@@ -44,12 +44,17 @@ not itself part of the shelf.
 exported to a static site with `npm run build:web`
 (`expo export --platform web`) — to GitHub Pages on every push to `main`, at
 `https://similonap.github.io/karamatch-components/`. Every story has its usual
-Controls/Actions/Backgrounds/Theme panels, plus an **Install** panel showing
-the exact `npx shadcn@latest add .../r/<name>.json` command for whatever
-component is currently selected (and what it pulls in, if anything) — same
-idea as an individual component page on ui.shadcn.com. One-time setup:
-Settings → Pages → Build and deployment → source: **GitHub Actions** (the
-repo needs to be public for Pages to work on the free tier).
+Controls/Actions/Backgrounds/Theme panels, plus two custom ones: an
+**Install** panel showing the exact `npx shadcn@latest add .../r/<name>.json`
+command for whatever component is currently selected (and what it pulls in,
+if anything) — same idea as an individual component page on ui.shadcn.com —
+and a **Code** panel showing a pasteable JSX snippet
+(`<ComponentName prop="value" ... />`) built from that story's *current*
+args, live-updating as you tweak Controls. Handy for grabbing the exact data
+shape a component expects (e.g. a domain composite's mock object) without
+digging through its `.stories.tsx` file. One-time setup: Settings → Pages →
+Build and deployment → source: **GitHub Actions** (the repo needs to be
+public for Pages to work on the free tier).
 
 ## Installing components via the registry
 
@@ -122,9 +127,63 @@ import { Button, Card, VenueCard, useTheme, ThemeProvider } from "./shelf";
 ```
 
 Wrap your app in `ThemeProvider` (and `SafeAreaProvider` from
-`react-native-safe-area-context`) once, near the root — every component
-reads colours/spacing/type through `useTheme()`, so there's nothing else to
-configure.
+`react-native-safe-area-context`) once, near the root — every component in
+the shelf calls `useTheme()` internally to read colours/spacing/type, and
+`useTheme()` throws `Error: useTheme must be used within a ThemeProvider` if
+it's rendered outside one. This is the single most common setup mistake:
+installing a component (either by copying `src/` or via `npx shadcn add`,
+see above) is not enough on its own — `ThemeProvider` has to be mounted
+above it in the tree, in every entry point that renders shelf components
+(including Storybook-less unit tests, if you render shelf components in
+them).
+
+If your app uses `expo-router`, the root layout is the right place, since
+everything under it shares one tree:
+
+```tsx
+// app/_layout.tsx
+import { ThemeProvider } from "@/theme/ThemeProvider";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Stack } from "expo-router";
+
+export default function RootLayout() {
+  return (
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <Stack />
+      </ThemeProvider>
+    </SafeAreaProvider>
+  );
+}
+```
+
+Without `expo-router`, wrap the root component you register with Expo
+instead (`App.tsx`, or wherever your `registerRootComponent`/navigation
+container lives):
+
+```tsx
+// App.tsx
+import { ThemeProvider } from "@/theme/ThemeProvider";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <ThemeProvider>{/* your navigator / screens */}</ThemeProvider>
+    </SafeAreaProvider>
+  );
+}
+```
+
+Adjust the import path to match how you pulled the shelf in: `@/theme/ThemeProvider`
+if you installed via the registry (per the `@/*` alias set up above) or copied
+`src/` to `src/` with that alias configured, `./shelf` if you're importing
+from the barrel (`src/index.ts`), or a relative path if you copied `theme/`
+somewhere else.
+
+`ThemeProvider` also takes an optional `initialMode` prop (`"light" | "dark" | "system"`,
+defaults to `"system"`) if you want to force a scheme instead of following
+the OS setting.
 
 `src/types.ts` has local copies of the API response shapes the domain
 composites are typed against (`VenueNearby`, `PartyView`, `NotificationView`,

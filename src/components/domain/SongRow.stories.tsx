@@ -1,5 +1,7 @@
 import { useState } from "react";
+import type { ComponentProps } from "react";
 import type { Meta, StoryObj } from "@storybook/react-native";
+import { useArgs } from "storybook/preview-api";
 import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
@@ -16,12 +18,12 @@ export default meta;
 type Story = StoryObj<typeof SongRow>;
 
 export const Default: Story = {
-    render: args => {
+    render: _args => {
         const { C } = useTheme();
-        const [selected, setSelected] = useState(args.selected);
+        const [args, updateArgs] = useArgs<ComponentProps<typeof SongRow>>();
         return (
             <View style={{ padding: 24, backgroundColor: C.surface }}>
-                <SongRow {...args} selected={selected} onToggle={() => setSelected(s => !s)} />
+                <SongRow {...args} onToggle={() => updateArgs({ selected: !args.selected })} />
             </View>
         );
     }

@@ -7,7 +7,8 @@ const main: StorybookConfig = {
         "@storybook/addon-ondevice-actions",
         "@storybook/addon-ondevice-backgrounds",
         "./addons/theme-toggle",
-        "./addons/install-command"
+        "./addons/install-command",
+        "./addons/code-snippet"
     ]
 };
 
