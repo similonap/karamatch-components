@@ -61,14 +61,47 @@ CLI needed. The same workflow regenerates `docs/r/` from the current `src/`
 to remember to rebuild and commit `docs/` by hand (it's gitignored; both
 `docs/r/` and the exported site are CI-only build output).
 
-In a consumer Expo project, add this registry's namespace to
-`components.json` so a component's own `registryDependencies` (other shelf
-pieces it imports) resolve here instead of defaulting to ui.shadcn.com:
+The shadcn CLI's `add` command needs a `components.json` to run, and if it
+doesn't find one it launches its interactive `init` wizard — which assumes a
+Tailwind/CSS web project (it'll ask you to pick Base UI/Radix, then send you
+to a browser-based "custom preset" builder since it has no built-in preset
+for Expo). None of that applies here — the shelf is plain `StyleSheet`-based
+RN with no Tailwind — so skip `init` entirely by hand-writing
+`components.json` yourself in the consumer project:
 
 ```json
 {
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "css": "",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/utils"
+  },
   "registries": {
     "@karamatch": "https://<this-repo's-pages-url>/r/{name}.json"
+  }
+}
+```
+
+The `tailwind` block is required by the CLI's schema even though nothing in
+the shelf reads it — leave it as-is. `aliases.components`/`aliases.utils`
+must resolve via a real path alias, so add the matching entry to
+`tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }
 ```
