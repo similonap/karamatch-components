@@ -1,5 +1,12 @@
 const { getDefaultConfig } = require("expo/metro-config");
 const { withStorybook } = require("@storybook/react-native/metro/withStorybook");
+const { writeInstallManifest } = require("./scripts/write-story-manifest");
+
+// Regenerates .rnstorybook/generated/install-manifest.json (read by the
+// "Install" addon panel) from the current src/ every time Metro starts,
+// same reasoning as storybook.requires.ts below — it should never be
+// hand-edited or allowed to go stale.
+writeInstallManifest();
 
 const config = getDefaultConfig(__dirname);
 

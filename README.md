@@ -38,16 +38,28 @@ components, just enough to prove the pieces actually compose into a real
 screen rather than only ever being seen one at a time in Storybook. It is
 not itself part of the shelf.
 
+## Browsing the docs site
+
+`.github/workflows/deploy-registry.yml` publishes this same Storybook —
+exported to a static site with `npm run build:web`
+(`expo export --platform web`) — to GitHub Pages on every push to `main`, at
+`https://<owner>.github.io/<repo>/`. Every story has its usual
+Controls/Actions/Backgrounds/Theme panels, plus an **Install** panel showing
+the exact `npx shadcn@latest add .../r/<name>.json` command for whatever
+component is currently selected (and what it pulls in, if anything) — same
+idea as an individual component page on ui.shadcn.com. One-time setup:
+Settings → Pages → Build and deployment → source: **GitHub Actions** (the
+repo needs to be public for Pages to work on the free tier).
+
 ## Installing components via the registry
 
 Components are also distributable one at a time through the standard
 [shadcn CLI](https://ui.shadcn.com/docs/cli) — same mechanism
 [reactnativereusables.com](https://reactnativereusables.com) uses, no custom
-CLI needed. `npm run build:registry` (`scripts/build-registry.js`) generates
-a shadcn-schema registry into `docs/r/` from the current `src/` — this is
-what GitHub Pages serves once enabled for this repo (Settings → Pages,
-source: `docs/` on `main`; the repo needs to be public for Pages to work on
-the free tier).
+CLI needed. The same workflow regenerates `docs/r/` from the current `src/`
+(via `npm run build:registry`) alongside the Storybook site above — no need
+to remember to rebuild and commit `docs/` by hand (it's gitignored; both
+`docs/r/` and the exported site are CI-only build output).
 
 In a consumer Expo project, add this registry's namespace to
 `components.json` so a component's own `registryDependencies` (other shelf

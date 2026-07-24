@@ -189,7 +189,7 @@ function writeRegistry(items) {
     const index = {
         $schema: "https://ui.shadcn.com/schema/registry.json",
         name: "karamatch-mobile",
-        homepage: "https://github.com/similonap/karamatch",
+        homepage: "https://github.com/similonap/karamatch-components",
         items: items.map(item => ({
             name: item.name,
             type: item.type,
@@ -202,4 +202,11 @@ function writeRegistry(items) {
     console.log(`[build-registry] wrote ${items.length} items + registry.json to ${path.relative(ROOT, OUT_DIR)}/`);
 }
 
-writeRegistry(buildItems());
+module.exports = { buildItems, writeRegistry };
+
+// `write-story-manifest.js` (run automatically from metro.config.js) also
+// needs `buildItems()` without triggering a `docs/r/` rewrite on every
+// Metro start, hence the guard.
+if (require.main === module) {
+    writeRegistry(buildItems());
+}

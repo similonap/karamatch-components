@@ -43,7 +43,8 @@
     "web": "expo start --web",
     "storybook:ios": "expo start --ios",
     "storybook:android": "expo start --android",
-    "build:registry": "node scripts/build-registry.js"
+    "build:registry": "node scripts/build-registry.js",
+    "build:web": "expo export --platform web"
   },
   "private": true
 }
