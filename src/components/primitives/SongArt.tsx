@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { Image } from "expo-image";
 
 import { useTheme } from "../../theme/ThemeProvider";
@@ -35,7 +35,14 @@ export function SongArt({
                 height: size,
                 borderRadius: radius ?? R.sm,
                 borderCurve: "continuous",
-                ...(gradient ? { experimental_backgroundImage: GRAD } : { backgroundColor: background ?? C.surface3 }),
+                // react-native-web doesn't translate `experimental_backgroundImage` (a Fabric/native-only
+                // style prop name) into real CSS, so it silently no-ops there — `backgroundImage` is the
+                // actual CSS property name and works on web.
+                ...(gradient
+                    ? Platform.OS === "web"
+                        ? { backgroundImage: GRAD }
+                        : { experimental_backgroundImage: GRAD }
+                    : { backgroundColor: background ?? C.surface3 }),
                 alignItems: "center",
                 justifyContent: "center",
                 overflow: "hidden"

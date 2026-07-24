@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Platform, Text, View } from "react-native";
 import type { StyleProp, ViewStyle } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
@@ -76,7 +76,14 @@ export function Button({
                     sizeStyleFor(R, S, S2, size),
                     boxStyleFor(C, variant, off),
                     showGradient
-                        ? { experimental_backgroundImage: GRAD, boxShadow: "0 6px 20px " + C.tintGlow }
+                        ? {
+                              // react-native-web has no special case for `experimental_backgroundImage` (it's a
+                              // Fabric/native-only style prop name) — it passes the key straight through as an
+                              // invalid CSS property, so the gradient silently no-ops on web. `backgroundImage` is
+                              // the real CSS property name and DOES pass through correctly there.
+                              ...(Platform.OS === "web" ? { backgroundImage: GRAD } : { experimental_backgroundImage: GRAD }),
+                              boxShadow: "0 6px 20px " + C.tintGlow
+                          }
                         : null
                 ]}
             >
