@@ -43,7 +43,7 @@ not itself part of the shelf.
 `.github/workflows/deploy-registry.yml` publishes this same Storybook —
 exported to a static site with `npm run build:web`
 (`expo export --platform web`) — to GitHub Pages on every push to `main`, at
-`https://<owner>.github.io/<repo>/`. Every story has its usual
+`https://similonap.github.io/karamatch-components/`. Every story has its usual
 Controls/Actions/Backgrounds/Theme panels, plus an **Install** panel showing
 the exact `npx shadcn@latest add .../r/<name>.json` command for whatever
 component is currently selected (and what it pulls in, if anything) — same
@@ -85,7 +85,7 @@ RN with no Tailwind — so skip `init` entirely by hand-writing
     "utils": "@/utils"
   },
   "registries": {
-    "@karamatch": "https://<this-repo's-pages-url>/r/{name}.json"
+    "@karamatch": "https://similonap.github.io/karamatch-components/r/{name}.json"
   }
 }
 ```
@@ -109,7 +109,7 @@ must resolve via a real path alias, so add the matching entry to
 Then install a component and everything it transitively needs in one go:
 
 ```sh
-npx shadcn@latest add https://<this-repo's-pages-url>/r/button.json
+npx shadcn@latest add https://similonap.github.io/karamatch-components/r/button.json
 ```
 
 ## Using the shelf in your own app
