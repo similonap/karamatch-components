@@ -8,17 +8,17 @@ import { useTheme } from "../../theme/ThemeProvider";
 // RN `View` borders support the same per-edge colouring, so the trick ports
 // directly; only the animation driver changes, to `Animated` + native driver.
 export function Spinner({ size = 24, color }: { size?: number; color?: string }) {
-    const { C } = useTheme();
+    const { C, MOTION } = useTheme();
     const tint = color ?? C.tint;
     const rotation = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         const loop = Animated.loop(
-            Animated.timing(rotation, { toValue: 1, duration: 800, easing: Easing.linear, useNativeDriver: true })
+            Animated.timing(rotation, { toValue: 1, duration: MOTION.spinnerMs, easing: Easing.linear, useNativeDriver: true })
         );
         loop.start();
         return () => loop.stop();
-    }, [rotation]);
+    }, [rotation, MOTION.spinnerMs]);
 
     const spin = rotation.interpolate({ inputRange: [0, 1], outputRange: ["0deg", "360deg"] });
     const border = Math.max(2, Math.round(size / 12));
@@ -30,7 +30,7 @@ export function Spinner({ size = 24, color }: { size?: number; color?: string })
                 height: size,
                 borderRadius: size / 2,
                 borderWidth: border,
-                borderColor: C.border,
+                borderColor: C.track,
                 borderTopColor: tint,
                 transform: [{ rotate: spin }]
             }}

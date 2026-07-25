@@ -25,14 +25,13 @@ export function ConfirmDialog({
     onConfirm: () => void;
     onCancel: () => void;
 }) {
-    const { C, R, S, SHADOW, T } = useTheme();
+    const { C, CTRL, RADII, S, SHADOW, T } = useTheme();
 
     return (
         <Modal visible={visible} transparent animationType="fade" statusBarTranslucent onRequestClose={onCancel}>
             <AppPressable
                 onPress={onCancel}
-                scaleTo={1}
-                opacityTo={1}
+                press="none"
                 style={{
                     flex: 1,
                     backgroundColor: C.scrim,
@@ -43,15 +42,14 @@ export function ConfirmDialog({
             >
                 <AppPressable
                     onPress={() => {}}
-                    scaleTo={1}
-                    opacityTo={1}
+                    press="none"
                     style={{
                         width: "100%",
                         maxWidth: 300,
                         backgroundColor: C.surface1,
-                        borderWidth: 1,
+                        borderWidth: CTRL.border.regular,
                         borderColor: C.border,
-                        borderRadius: R.xl,
+                        borderRadius: RADII.sheet,
                         borderCurve: "continuous",
                         padding: S.lg,
                         gap: S.sm,

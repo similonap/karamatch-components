@@ -55,7 +55,7 @@ export function PartyCard({
     onRateCrew?: () => void;
     onReviewVenue?: () => void;
 }) {
-    const { C, S, S2, T } = useTheme();
+    const { C, CTRL, S, S2, T } = useTheme();
     const strongMatch = (matchPct ?? 0) >= 60;
 
     return (
@@ -93,7 +93,7 @@ export function PartyCard({
             )}
 
             {(variant === "open" || variant === "match") ? (
-                <AppPressable onPress={onHostPress} scaleTo={1} style={{ flexDirection: "row", alignItems: "center", gap: S.sm, alignSelf: "flex-start" }}>
+                <AppPressable onPress={onHostPress} press="row" style={{ flexDirection: "row", alignItems: "center", gap: S.sm, alignSelf: "flex-start" }}>
                     <Avatar name={party.host.name} photoUrl={party.host.photoUrl} seed={party.host.id} size={28} />
                     <Text style={[T.caption, { color: C.textMuted }]}>
                         @{party.host.username} · {plural(party.membersCount, "singer", "singers")}
@@ -121,7 +121,7 @@ export function PartyCard({
                         justifyContent: "space-between",
                         gap: S2.s12,
                         paddingTop: S2.s12,
-                        borderTopWidth: 1,
+                        borderTopWidth: CTRL.border.hairline,
                         borderTopColor: C.border
                     }}
                 >
@@ -139,14 +139,14 @@ export function PartyCard({
                             {party.membersCount}/{party.capacity} singers
                         </Text>
                     ) : (
-                        <AppPressable onPress={onHostPress} scaleTo={1} style={{ flexDirection: "row", alignItems: "center", gap: S2.s6 }}>
+                        <AppPressable onPress={onHostPress} press="row" style={{ flexDirection: "row", alignItems: "center", gap: S2.s6 }}>
                             <Avatar name={party.host.name} photoUrl={party.host.photoUrl} seed={party.host.id} size={22} />
                             <Text style={[T.caption, { color: C.textMuted }]}>@{party.host.username}</Text>
                         </AppPressable>
                     )}
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
                         <Text style={[T.captionStrong, { color: C.tintSoft }]}>Open room</Text>
-                        <Icon name="chevronRight" size={14} strokeWidth={2.2} color={C.tintSoft} />
+                        <Icon name="chevronRight" size={14} weight="strong" color={C.tintSoft} />
                     </View>
                 </View>
             ) : null}
@@ -171,6 +171,8 @@ export function PartyCard({
 
 const RING_SIZE = 56;
 const RING_STROKE = 5.5;
+/** The disc the percentage sits on, inside the ring. */
+const RING_PLATE = 45;
 const RING_RADIUS = (RING_SIZE - RING_STROKE) / 2;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
@@ -180,7 +182,7 @@ const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 // conic-gradient support, so this is an SVG circle with a dashed stroke
 // instead, which is the standard native technique for a percentage ring.
 function MatchRing({ pct }: { pct: number }) {
-    const { C, T } = useTheme();
+    const { C, RADII, T } = useTheme();
     const strong = pct >= 60;
     const tone = strong ? C.tint : C.textMuted;
     const offset = RING_CIRCUMFERENCE * (1 - pct / 100);
@@ -188,7 +190,7 @@ function MatchRing({ pct }: { pct: number }) {
     return (
         <View style={{ width: RING_SIZE, height: RING_SIZE, alignItems: "center", justifyContent: "center" }}>
             <Svg width={RING_SIZE} height={RING_SIZE} style={{ position: "absolute" }}>
-                <Circle cx={RING_SIZE / 2} cy={RING_SIZE / 2} r={RING_RADIUS} stroke={C.surface3} strokeWidth={RING_STROKE} fill="none" />
+                <Circle cx={RING_SIZE / 2} cy={RING_SIZE / 2} r={RING_RADIUS} stroke={C.track} strokeWidth={RING_STROKE} fill="none" />
                 <Circle
                     cx={RING_SIZE / 2}
                     cy={RING_SIZE / 2}
@@ -206,7 +208,16 @@ function MatchRing({ pct }: { pct: number }) {
                     origin={RING_SIZE / 2 + ", " + RING_SIZE / 2}
                 />
             </Svg>
-            <View style={{ width: 45, height: 45, borderRadius: 22.5, backgroundColor: C.surface1, alignItems: "center", justifyContent: "center" }}>
+            <View
+                style={{
+                    width: RING_PLATE,
+                    height: RING_PLATE,
+                    borderRadius: Math.min(RADII.round, RING_PLATE / 2),
+                    backgroundColor: C.surface1,
+                    alignItems: "center",
+                    justifyContent: "center"
+                }}
+            >
                 <Text style={[T.captionStrong, { fontSize: 14, lineHeight: 16, color: tone }]}>{pct}</Text>
                 <Text style={[T.footnote, { fontSize: 8, lineHeight: 9, opacity: 0.75, color: tone }]}>MATCH</Text>
             </View>

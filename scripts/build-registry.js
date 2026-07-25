@@ -24,9 +24,16 @@ const COMPONENT_DIRS = [
     { dir: "src/components/scaffolding", type: "registry:component" }
 ];
 
+// `name` is optional and only needed where the filename doesn't make a good
+// registry item name on its own (a directory barrel called index.ts).
 const SUPPORT_FILES = [
     { file: "src/theme/colors.ts", type: "registry:theme" },
     { file: "src/theme/tokens.ts", type: "registry:theme" },
+    { file: "src/theme/createTheme.ts", type: "registry:theme" },
+    { file: "src/theme/themes/index.ts", type: "registry:theme", name: "themes" },
+    { file: "src/theme/themes/neonNights.ts", type: "registry:theme" },
+    { file: "src/theme/themes/paperPress.ts", type: "registry:theme" },
+    { file: "src/theme/themes/softAurora.ts", type: "registry:theme" },
     { file: "src/theme/ThemeProvider.tsx", type: "registry:lib" },
     { file: "src/icons/Icon.tsx", type: "registry:ui" },
     { file: "src/icons/StarIcon.tsx", type: "registry:ui" },
@@ -97,22 +104,24 @@ function parseImportSpecifiers(sourceText, absPath) {
 function resolveRelativeImport(fromAbsFile, specifier, filesByAbsPathNoExt) {
     // Map keys are stored without extension (see buildItems), matching how
     // these specifiers are written (no `.tsx`/`.ts` suffix), so no
-    // extension needs adding back on here.
+    // extension needs adding back on here. A specifier naming a directory
+    // ("./themes") means that directory's barrel, hence the /index retry.
     const resolved = path.resolve(path.dirname(fromAbsFile), specifier);
-    return filesByAbsPathNoExt.get(resolved) ?? null;
+    return filesByAbsPathNoExt.get(resolved) ?? filesByAbsPathNoExt.get(path.join(resolved, "index")) ?? null;
 }
 
 function buildItems() {
     const sourceFiles = collectSourceFiles();
 
-    const rawItems = sourceFiles.map(({ file, type }) => {
+    const rawItems = sourceFiles.map(({ file, type, name }) => {
         const absPath = path.join(ROOT, file);
         const baseName = path.basename(file).replace(/\.tsx?$/, "");
         const relDir = path.relative("src", path.dirname(file));
         return {
-            baseSlug: toSlug(baseName),
+            baseSlug: name ?? toSlug(baseName),
+            fixedName: name,
             relDir,
-            title: baseName,
+            title: name ?? baseName,
             type,
             file,
             absPath,
@@ -136,7 +145,9 @@ function buildItems() {
     const byAbsPath = new Map();
     const items = rawItems.map(raw => {
         const collides = countByBaseSlug.get(raw.baseSlug) > 1;
-        const name = collides && raw.relDir !== "" ? `${toSlug(raw.relDir.split(path.sep).join("-"))}-${raw.baseSlug}` : raw.baseSlug;
+        const name =
+            raw.fixedName ??
+            (collides && raw.relDir !== "" ? `${toSlug(raw.relDir.split(path.sep).join("-"))}-${raw.baseSlug}` : raw.baseSlug);
         const item = { name, title: raw.title, type: raw.type, file: raw.file, absPath: raw.absPath, content: raw.content };
         byAbsPath.set(raw.absPath.replace(/\.tsx?$/, ""), item);
         return item;

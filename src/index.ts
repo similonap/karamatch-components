@@ -5,7 +5,30 @@
 export { ThemeProvider, useTheme } from "./theme/ThemeProvider";
 export type { ThemeMode, ThemeValue } from "./theme/ThemeProvider";
 export type { ColorScheme, Palette, Shadows } from "./theme/colors";
-export { FONT, LAYOUT, R, S, S2, T } from "./theme/tokens";
+
+// Authoring a theme: `createTheme` takes the differences from the default and
+// fills in the rest. See theme/themes/ for three worked examples.
+export { createTheme } from "./theme/createTheme";
+export type { ControlsSpec, MotionSpec, Theme, ThemeScheme, ThemeSchemeSpec, ThemeSpec, ThemeTokens } from "./theme/createTheme";
+export { BUILT_IN_THEMES, DEFAULT_THEME, neonNights, paperPress, softAurora } from "./theme/themes";
+
+// Token defaults + their types, i.e. what a theme may override.
+export { CTRL, DECOR, FONT, LAYOUT, MOTION, R, RADII, S, S2, T, glowShadow, makeRadii, makeTypeScale } from "./theme/tokens";
+export type {
+    Controls,
+    Decor,
+    FontFamilies,
+    HalfStepScale,
+    LayoutScale,
+    Motion,
+    PressFeedback,
+    PressRole,
+    Radii,
+    RadiusScale,
+    SpaceScale,
+    TypeRole,
+    TypeScale
+} from "./theme/tokens";
 
 // Icons
 export { Icon } from "./icons/Icon";

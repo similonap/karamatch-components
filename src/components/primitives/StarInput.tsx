@@ -17,7 +17,7 @@ export function StarInput({ value, onChange }: { value: number; onChange: (stars
                         key={star}
                         onPress={() => onChange(star)}
                         accessibilityLabel={star + (star === 1 ? " star" : " stars")}
-                        scaleTo={0.85}
+                        press="snap"
                         style={{
                             width: LAYOUT.touch,
                             height: LAYOUT.touch,
@@ -25,7 +25,7 @@ export function StarInput({ value, onChange }: { value: number; onChange: (stars
                             justifyContent: "center"
                         }}
                     >
-                        <StarIcon size={26} filled={on} color={on ? C.gold : C.surface3} />
+                        <StarIcon size={26} filled={on} color={on ? C.gold : C.track} />
                     </AppPressable>
                 );
             })}

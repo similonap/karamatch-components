@@ -9,40 +9,43 @@ import { AppPressable } from "./AppPressable";
 // the thumb's `left` with a CSS transition; RN animates the same distance as
 // a `translateX` on the native driver instead.
 export function Toggle({ on, onChange, label }: { on: boolean; onChange: (on: boolean) => void; label: string }) {
-    const { C, R, SHADOW } = useTheme();
+    const { C, CTRL, RADII, MOTION, SHADOW } = useTheme();
+    const { width, height, thumb, inset } = CTRL.toggle;
     const progress = useRef(new Animated.Value(on ? 1 : 0)).current;
 
     useEffect(() => {
-        Animated.timing(progress, { toValue: on ? 1 : 0, duration: 200, useNativeDriver: true }).start();
-    }, [on, progress]);
+        Animated.timing(progress, { toValue: on ? 1 : 0, duration: MOTION.toggleMs, useNativeDriver: true }).start();
+    }, [on, progress, MOTION.toggleMs]);
 
-    const translateX = progress.interpolate({ inputRange: [0, 1], outputRange: [0, 19] });
+    // The thumb travels the track minus its own width and both insets, so the
+    // switch stays symmetrical at any theme's geometry.
+    const travel = width - thumb - inset * 2;
+    const translateX = progress.interpolate({ inputRange: [0, 1], outputRange: [0, travel] });
 
     return (
         <AppPressable
             onPress={() => onChange(!on)}
             accessibilityLabel={label}
-            scaleTo={1}
-            opacityTo={0.8}
+            press="row"
             style={{
-                width: 46,
-                height: 28,
-                borderRadius: R.full,
+                width,
+                height,
+                borderRadius: Math.min(RADII.round, height / 2),
                 borderCurve: "continuous",
                 backgroundColor: on ? C.green : C.surface3,
-                borderWidth: on ? 0 : 1,
+                borderWidth: on ? 0 : CTRL.border.regular,
                 borderColor: C.border
             }}
         >
             <Animated.View
                 style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: 11,
-                    backgroundColor: "#fff",
+                    width: thumb,
+                    height: thumb,
+                    borderRadius: Math.min(RADII.round, thumb / 2),
+                    backgroundColor: C.knob,
                     position: "absolute",
-                    top: 2,
-                    left: 2,
+                    top: inset,
+                    left: inset,
                     boxShadow: SHADOW.e1,
                     transform: [{ translateX }]
                 }}

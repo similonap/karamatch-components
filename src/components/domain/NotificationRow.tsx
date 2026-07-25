@@ -35,7 +35,7 @@ export function NotificationRow({
     return (
         <Card highlight style={{ gap: S2.s12 }}>
             {notification.kind === "review" ? (
-                <AppPressable onPress={onOpen} scaleTo={1} style={{ flexDirection: "row", alignItems: "center", gap: S2.s12 }}>
+                <AppPressable onPress={onOpen} press="row" style={{ flexDirection: "row", alignItems: "center", gap: S2.s12 }}>
                     <VenueThumb imageUrl={notification.venue.imageUrl} />
                     <View style={{ flex: 1, minWidth: 0 }}>
                         <Text style={[T.callout, { color: C.textDim }]}>
@@ -46,10 +46,10 @@ export function NotificationRow({
                             {notification.party.title} · {formatWhen(notification.party.start)}
                         </Text>
                     </View>
-                    <Icon name="chevronRight" size={16} strokeWidth={2.2} color={C.textFaint} />
+                    <Icon name="chevronRight" size={16} weight="strong" color={C.textFaint} />
                 </AppPressable>
             ) : (
-                <AppPressable onPress={onOpen} scaleTo={1} style={{ flexDirection: "row", alignItems: "center", gap: S2.s12 }}>
+                <AppPressable onPress={onOpen} press="row" style={{ flexDirection: "row", alignItems: "center", gap: S2.s12 }}>
                     <Avatar name={notification.from.name} photoUrl={notification.from.photoUrl} seed={notification.from.id} size={42} />
                     <View style={{ minWidth: 0, flex: 1 }}>
                         <Text style={[T.callout, { color: C.textDim }]}>
@@ -88,7 +88,7 @@ export function NotificationRow({
 
 /** The review notification's venue thumbnail, with the same broken-image fallback as SongArt/Avatar. */
 function VenueThumb({ imageUrl }: { imageUrl: string }) {
-    const { C, R } = useTheme();
+    const { C, RADII } = useTheme();
     const [broken, setBroken] = useState(false);
     const showPhoto = imageUrl && !broken;
 
@@ -97,7 +97,7 @@ function VenueThumb({ imageUrl }: { imageUrl: string }) {
             style={{
                 width: 42,
                 height: 42,
-                borderRadius: R.md,
+                borderRadius: RADII.plate,
                 borderCurve: "continuous",
                 overflow: "hidden",
                 backgroundColor: C.surface2,

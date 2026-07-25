@@ -19,20 +19,20 @@ export function CrewMemberChip({
     isMe: boolean;
     onPress?: () => void;
 }) {
-    const { C, R, T } = useTheme();
+    const { C, CTRL, RADII, T } = useTheme();
 
     return (
         <AppPressable
             onPress={onPress}
-            scaleTo={0.96}
+            press="control"
             style={{
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 7,
                 backgroundColor: C.surface1,
-                borderWidth: 1,
+                borderWidth: CTRL.border.regular,
                 borderColor: C.border,
-                borderRadius: R.full,
+                borderRadius: RADII.pill,
                 paddingVertical: 4,
                 paddingLeft: 4,
                 paddingRight: 11
@@ -43,7 +43,7 @@ export function CrewMemberChip({
             {member.role === "host" ? (
                 <Icon name="crown" size={12} color={C.gold} />
             ) : member.paid ? (
-                <Icon name="check" size={12} strokeWidth={2.6} color={C.green} />
+                <Icon name="check" size={12} weight="strong" color={C.green} />
             ) : (
                 <Icon name="clock" size={12} color={C.textFaint} />
             )}
@@ -52,7 +52,7 @@ export function CrewMemberChip({
 }
 
 export function InvitedMemberChip({ username }: { username: string }) {
-    const { C, R, T } = useTheme();
+    const { C, CTRL, DECOR, RADII, T } = useTheme();
 
     return (
         <View
@@ -60,10 +60,10 @@ export function InvitedMemberChip({ username }: { username: string }) {
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 6,
-                borderWidth: 1,
-                borderStyle: "dashed",
+                borderWidth: CTRL.border.regular,
+                borderStyle: DECOR.placeholderBorder,
                 borderColor: C.borderStrong,
-                borderRadius: R.full,
+                borderRadius: RADII.pill,
                 paddingVertical: 6,
                 paddingHorizontal: 11
             }}

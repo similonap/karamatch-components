@@ -21,8 +21,9 @@ export function Avatar({
     size?: number;
     ring?: boolean;
 }) {
-    const { C } = useTheme();
+    const { AVATARS, C, CTRL, FONT, RADII } = useTheme();
     const [broken, setBroken] = useState(false);
+    const ringWidth = CTRL.avatarRing;
     const showPhoto = photoUrl && !broken;
 
     return (
@@ -30,12 +31,14 @@ export function Avatar({
             style={{
                 width: size,
                 height: size,
-                borderRadius: size / 2,
-                backgroundColor: avatarColor(seed ?? name),
+                borderRadius: Math.min(RADII.avatar, size / 2),
+                backgroundColor: avatarColor(seed ?? name, AVATARS),
                 alignItems: "center",
                 justifyContent: "center",
                 overflow: "hidden",
-                boxShadow: ring ? "0 0 0 2px " + C.surface + ", 0 0 0 4px " + C.tint : undefined
+                boxShadow: ring
+                    ? "0 0 0 " + ringWidth + "px " + C.surface + ", 0 0 0 " + ringWidth * 2 + "px " + C.tint
+                    : undefined
             }}
         >
             {showPhoto ? (
@@ -46,7 +49,7 @@ export function Avatar({
                     contentFit="cover"
                 />
             ) : (
-                <Text style={{ fontSize: Math.round(size * 0.38), fontWeight: "700", color: "#fff" }}>{initial(name)}</Text>
+                <Text style={{ fontFamily: FONT.bodyBold, fontSize: Math.round(size * 0.38), color: C.onAvatar }}>{initial(name)}</Text>
             )}
         </View>
     );

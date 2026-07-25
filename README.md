@@ -76,3 +76,123 @@ import { Button } from "@/components/primitives/Button";
 
 That's it — browse the gallery for what's available, install what you need,
 and go.
+
+## 4. Theming
+
+Three themes ship with the shelf, and each one supports dark **and** light:
+
+| Theme | `name` | Look |
+| --- | --- | --- |
+| Neon Nights (default) | `neon-nights` | Near-black violet, hot pink→purple gradient, Unbounded + Outfit |
+| Paper Press | `paper-press` | Cream stock, ink rules, hard offset shadows, square everything, Fraunces + IBM Plex Mono |
+| Soft Aurora | `soft-aurora` | Pastel pills, big soft glows, roomy controls, Quicksand + Nunito |
+
+Pick one, and switch appearance separately:
+
+```tsx
+<ThemeProvider theme="paper-press" initialMode="light">
+  <Stack />
+</ThemeProvider>
+```
+
+Or let the app change it at runtime — no remount, no prop drilling:
+
+```tsx
+const { themeName, themes, setTheme, mode, setMode } = useTheme();
+
+<Segmented items={themes.map(t => ({ key: t.name, label: t.label }))} value={themeName} onChange={setTheme} />
+<Segmented
+  items={[{ key: "system", label: "System" }, { key: "dark", label: "Dark" }, { key: "light", label: "Light" }]}
+  value={mode}
+  onChange={setMode}
+/>
+```
+
+See it live in the gallery under **Theme → Theming** (`Showcase`, `SideBySide`,
+`Tokens`, `Switcher`), or switch the whole gallery over from the **Theme**
+addon panel.
+
+### Loading a theme's fonts
+
+React Native can't synthesise a weight, so each theme names one registered
+family per weight and those families have to be loaded before you render.
+Install the packages for the theme(s) you use and load them once at the root:
+
+```sh
+# neon-nights (default)
+npx expo install @expo-google-fonts/unbounded @expo-google-fonts/outfit
+# paper-press
+npx expo install @expo-google-fonts/fraunces @expo-google-fonts/ibm-plex-mono
+# soft-aurora
+npx expo install @expo-google-fonts/quicksand @expo-google-fonts/nunito
+```
+
+```tsx
+import { useFonts } from "@expo-google-fonts/outfit/useFonts";
+import { Outfit_400Regular } from "@expo-google-fonts/outfit/400Regular";
+// …one import per weight; see App.tsx in this repo for all three themes.
+
+const [fontsLoaded] = useFonts({ Outfit_400Regular /* … */ });
+if (!fontsLoaded) return null;
+```
+
+Weights per theme: `neon-nights` — Unbounded 700/800 + Outfit 400/500/700/800 ·
+`paper-press` — Fraunces 700/900 + IBM Plex Mono 400/500/600/700 ·
+`soft-aurora` — Quicksand 600/700 + Nunito 400/500/700/800.
+
+### Writing your own theme
+
+A theme is plain data: the *differences* from the default. `createTheme()`
+fills in everything you don't mention, so a brand recolour is a few lines and a
+full redesign is still one file.
+
+```tsx
+// theme/themes/myBrand.ts
+import { createTheme } from "@/theme/createTheme";
+
+export const myBrand = createTheme({
+  name: "my-brand",
+  label: "My Brand",
+  fonts: { bodyRegular: "Inter_400Regular", bodyBold: "Inter_700Bold" },
+  radius: { sm: 4, md: 6, lg: 8, xl: 12, xxl: 16, full: 999 },
+  radii: { control: 6, chip: 4 },              // semantic overrides
+  controls: { buttonHeight: { lg: 48 }, border: { regular: 2 } },
+  motion: { press: { button: { scale: 1 } } }, // no squash on buttons
+  decor: { primaryFill: "solid", glow: "none" },
+  schemes: {
+    light: { colors: { bg: "#ffffff", tint: "#0057ff", selectBg: "#0057ff", selectText: "#ffffff" } },
+    dark: { colors: { bg: "#05070f", tint: "#5b8cff" } }
+  }
+});
+```
+
+```tsx
+<ThemeProvider themes={[myBrand, neonNights]} theme="my-brand">
+  <Stack />
+</ThemeProvider>
+```
+
+Define only one scheme and the theme stays on it, ignoring the light/dark
+switch. Pass a `createTheme()` object straight to `theme=` for a one-off.
+
+### What's themeable
+
+Every value a component draws with comes from one of these groups — no
+component hardcodes a colour, radius, border width, duration or stroke.
+
+| Group | What it controls |
+| --- | --- |
+| `C` (`colors`) | Surfaces, text, tint, status colours, plus roles: `select*` (how a selected pill/row/tile fills), `focus`, `track`, `knob`, `overlay`/`onOverlay`, `onAvatar` |
+| `SHADOW` (`shadows`) | `e1`/`e2`/`e3` as raw `boxShadow` strings — a blur, or a hard offset rule |
+| `GRAD` / `GRAD_TILE` (`gradient`, `tileGradient`) | Primary-action and brand-mark gradients |
+| `AVATARS` (`avatarColors`) | The rotation generated avatars pick from |
+| `T` (`type`) + `FONT` (`fonts`) | 17 type roles, rebuilt from your typefaces; per-role overrides for size, tracking, `textTransform` |
+| `RADII` (`radii`) | Shape per *kind of thing*: `control`, `field`, `card`, `chip`, `pill`, `tile`, `plate`, `sheet`, `bubble`, `avatar`, `round`, `track` |
+| `CTRL` (`controls`) | Control geometry: button/field/chip/row/segment sizes, toggle, borders (`hairline`/`regular`/`strong`) |
+| `MOTION` (`motion`) | Press feedback per role (`button`, `control`, `snap`, `surface`, `row`), press/toggle/spinner/skeleton timings |
+| `DECOR` (`decor`) | `primaryFill`, `glow`, `iconStroke`(`Strong`), `brandRadiusRatio`, `placeholderBorder`, `appBarBorder` |
+| `S`, `S2`, `R`, `LAYOUT` | Spacing grid, half-steps, raw radius scale, gutter/app bar/tab bar/touch target |
+
+The defaults live in `theme/tokens.ts` and `theme/colors.ts`, and the default
+theme is deliberately an empty spec (`theme/themes/neonNights.ts`) — so those
+files double as the reference for what each token means.

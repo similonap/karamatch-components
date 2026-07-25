@@ -2,6 +2,10 @@
 // through CSS variables so a theme switch needs no re-render; React Native
 // has no CSS variables, so ThemeProvider picks one of these two objects and
 // components read it through useTheme() instead.
+//
+// These two palettes are the *default* theme's (see themes/neonNights.ts).
+// A theme supplies its own, and only has to name the roles it wants to move —
+// createTheme.ts fills the rest in from here.
 
 export type ColorScheme = "dark" | "light";
 
@@ -43,6 +47,29 @@ export interface Palette {
 
     scrim: string;
     skeleton: string;
+
+    // ── Roles added for themeability ────────────────────────────────────────
+    // Everything above is a colour the web app named; everything below is a
+    // *job* a component needs done, which the default theme happens to do
+    // with one of the colours above. Separating them is what lets a theme
+    // make selection a solid ink fill (Paper Press) rather than a tint wash,
+    // without every component growing a branch.
+
+    /** A selected pill / row / tile: its fill, outline and label. */
+    selectBg: string;
+    selectBorder: string;
+    selectText: string;
+    /** Outline of a focused text field. */
+    focus: string;
+    /** The knob of a switch. */
+    knob: string;
+    /** Initials drawn on an avatar's generated colour. */
+    onAvatar: string;
+    /** A chip floating on top of a photo, and its text. */
+    overlay: string;
+    onOverlay: string;
+    /** The unfilled part of a track: progress bars, rings, empty stars. */
+    track: string;
 }
 
 export interface Shadows {
@@ -88,7 +115,17 @@ const dark: Palette = {
     dangerBorder: "rgba(255, 90, 95, 0.4)",
 
     scrim: "rgba(4, 2, 8, 0.66)",
-    skeleton: "#211735"
+    skeleton: "#211735",
+
+    selectBg: "rgba(255, 61, 143, 0.14)",
+    selectBorder: "rgba(255, 61, 143, 0.42)",
+    selectText: "#ff6fae",
+    focus: "rgba(255, 61, 143, 0.42)",
+    knob: "#ffffff",
+    onAvatar: "#ffffff",
+    overlay: "rgba(7, 4, 13, 0.72)",
+    onOverlay: "#ffffff",
+    track: "#2b1f43"
 };
 
 const darkShadows: Shadows = {
@@ -134,7 +171,17 @@ const light: Palette = {
     dangerBorder: "rgba(209, 55, 60, 0.32)",
 
     scrim: "rgba(38, 16, 64, 0.4)",
-    skeleton: "#ece4f7"
+    skeleton: "#ece4f7",
+
+    selectBg: "rgba(224, 26, 114, 0.1)",
+    selectBorder: "rgba(224, 26, 114, 0.35)",
+    selectText: "#c8146c",
+    focus: "rgba(224, 26, 114, 0.35)",
+    knob: "#ffffff",
+    onAvatar: "#ffffff",
+    overlay: "rgba(23, 14, 34, 0.72)",
+    onOverlay: "#ffffff",
+    track: "#efe7f9"
 };
 
 const lightShadows: Shadows = {

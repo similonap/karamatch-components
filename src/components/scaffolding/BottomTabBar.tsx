@@ -23,7 +23,7 @@ export const TABS: { key: TabKey; label: string; icon: IconName }[] = [
 // backdrop-filter/blur is unsupported, breaking the "identical on both
 // platforms" requirement the web version calls out.
 export function BottomTabBar({ current, onSelect }: { current: TabKey; onSelect: (tab: TabKey) => void }) {
-    const { C, FONT, LAYOUT, T } = useTheme();
+    const { C, CTRL, FONT, LAYOUT, T } = useTheme();
     const insets = useSafeAreaInsets();
 
     return (
@@ -34,7 +34,7 @@ export function BottomTabBar({ current, onSelect }: { current: TabKey; onSelect:
                 height: LAYOUT.tabBar + insets.bottom,
                 paddingBottom: insets.bottom,
                 backgroundColor: C.surface,
-                borderTopWidth: 1,
+                borderTopWidth: CTRL.border.hairline,
                 borderTopColor: C.border
             }}
         >
@@ -44,23 +44,12 @@ export function BottomTabBar({ current, onSelect }: { current: TabKey; onSelect:
                     <AppPressable
                         key={tab.key}
                         onPress={() => onSelect(tab.key)}
-                        scaleTo={0.92}
-                        opacityTo={0.6}
+                        press="snap"
                         accessibilityLabel={tab.label}
                         style={{ flex: 1, alignItems: "center", justifyContent: "center", gap: 3 }}
                     >
-                        <Icon name={tab.icon} size={24} strokeWidth={1.8} solid={on} color={on ? C.tint : C.textMuted} />
-                        <Text
-                            style={[
-                                T.footnote,
-                                {
-                                    fontFamily: on ? FONT.bodyBold : FONT.bodyMedium,
-                                    fontSize: 10,
-                                    letterSpacing: 0.1,
-                                    color: on ? C.tint : C.textMuted
-                                }
-                            ]}
-                        >
+                        <Icon name={tab.icon} size={24} solid={on} color={on ? C.tint : C.textMuted} />
+                        <Text style={[T.tab, { fontFamily: on ? FONT.bodyBold : FONT.bodyMedium, color: on ? C.tint : C.textMuted }]}>
                             {tab.label}
                         </Text>
                     </AppPressable>

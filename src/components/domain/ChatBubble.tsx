@@ -7,7 +7,7 @@ import type { ChatMessage } from "../../types";
 // a tail on the outer corner, the way both platforms' native bubbles are
 // shaped, and the sender's name shown only on the first message of a run.
 export function ChatBubble({ message, mine, showName }: { message: ChatMessage; mine: boolean; showName: boolean }) {
-    const { C, R, S, T } = useTheme();
+    const { C, CTRL, RADII, S2, T } = useTheme();
 
     return (
         <View style={{ alignItems: mine ? "flex-end" : "flex-start", gap: 2 }}>
@@ -19,14 +19,14 @@ export function ChatBubble({ message, mine, showName }: { message: ChatMessage; 
             <View
                 style={{
                     maxWidth: "78%",
-                    paddingVertical: 9,
-                    paddingHorizontal: 13,
-                    borderRadius: R.lg,
+                    paddingVertical: S2.s10 - 1,
+                    paddingHorizontal: S2.s12 + 1,
+                    borderRadius: RADII.bubble,
                     borderCurve: "continuous",
-                    borderBottomRightRadius: mine ? 5 : R.lg,
-                    borderBottomLeftRadius: mine ? R.lg : 5,
+                    borderBottomRightRadius: mine ? CTRL.bubbleTail : RADII.bubble,
+                    borderBottomLeftRadius: mine ? RADII.bubble : CTRL.bubbleTail,
                     backgroundColor: mine ? C.tint : C.surface2,
-                    borderWidth: 1,
+                    borderWidth: CTRL.border.regular,
                     borderColor: mine ? "transparent" : C.border
                 }}
             >

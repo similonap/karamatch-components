@@ -33,7 +33,7 @@ export function ListRow({
     trailing?: ReactNode;
     last?: boolean;
 }) {
-    const { C, S, S2, T } = useTheme();
+    const { C, CTRL, S, S2, T } = useTheme();
 
     const body = (
         <View
@@ -41,10 +41,10 @@ export function ListRow({
                 flexDirection: "row",
                 alignItems: "center",
                 gap: S2.s12,
-                minHeight: 52,
-                paddingVertical: 10,
+                minHeight: CTRL.rowMinHeight,
+                paddingVertical: CTRL.rowPaddingY,
                 paddingHorizontal: S.md,
-                borderBottomWidth: last ? 0 : 1,
+                borderBottomWidth: last ? 0 : CTRL.border.hairline,
                 borderBottomColor: C.border
             }}
         >
@@ -78,7 +78,7 @@ export function ListRow({
         return body;
     }
     return (
-        <AppPressable onPress={onPress} scaleTo={1} opacityTo={0.6}>
+        <AppPressable onPress={onPress} press="row">
             {body}
         </AppPressable>
     );

@@ -5,7 +5,7 @@ import { Icon } from "../../icons/Icon";
 
 // Ported from karamatch-web/src/ui.tsx's `ErrorNote`.
 export function ErrorNote({ message }: { message: string }) {
-    const { C, R, S, T } = useTheme();
+    const { C, CTRL, RADII, S, S2, T } = useTheme();
     return (
         <View
             style={{
@@ -13,12 +13,12 @@ export function ErrorNote({ message }: { message: string }) {
                 alignItems: "center",
                 gap: S.sm,
                 backgroundColor: C.tintBg,
-                borderWidth: 1,
+                borderWidth: CTRL.border.regular,
                 borderColor: C.tintBorder,
-                borderRadius: R.md,
+                borderRadius: RADII.card,
                 borderCurve: "continuous",
-                paddingVertical: 10,
-                paddingHorizontal: 14
+                paddingVertical: S2.s10,
+                paddingHorizontal: CTRL.fieldPaddingX
             }}
         >
             <Icon name="info" size={16} color={C.tintSoft} />

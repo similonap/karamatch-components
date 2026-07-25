@@ -24,7 +24,7 @@ export function SongArt({
     gradient?: boolean;
     color?: string;
 }) {
-    const { C, GRAD, R } = useTheme();
+    const { C, GRAD, RADII } = useTheme();
     const [broken, setBroken] = useState(false);
     const showArt = coverArt && !broken;
 
@@ -33,7 +33,7 @@ export function SongArt({
             style={{
                 width: size,
                 height: size,
-                borderRadius: radius ?? R.sm,
+                borderRadius: radius ?? RADII.tile,
                 borderCurve: "continuous",
                 // react-native-web doesn't translate `experimental_backgroundImage` (a Fabric/native-only
                 // style prop name) into real CSS, so it silently no-ops there — `backgroundImage` is the

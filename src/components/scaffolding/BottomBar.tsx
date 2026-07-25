@@ -8,7 +8,7 @@ import { useTheme } from "../../theme/ThemeProvider";
 // device's real bottom inset instead of the web version's `LAYOUT.safeBottom`
 // constant.
 export function BottomBar({ children }: { children: React.ReactNode }) {
-    const { C, LAYOUT, S } = useTheme();
+    const { C, CTRL, LAYOUT, S } = useTheme();
     const insets = useSafeAreaInsets();
 
     return (
@@ -17,7 +17,7 @@ export function BottomBar({ children }: { children: React.ReactNode }) {
                 paddingHorizontal: LAYOUT.gutter,
                 paddingTop: S.md,
                 paddingBottom: insets.bottom + S.sm,
-                borderTopWidth: 1,
+                borderTopWidth: CTRL.border.hairline,
                 borderTopColor: C.border,
                 backgroundColor: C.surface,
                 gap: S.sm

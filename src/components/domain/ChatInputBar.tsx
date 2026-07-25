@@ -18,7 +18,7 @@ export function ChatInputBar({
     onSend: () => void;
     placeholder?: string;
 }) {
-    const { C, R, S, T } = useTheme();
+    const { C, CTRL, RADII, S, T } = useTheme();
     const canSend = value.trim().length > 0;
 
     return (
@@ -30,17 +30,17 @@ export function ChatInputBar({
                 placeholder={placeholder}
                 placeholderTextColor={C.textFaint}
                 style={[
-                    T.body,
+                    T.input,
                     {
                         flex: 1,
-                        height: 44,
-                        borderRadius: R.full,
+                        height: CTRL.searchHeight,
+                        borderRadius: Math.min(RADII.pill, CTRL.searchHeight / 2),
                         borderCurve: "continuous",
-                        borderWidth: 1,
+                        borderWidth: CTRL.border.regular,
                         borderColor: C.border,
                         backgroundColor: C.surface2,
                         color: C.text,
-                        paddingHorizontal: 16
+                        paddingHorizontal: CTRL.fieldPaddingX + 2
                     }
                 ]}
             />
@@ -48,11 +48,11 @@ export function ChatInputBar({
                 onPress={onSend}
                 disabled={!canSend}
                 accessibilityLabel="Send message"
-                scaleTo={0.9}
+                press="snap"
                 style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 22,
+                    width: CTRL.searchHeight,
+                    height: CTRL.searchHeight,
+                    borderRadius: Math.min(RADII.round, CTRL.searchHeight / 2),
                     alignItems: "center",
                     justifyContent: "center",
                     backgroundColor: canSend ? C.tint : C.surface3

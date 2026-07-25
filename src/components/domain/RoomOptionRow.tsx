@@ -9,25 +9,24 @@ import { AppPressable } from "../primitives/AppPressable";
 // row — name and seat count on the left, price/hr on the right, tinted when
 // selected.
 export function RoomOptionRow({ room, selected, onPress }: { room: Room; selected: boolean; onPress: () => void }) {
-    const { C, R, S, T } = useTheme();
+    const { C, CTRL, RADII, S, T } = useTheme();
 
     return (
         <AppPressable
             onPress={onPress}
-            scaleTo={0.99}
-            opacityTo={0.8}
+            press="surface"
             style={{
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
                 gap: S.sm,
-                minHeight: 58,
+                minHeight: CTRL.rowMinHeight,
                 paddingHorizontal: S.md,
-                borderRadius: R.md,
+                borderRadius: RADII.card,
                 borderCurve: "continuous",
-                borderWidth: 1,
-                borderColor: selected ? C.tintBorder : C.border,
-                backgroundColor: selected ? C.tintBg : C.surface1
+                borderWidth: CTRL.border.regular,
+                borderColor: selected ? C.selectBorder : C.border,
+                backgroundColor: selected ? C.selectBg : C.surface1
             }}
         >
             <View style={{ minWidth: 0 }}>

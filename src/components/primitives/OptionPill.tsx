@@ -19,30 +19,30 @@ export function OptionPill({
     onPress: () => void;
     disabled?: boolean;
 }) {
-    const { C, LAYOUT, R, T } = useTheme();
+    const { C, CTRL, LAYOUT, RADII, T } = useTheme();
 
     return (
         <AppPressable
             onPress={onPress}
             disabled={disabled}
-            scaleTo={0.96}
+            press="control"
             style={{
                 minHeight: LAYOUT.touch,
                 paddingVertical: 8,
-                paddingHorizontal: 14,
-                borderRadius: R.md,
+                paddingHorizontal: CTRL.fieldPaddingX,
+                borderRadius: Math.min(RADII.control, LAYOUT.touch / 2),
                 borderCurve: "continuous",
-                borderWidth: 1,
-                borderColor: selected ? C.tintBorder : C.border,
-                backgroundColor: selected ? C.tintBg : C.surface2,
+                borderWidth: CTRL.border.regular,
+                borderColor: selected ? C.selectBorder : C.border,
+                backgroundColor: selected ? C.selectBg : C.surface2,
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 1
             }}
         >
-            <Text style={[T.captionStrong, { color: selected ? C.tintSoft : C.textDim }]}>{label}</Text>
+            <Text style={[T.captionStrong, { color: selected ? C.selectText : C.textDim }]}>{label}</Text>
             {sub ? (
-                <Text style={[T.footnote, { fontSize: 10, opacity: 0.8, color: selected ? C.tintSoft : C.textDim }]}>
+                <Text style={[T.footnote, { fontSize: 10, opacity: 0.8, color: selected ? C.selectText : C.textDim }]}>
                     {sub}
                 </Text>
             ) : null}

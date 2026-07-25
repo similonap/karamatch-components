@@ -19,27 +19,27 @@ export function IconTile({
     selected: boolean;
     onPress: () => void;
 }) {
-    const { C, FONT, R, T } = useTheme();
+    const { C, CTRL, FONT, RADII, T } = useTheme();
 
     return (
         <AppPressable
             onPress={onPress}
-            scaleTo={0.97}
+            press="surface"
             style={{
                 flex: 1,
-                height: 62,
-                borderRadius: R.md,
+                height: CTRL.tileHeight,
+                borderRadius: RADII.plate,
                 borderCurve: "continuous",
-                borderWidth: 1,
-                borderColor: selected ? C.tintBorder : C.border,
-                backgroundColor: selected ? C.tintBg : C.surface1,
+                borderWidth: CTRL.border.regular,
+                borderColor: selected ? C.selectBorder : C.border,
+                backgroundColor: selected ? C.selectBg : C.surface1,
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 4
             }}
         >
-            <Icon name={icon} size={20} color={selected ? C.tintSoft : C.textDim} />
-            <Text style={[T.footnote, { fontFamily: FONT.bodyBold, color: selected ? C.tintSoft : C.textDim }]}>{label}</Text>
+            <Icon name={icon} size={20} color={selected ? C.selectText : C.textDim} />
+            <Text style={[T.footnote, { fontFamily: FONT.bodyBold, color: selected ? C.selectText : C.textDim }]}>{label}</Text>
         </AppPressable>
     );
 }

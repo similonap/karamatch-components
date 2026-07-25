@@ -22,7 +22,7 @@ export function IconButton({
     tone?: "plain" | "filled";
     size?: number;
 }) {
-    const { C, LAYOUT, R, T } = useTheme();
+    const { C, CTRL, LAYOUT, RADII, T } = useTheme();
     const resolvedSize = size ?? LAYOUT.touch;
 
     return (
@@ -32,12 +32,12 @@ export function IconButton({
             style={{
                 width: resolvedSize,
                 height: resolvedSize,
-                borderRadius: R.full,
+                borderRadius: Math.min(RADII.round, resolvedSize / 2),
                 borderCurve: "continuous",
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: tone === "filled" ? C.surface2 : "transparent",
-                borderWidth: tone === "filled" ? 1 : 0,
+                borderWidth: tone === "filled" ? CTRL.border.regular : 0,
                 borderColor: C.border
             }}
         >
@@ -50,12 +50,12 @@ export function IconButton({
                         right: 4,
                         minWidth: 17,
                         height: 17,
-                        borderRadius: R.full,
+                        borderRadius: Math.min(RADII.round, 8.5),
                         backgroundColor: C.tint,
                         alignItems: "center",
                         justifyContent: "center",
                         paddingHorizontal: 4,
-                        borderWidth: 2,
+                        borderWidth: CTRL.border.strong,
                         borderColor: C.surface
                     }}
                 >

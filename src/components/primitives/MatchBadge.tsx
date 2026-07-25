@@ -6,7 +6,7 @@ import { useTheme } from "../../theme/ThemeProvider";
 // as a compact pill, for singers listed in a row. Renders nothing when pct
 // is null (that singer is you).
 export function MatchBadge({ pct }: { pct: number | null | undefined }) {
-    const { C, R, T } = useTheme();
+    const { C, CTRL, RADII, T } = useTheme();
     if (pct === null || pct === undefined) {
         return null;
     }
@@ -15,16 +15,16 @@ export function MatchBadge({ pct }: { pct: number | null | undefined }) {
     return (
         <View
             style={{
-                borderRadius: R.sm,
+                borderRadius: RADII.chip,
                 borderCurve: "continuous",
-                paddingHorizontal: 8,
+                paddingHorizontal: CTRL.chipPaddingX - 2,
                 paddingVertical: 2,
-                borderWidth: 1,
+                borderWidth: CTRL.border.regular,
                 borderColor: strong ? C.tintBorder : C.border,
                 backgroundColor: strong ? C.tintBg : C.surface2
             }}
         >
-            <Text style={[T.footnote, { fontSize: 11, color: strong ? C.tintSoft : C.textMuted }]}>{pct}%</Text>
+            <Text style={[T.chip, { color: strong ? C.tintSoft : C.textMuted }]}>{pct}%</Text>
         </View>
     );
 }

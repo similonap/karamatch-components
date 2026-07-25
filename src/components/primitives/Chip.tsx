@@ -42,24 +42,34 @@ export function Chip({
     /** Trailing chevron, for a chip that opens something (e.g. a location picker). */
     chevron?: boolean;
 }) {
-    const { C, R, T } = useTheme();
-    const resolvedTone = selected ? "tint" : tone;
-    const iconColor = iconColorFor(C)[resolvedTone];
+    const { C, CTRL, RADII, T } = useTheme();
+    // A selected chip takes the theme's selection roles rather than the "tint"
+    // tone, so a theme that fills selections solid gets a solid chip.
+    const iconColor = selected ? C.selectText : iconColorFor(C)[tone];
 
     const body = (
         <View
             style={[
-                { flexDirection: "row", alignItems: "center", gap: 5, height: 26, paddingHorizontal: 10, borderRadius: R.sm, borderWidth: 1, borderCurve: "continuous" },
-                bodyStyleFor(C)[resolvedTone]
+                {
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: CTRL.chipGap,
+                    height: CTRL.chipHeight,
+                    paddingHorizontal: CTRL.chipPaddingX,
+                    borderRadius: Math.min(RADII.chip, CTRL.chipHeight / 2),
+                    borderWidth: CTRL.border.regular,
+                    borderCurve: "continuous"
+                },
+                selected ? { backgroundColor: C.selectBg, borderColor: C.selectBorder } : bodyStyleFor(C)[tone]
             ]}
         >
-            {icon ? <Icon name={icon} size={13} strokeWidth={2} color={iconColor} /> : null}
+            {icon ? <Icon name={icon} size={CTRL.chipIcon} color={iconColor} /> : null}
             {typeof label === "string" ? (
-                <Text style={[T.footnote, { color: iconColor, fontSize: 12 }]}>{label}</Text>
+                <Text style={[T.chip, { color: iconColor }]}>{label}</Text>
             ) : (
                 label
             )}
-            {chevron ? <Icon name="chevronRight" size={12} strokeWidth={2} color={iconColor} /> : null}
+            {chevron ? <Icon name="chevronRight" size={12} color={iconColor} /> : null}
         </View>
     );
 

@@ -1,5 +1,6 @@
 import Svg, { Path } from "react-native-svg";
 
+import { useTheme } from "../theme/ThemeProvider";
 import type { IconName } from "./types";
 
 // One stroked icon set, drawn on a 24px grid with round caps and a 1.75 stem,
@@ -66,7 +67,8 @@ export function Icon({
     size = 22,
     color,
     solid = false,
-    strokeWidth = 1.75
+    weight = "regular",
+    strokeWidth
 }: {
     name: IconName;
     size?: number;
@@ -78,9 +80,18 @@ export function Icon({
     color: string;
     /** Filled form, for a selected tab. Falls back to the outline if undrawn. */
     solid?: boolean;
+    /**
+     * `strong` for a glyph that carries its meaning alone (a ✓ in a check
+     * ring, a ✕ on a chip). Both weights come from the theme — a theme with a
+     * heavy hand (`DECOR.iconStroke`) thickens the whole icon set at once.
+     */
+    weight?: "regular" | "strong";
+    /** Escape hatch past the theme's stroke weights. */
     strokeWidth?: number;
 }) {
+    const { DECOR } = useTheme();
     const filled = solid ? SOLID[name] : undefined;
+    const stroke = strokeWidth ?? (weight === "strong" ? DECOR.iconStrokeStrong : DECOR.iconStroke);
 
     return (
         <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -88,7 +99,7 @@ export function Icon({
                 <Path d={filled} fill={color} />
             ) : (
                 PATHS[name].map(d => (
-                    <Path key={d} d={d} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+                    <Path key={d} d={d} stroke={color} strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round" />
                 ))
             )}
         </Svg>

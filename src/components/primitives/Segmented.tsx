@@ -14,18 +14,23 @@ export function Segmented<K extends string>({
     value: K;
     onChange: (key: K) => void;
 }) {
-    const { C, R, T } = useTheme();
+    const { C, CTRL, RADII, T } = useTheme();
+    const pad = CTRL.segmentPad;
+    const outer = Math.min(RADII.control, (CTRL.segmentHeight + pad * 2) / 2);
+    // The inner radius has to shrink by the padding, or a pill-shaped
+    // container ends up with square segments rattling around inside it.
+    const inner = Math.min(Math.max(outer - pad, 0), CTRL.segmentHeight / 2);
 
     return (
         <View
             style={{
                 flexDirection: "row",
                 backgroundColor: C.surface2,
-                borderWidth: 1,
+                borderWidth: CTRL.border.regular,
                 borderColor: C.border,
-                borderRadius: R.md,
+                borderRadius: outer,
                 borderCurve: "continuous",
-                padding: 3,
+                padding: pad,
                 gap: 2
             }}
         >
@@ -35,12 +40,11 @@ export function Segmented<K extends string>({
                     <AppPressable
                         key={item.key}
                         onPress={() => onChange(item.key)}
-                        scaleTo={1}
-                        opacityTo={0.8}
+                        press="row"
                         style={{
                             flex: 1,
-                            height: 34,
-                            borderRadius: R.sm,
+                            height: CTRL.segmentHeight,
+                            borderRadius: inner,
                             borderCurve: "continuous",
                             flexDirection: "row",
                             alignItems: "center",
@@ -53,7 +57,7 @@ export function Segmented<K extends string>({
                             {item.label}
                         </Text>
                         {item.dot ? (
-                            <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: C.tint }} />
+                            <View style={{ width: 6, height: 6, borderRadius: Math.min(RADII.round, 3), backgroundColor: C.tint }} />
                         ) : null}
                     </AppPressable>
                 );

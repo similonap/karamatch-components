@@ -19,19 +19,19 @@ export function AvatarPicker({
     onPress: () => void;
     size?: number;
 }) {
-    const { C } = useTheme();
+    const { C, CTRL, RADII } = useTheme();
     const badgeSize = Math.round(size * 0.31);
 
     return (
-        <AppPressable onPress={onPress} accessibilityLabel="Change profile photo" scaleTo={0.97} style={{ width: size, height: size }}>
+        <AppPressable onPress={onPress} accessibilityLabel="Change profile photo" press="surface" style={{ width: size, height: size }}>
             <View
                 style={{
                     width: size,
                     height: size,
-                    borderRadius: size / 2,
+                    borderRadius: Math.min(RADII.avatar, size / 2),
                     overflow: "hidden",
                     backgroundColor: C.surface2,
-                    borderWidth: 1,
+                    borderWidth: CTRL.border.regular,
                     borderColor: C.border,
                     alignItems: "center",
                     justifyContent: "center"
@@ -50,9 +50,9 @@ export function AvatarPicker({
                     right: 0,
                     width: badgeSize,
                     height: badgeSize,
-                    borderRadius: badgeSize / 2,
+                    borderRadius: Math.min(RADII.round, badgeSize / 2),
                     backgroundColor: C.tint,
-                    borderWidth: 2.5,
+                    borderWidth: CTRL.border.strong,
                     borderColor: C.surface,
                     alignItems: "center",
                     justifyContent: "center"

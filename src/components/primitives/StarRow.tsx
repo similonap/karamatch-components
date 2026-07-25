@@ -10,7 +10,7 @@ export function StarRow({ value, size = 13 }: { value: number; size?: number }) 
     return (
         <View style={{ flexDirection: "row", gap: 1 }} accessibilityLabel={value + " out of 5 stars"}>
             {[1, 2, 3, 4, 5].map(star => (
-                <StarIcon key={star} size={size} color={star <= value ? C.gold : C.surface3} />
+                <StarIcon key={star} size={size} color={star <= value ? C.gold : C.track} />
             ))}
         </View>
     );

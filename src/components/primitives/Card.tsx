@@ -19,12 +19,12 @@ export function Card({
     /** Tints the border, for the one card that deserves attention. */
     highlight?: boolean;
 }) {
-    const { C, R, S, SHADOW } = useTheme();
+    const { C, CTRL, RADII, S, SHADOW } = useTheme();
     const base: ViewStyle = {
         backgroundColor: C.surface1,
-        borderWidth: 1,
+        borderWidth: CTRL.border.regular,
         borderColor: highlight ? C.tintBorder : C.border,
-        borderRadius: R.lg,
+        borderRadius: RADII.card,
         borderCurve: "continuous",
         boxShadow: SHADOW.e1,
         padding: padded ? S.md : 0,
@@ -35,7 +35,7 @@ export function Card({
         return <View style={[base, style]}>{children}</View>;
     }
     return (
-        <AppPressable onPress={onPress} scaleTo={0.985} opacityTo={0.85} style={[base, style]}>
+        <AppPressable onPress={onPress} press="surface" style={[base, style]}>
             {children}
         </AppPressable>
     );

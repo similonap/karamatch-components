@@ -21,24 +21,23 @@ export function InviteFriendRow({
     selected: boolean;
     onToggle: () => void;
 }) {
-    const { C, R, S2, T } = useTheme();
+    const { C, CTRL, RADII, S2, T } = useTheme();
 
     return (
         <AppPressable
             onPress={onToggle}
-            scaleTo={0.99}
-            opacityTo={0.75}
+            press="surface"
             style={{
                 flexDirection: "row",
                 alignItems: "center",
                 gap: S2.s12,
-                paddingVertical: 10,
-                paddingHorizontal: 12,
-                borderRadius: R.md,
+                paddingVertical: CTRL.rowPaddingY,
+                paddingHorizontal: CTRL.rowPaddingX,
+                borderRadius: RADII.card,
                 borderCurve: "continuous",
-                borderWidth: 1,
-                borderColor: selected ? C.tintBorder : C.border,
-                backgroundColor: selected ? C.tintBg : C.surface1
+                borderWidth: CTRL.border.regular,
+                borderColor: selected ? C.selectBorder : C.border,
+                backgroundColor: selected ? C.selectBg : C.surface1
             }}
         >
             <Avatar name={friend.name} photoUrl={friend.photoUrl} seed={friend.id} size={42} />

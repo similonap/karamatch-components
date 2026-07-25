@@ -26,7 +26,7 @@ export function Screen({
     /** Scroll offset in px, for screens with a collapsing header. */
     onScroll?: (offset: number) => void;
 }) {
-    const { LAYOUT, S, S2 } = useTheme();
+    const { LAYOUT, S } = useTheme();
     const insets = useSafeAreaInsets();
 
     const handleScroll = onScroll
@@ -38,7 +38,7 @@ export function Screen({
             style={{ flex: 1 }}
             contentContainerStyle={[
                 {
-                    gap: gap ?? S2.s12,
+                    gap: gap ?? LAYOUT.screenGap,
                     paddingHorizontal: pad ? LAYOUT.gutter : 0,
                     paddingBottom: bottomPad ?? insets.bottom + S.md
                 },

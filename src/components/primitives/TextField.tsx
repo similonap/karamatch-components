@@ -27,11 +27,11 @@ export function TextField({
     multiline?: boolean;
     maxLength?: number;
 }) {
-    const { C, R, T } = useTheme();
+    const { C, CTRL, RADII, S2, T } = useTheme();
     const [focused, setFocused] = useState(false);
 
     return (
-        <View style={{ gap: 6 }}>
+        <View style={{ gap: S2.s6 }}>
             {label ? (
                 <Text style={[T.captionStrong, { color: C.textMuted, paddingLeft: 2 }]}>{label}</Text>
             ) : null}
@@ -51,18 +51,18 @@ export function TextField({
                 keyboardType={type === "email" ? "email-address" : "default"}
                 autoCapitalize={type === "email" ? "none" : "sentences"}
                 style={[
-                    T.body,
+                    T.input,
                     {
                         width: "100%",
-                        borderRadius: R.md,
+                        borderRadius: RADII.field,
                         borderCurve: "continuous",
-                        borderWidth: 1,
-                        borderColor: focused ? C.tintBorder : C.border,
+                        borderWidth: CTRL.border.regular,
+                        borderColor: focused ? C.focus : C.border,
                         backgroundColor: C.surface2,
                         color: C.text,
-                        paddingHorizontal: 14,
-                        paddingVertical: multiline ? 12 : 0,
-                        height: multiline ? 88 : 50,
+                        paddingHorizontal: CTRL.fieldPaddingX,
+                        paddingVertical: multiline ? S2.s12 : 0,
+                        height: multiline ? CTRL.fieldMultilineHeight : CTRL.fieldHeight,
                         textAlignVertical: multiline ? "top" : "center"
                     }
                 ]}

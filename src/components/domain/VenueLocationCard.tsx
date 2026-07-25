@@ -21,7 +21,7 @@ export function VenueLocationCard({
     lng: number;
     height?: number;
 }) {
-    const { C, R, S, T } = useTheme();
+    const { C, CTRL, RADII, S, S2, T } = useTheme();
 
     const openInMaps = () => {
         const label = encodeURIComponent(name);
@@ -34,7 +34,7 @@ export function VenueLocationCard({
     };
 
     return (
-        <AppPressable onPress={openInMaps} scaleTo={0.99} opacityTo={0.9}>
+        <AppPressable onPress={openInMaps} press="surface">
             <Card padded={false}>
                 <View
                     style={{
@@ -42,16 +42,16 @@ export function VenueLocationCard({
                         backgroundColor: C.surface3,
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: 6
+                        gap: S2.s6
                     }}
                 >
                     <View
                         style={{
                             width: 34,
                             height: 34,
-                            borderRadius: 17,
+                            borderRadius: Math.min(RADII.round, 17),
                             backgroundColor: C.tintBg,
-                            borderWidth: 1,
+                            borderWidth: CTRL.border.regular,
                             borderColor: C.tintBorder,
                             alignItems: "center",
                             justifyContent: "center"
@@ -63,13 +63,13 @@ export function VenueLocationCard({
                         {lat.toFixed(4)}, {lng.toFixed(4)}
                     </Text>
                 </View>
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: S.sm, borderTopWidth: 1, borderTopColor: C.border }}>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: S.sm, borderTopWidth: CTRL.border.hairline, borderTopColor: C.border }}>
                     <Text style={[T.captionStrong, { color: C.text, flexShrink: 1 }]} numberOfLines={1}>
                         {name}
                     </Text>
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
                         <Text style={[T.captionStrong, { color: C.tintSoft }]}>Open in Maps</Text>
-                        <Icon name="chevronRight" size={14} strokeWidth={2.2} color={C.tintSoft} />
+                        <Icon name="chevronRight" size={14} weight="strong" color={C.tintSoft} />
                     </View>
                 </View>
             </Card>

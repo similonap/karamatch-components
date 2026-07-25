@@ -15,7 +15,7 @@ export function SearchField({
     onChange: (value: string) => void;
     placeholder?: string;
 }) {
-    const { C, R, T } = useTheme();
+    const { C, CTRL, RADII, T } = useTheme();
 
     return (
         <View
@@ -23,13 +23,13 @@ export function SearchField({
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 8,
-                height: 44,
-                paddingLeft: 12,
-                paddingRight: 10,
-                borderRadius: R.md,
+                height: CTRL.searchHeight,
+                paddingLeft: CTRL.fieldPaddingX,
+                paddingRight: CTRL.fieldPaddingX - 4,
+                borderRadius: Math.min(RADII.field, CTRL.searchHeight / 2),
                 borderCurve: "continuous",
                 backgroundColor: C.surface2,
-                borderWidth: 1,
+                borderWidth: CTRL.border.regular,
                 borderColor: C.border
             }}
         >
@@ -39,15 +39,15 @@ export function SearchField({
                 onChangeText={onChange}
                 placeholder={placeholder}
                 placeholderTextColor={C.textFaint}
-                style={[T.body, { flex: 1, color: C.text, padding: 0 }]}
+                style={[T.input, { flex: 1, color: C.text, padding: 0 }]}
             />
             {value ? (
                 <AppPressable
                     onPress={() => onChange("")}
                     accessibilityLabel="Clear search"
-                    style={{ width: 28, height: 28, alignItems: "center", justifyContent: "center", borderRadius: R.full }}
+                    style={{ width: 28, height: 28, alignItems: "center", justifyContent: "center", borderRadius: Math.min(RADII.round, 14) }}
                 >
-                    <Icon name="close" size={15} strokeWidth={2.2} color={C.textFaint} />
+                    <Icon name="close" size={15} weight="strong" color={C.textFaint} />
                 </AppPressable>
             ) : null}
         </View>

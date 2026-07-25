@@ -9,7 +9,7 @@ export function Rating({ value, size = 13, showValue = true }: { value: number; 
     return (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
             <StarIcon size={size} color={C.gold} />
-            {showValue ? <Text style={[T.footnote, { fontSize: 12, color: C.gold }]}>{value.toFixed(1)}</Text> : null}
+            {showValue ? <Text style={[T.chip, { color: C.gold }]}>{value.toFixed(1)}</Text> : null}
         </View>
     );
 }

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Text, View } from "react-native";
 
 import { AppBar } from "./components/scaffolding/AppBar";
+import { Section } from "./components/primitives/Section";
+import { Segmented } from "./components/primitives/Segmented";
 import { BottomBar } from "./components/scaffolding/BottomBar";
 import { Screen } from "./components/scaffolding/Screen";
 import { Button } from "./components/primitives/Button";
@@ -34,7 +36,37 @@ function VenueListScreen({ onOpen }: { onOpen: () => void }) {
             <AppBar title="Karaoke near you" large />
             <Screen>
                 <VenueCard venue={MOCK_VENUE} onPress={onOpen} />
+                <AppearancePicker />
             </Screen>
+        </>
+    );
+}
+
+// Also here to prove a point: switching theme is two calls off `useTheme()`,
+// and every component above restyles itself with no other wiring.
+function AppearancePicker() {
+    const { themeName, themes, setTheme, mode, setMode } = useTheme();
+
+    return (
+        <>
+            <Section title="Theme">
+                <Segmented
+                    items={themes.map(entry => ({ key: entry.name, label: entry.label.split(" ")[0] }))}
+                    value={themeName}
+                    onChange={setTheme}
+                />
+            </Section>
+            <Section title="Appearance">
+                <Segmented
+                    items={[
+                        { key: "system" as const, label: "System" },
+                        { key: "dark" as const, label: "Dark" },
+                        { key: "light" as const, label: "Light" }
+                    ]}
+                    value={mode}
+                    onChange={setMode}
+                />
+            </Section>
         </>
     );
 }

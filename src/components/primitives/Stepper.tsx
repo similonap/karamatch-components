@@ -20,7 +20,7 @@ export function Stepper({
     onChange: (value: number) => void;
     suffix?: string;
 }) {
-    const { C, FONT, LAYOUT, R, S2, T } = useTheme();
+    const { C, CTRL, LAYOUT, RADII, S2, T } = useTheme();
 
     const step = (delta: number) => onChange(Math.min(max, Math.max(min, value + delta)));
 
@@ -29,20 +29,20 @@ export function Stepper({
             onPress={() => step(delta)}
             disabled={off}
             accessibilityLabel={label}
-            scaleTo={0.9}
+            press="snap"
             style={{
                 width: LAYOUT.touch,
                 height: LAYOUT.touch,
-                borderRadius: R.md,
+                borderRadius: Math.min(RADII.control, LAYOUT.touch / 2),
                 borderCurve: "continuous",
-                borderWidth: 1,
+                borderWidth: CTRL.border.regular,
                 borderColor: C.border,
                 backgroundColor: C.surface2,
                 alignItems: "center",
                 justifyContent: "center"
             }}
         >
-            <Icon name={icon} size={18} strokeWidth={2.4} color={C.text} />
+            <Icon name={icon} size={18} weight="strong" color={C.text} />
         </AppPressable>
     );
 
@@ -50,7 +50,7 @@ export function Stepper({
         <View style={{ flexDirection: "row", alignItems: "center", gap: S2.s12 }}>
             {control("Decrease", "minus", -1, value <= min)}
             <View style={{ flexDirection: "row", alignItems: "baseline", gap: 4, minWidth: 52, justifyContent: "center" }}>
-                <Text style={{ fontFamily: FONT.displayBold, fontSize: 20, color: C.text }}>{value}</Text>
+                <Text style={[T.numeric, { color: C.text }]}>{value}</Text>
                 {suffix ? <Text style={[T.footnote, { color: C.textMuted }]}>{suffix}</Text> : null}
             </View>
             {control("Increase", "plus", 1, value >= max)}

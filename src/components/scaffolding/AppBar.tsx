@@ -28,7 +28,7 @@ export function AppBar({
     subtitle?: string;
     bordered?: boolean;
 }) {
-    const { C, LAYOUT, R, S, T } = useTheme();
+    const { C, CTRL, DECOR, LAYOUT, RADII, S, T } = useTheme();
     const insets = useSafeAreaInsets();
 
     return (
@@ -42,7 +42,7 @@ export function AppBar({
                     gap: S.sm,
                     paddingLeft: onBack ? 4 : LAYOUT.gutter,
                     paddingRight: S.sm,
-                    borderBottomWidth: bordered && !large ? 1 : 0,
+                    borderBottomWidth: bordered && !large && DECOR.appBarBorder ? CTRL.border.hairline : 0,
                     borderBottomColor: C.border
                 }}
             >
@@ -55,10 +55,10 @@ export function AppBar({
                             height: LAYOUT.touch,
                             alignItems: "center",
                             justifyContent: "center",
-                            borderRadius: R.full
+                            borderRadius: Math.min(RADII.round, LAYOUT.touch / 2)
                         }}
                     >
-                        <Icon name="chevronLeft" size={24} strokeWidth={2} color={C.text} />
+                        <Icon name="chevronLeft" size={24} weight="strong" color={C.text} />
                     </AppPressable>
                 ) : null}
 

@@ -18,17 +18,17 @@ export function EmptyState({
     body?: string;
     action?: ReactNode;
 }) {
-    const { C, R, S, T } = useTheme();
+    const { C, CTRL, RADII, S, T } = useTheme();
     return (
         <View style={{ alignItems: "center", justifyContent: "center", gap: S.sm, paddingVertical: S.xl, paddingHorizontal: S.lg }}>
             <View
                 style={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: R.lg,
+                    width: CTRL.plateSize,
+                    height: CTRL.plateSize,
+                    borderRadius: RADII.plate,
                     borderCurve: "continuous",
                     backgroundColor: C.surface2,
-                    borderWidth: 1,
+                    borderWidth: CTRL.border.regular,
                     borderColor: C.border,
                     alignItems: "center",
                     justifyContent: "center",

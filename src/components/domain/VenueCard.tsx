@@ -13,7 +13,7 @@ import { Rating } from "../primitives/Rating";
 // card — a 124px photo (distance badge riding on top-left) over a name /
 // rating line and a rooms · from-price line.
 export function VenueCard({ venue, onPress }: { venue: VenueNearby; onPress?: () => void }) {
-    const { C, R, S, S2, T } = useTheme();
+    const { C, CTRL, RADII, S, S2, T } = useTheme();
     const [broken, setBroken] = useState(false);
     const showPhoto = venue.imageUrl && !broken;
 
@@ -41,13 +41,13 @@ export function VenueCard({ venue, onPress }: { venue: VenueNearby; onPress?: ()
                         alignItems: "center",
                         gap: 4,
                         height: 24,
-                        paddingHorizontal: 8,
-                        borderRadius: R.sm,
-                        backgroundColor: "rgba(7,4,13,0.72)"
+                        paddingHorizontal: CTRL.chipPaddingX - 2,
+                        borderRadius: Math.min(RADII.chip, 12),
+                        backgroundColor: C.overlay
                     }}
                 >
-                    <Icon name="pin" size={12} strokeWidth={2} color="#fff" />
-                    <Text style={[T.footnote, { fontSize: 11, color: "#fff" }]}>{venue.distanceKm} km</Text>
+                    <Icon name="pin" size={12} color={C.onOverlay} />
+                    <Text style={[T.chip, { color: C.onOverlay }]}>{venue.distanceKm} km</Text>
                 </View>
             </View>
 
@@ -61,7 +61,7 @@ export function VenueCard({ venue, onPress }: { venue: VenueNearby; onPress?: ()
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: S.sm }}>
                     <Text style={[T.caption, { color: C.textMuted }]}>{plural(venue.rooms.length, "room", "rooms")}</Text>
-                    <View style={{ width: 3, height: 3, borderRadius: 1.5, backgroundColor: C.textFaint }} />
+                    <View style={{ width: 3, height: 3, borderRadius: Math.min(RADII.round, 1.5), backgroundColor: C.textFaint }} />
                     <Text style={[T.caption, { color: C.cyan }]}>from {money(venue.fromPrice)}/hr</Text>
                 </View>
             </View>

@@ -7,7 +7,7 @@ import { useTheme } from "../../theme/ThemeProvider";
 // hand-rolled absolutely-positioned overlay; RN uses a real, transparent,
 // fade `<Modal>` instead, which is why this needs an explicit `visible`.
 export function Toast({ message, visible = true }: { message: string; visible?: boolean }) {
-    const { C, LAYOUT, R, S, SHADOW, T } = useTheme();
+    const { C, CTRL, LAYOUT, RADII, S, S2, SHADOW, T } = useTheme();
     const insets = useSafeAreaInsets();
 
     return (
@@ -25,12 +25,12 @@ export function Toast({ message, visible = true }: { message: string; visible?: 
                     accessibilityRole="alert"
                     style={{
                         backgroundColor: C.surface3,
-                        borderWidth: 1,
+                        borderWidth: CTRL.border.regular,
                         borderColor: C.borderStrong,
-                        borderRadius: R.md,
+                        borderRadius: RADII.sheet,
                         borderCurve: "continuous",
-                        paddingVertical: 12,
-                        paddingHorizontal: 16,
+                        paddingVertical: S2.s12,
+                        paddingHorizontal: S.md,
                         boxShadow: SHADOW.e2
                     }}
                 >

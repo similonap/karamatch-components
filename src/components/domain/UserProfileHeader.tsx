@@ -11,7 +11,7 @@ import { Avatar } from "../primitives/Avatar";
 // taste match when the profile isn't your own) that reads as one strip
 // rather than three floating cards.
 export function UserProfileHeader({ user }: { user: UserProfile }) {
-    const { C, R, S, T } = useTheme();
+    const { C, CTRL, RADII, S, T } = useTheme();
 
     return (
         <View style={{ gap: S.lg }}>
@@ -26,7 +26,17 @@ export function UserProfileHeader({ user }: { user: UserProfile }) {
                 ) : null}
             </View>
 
-            <View style={{ flexDirection: "row", backgroundColor: C.surface1, borderWidth: 1, borderColor: C.border, borderRadius: R.lg, borderCurve: "continuous", overflow: "hidden" }}>
+            <View
+                style={{
+                    flexDirection: "row",
+                    backgroundColor: C.surface1,
+                    borderWidth: CTRL.border.regular,
+                    borderColor: C.border,
+                    borderRadius: RADII.card,
+                    borderCurve: "continuous",
+                    overflow: "hidden"
+                }}
+            >
                 <Stat label="rating" value={user.singerRating.toFixed(1)} icon={<StarIcon size={13} color={C.gold} />} color={C.gold} />
                 <Stat label={user.eventsCount === 1 ? "night out" : "nights out"} value={String(user.eventsCount)} last={user.matchPct === null} />
                 {user.matchPct !== null ? <Stat label="taste match" value={user.matchPct + "%"} color={C.tintSoft} last /> : null}
@@ -36,7 +46,7 @@ export function UserProfileHeader({ user }: { user: UserProfile }) {
 }
 
 function Stat({ label, value, color, icon, last }: { label: string; value: string; color?: string; icon?: ReactNode; last?: boolean }) {
-    const { C, S, S2, T } = useTheme();
+    const { C, CTRL, S, S2, T } = useTheme();
     return (
         <View
             style={{
@@ -44,7 +54,7 @@ function Stat({ label, value, color, icon, last }: { label: string; value: strin
                 paddingVertical: S2.s12,
                 paddingHorizontal: S.sm,
                 alignItems: "center",
-                borderRightWidth: last ? 0 : 1,
+                borderRightWidth: last ? 0 : CTRL.border.hairline,
                 borderRightColor: C.border
             }}
         >

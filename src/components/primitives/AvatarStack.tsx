@@ -14,7 +14,8 @@ export function AvatarStack({
     max?: number;
     size?: number;
 }) {
-    const { C } = useTheme();
+    const { C, CTRL, FONT, RADII } = useTheme();
+    const ring = "0 0 0 " + CTRL.avatarRing + "px ";
     const shown = people.slice(0, max);
     const extra = people.length - shown.length;
 
@@ -25,8 +26,8 @@ export function AvatarStack({
                     key={person.id ?? person.name + index}
                     style={{
                         marginLeft: index === 0 ? 0 : -size * 0.32,
-                        borderRadius: size / 2,
-                        boxShadow: "0 0 0 2px " + C.surface1,
+                        borderRadius: Math.min(RADII.avatar, size / 2),
+                        boxShadow: ring + C.surface1,
                         zIndex: shown.length - index
                     }}
                 >
@@ -39,14 +40,14 @@ export function AvatarStack({
                         marginLeft: -size * 0.32,
                         width: size,
                         height: size,
-                        borderRadius: size / 2,
+                        borderRadius: Math.min(RADII.avatar, size / 2),
                         backgroundColor: C.surface3,
                         alignItems: "center",
                         justifyContent: "center",
-                        boxShadow: "0 0 0 2px " + C.surface1
+                        boxShadow: ring + C.surface1
                     }}
                 >
-                    <Text style={{ fontSize: Math.round(size * 0.34), fontWeight: "700", color: C.textDim }}>+{extra}</Text>
+                    <Text style={{ fontFamily: FONT.bodyBold, fontSize: Math.round(size * 0.34), color: C.textDim }}>+{extra}</Text>
                 </View>
             ) : null}
         </View>

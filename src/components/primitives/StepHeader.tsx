@@ -18,9 +18,9 @@ export function StepHeader({
     subtitle?: string;
     trailing?: ReactNode;
 }) {
-    const { C, T } = useTheme();
+    const { C, CTRL, RADII, S2, T } = useTheme();
     return (
-        <View style={{ gap: 10 }}>
+        <View style={{ gap: S2.s10 }}>
             <View
                 style={{ flexDirection: "row", gap: 4 }}
                 accessibilityRole="progressbar"
@@ -29,7 +29,12 @@ export function StepHeader({
                 {Array.from({ length: total }, (_, index) => (
                     <View
                         key={index}
-                        style={{ flex: 1, height: 3, borderRadius: 2, backgroundColor: index < step ? C.tint : C.surface3 }}
+                        style={{
+                            flex: 1,
+                            height: CTRL.trackHeight,
+                            borderRadius: RADII.track,
+                            backgroundColor: index < step ? C.tint : C.track
+                        }}
                     />
                 ))}
             </View>
