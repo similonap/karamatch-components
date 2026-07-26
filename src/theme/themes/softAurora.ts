@@ -1,7 +1,7 @@
 import { createTheme } from "../createTheme";
 
 // ── Soft Aurora ────────────────────────────────────────────────────────────
-// The opposite end of every dial from Paper Press: pillowy, pastel and
+// The other end of every dial from the default: pillowy, pastel and
 // unhurried. Periwinkle→blossom gradients, diffuse coloured shadows, and
 // Quicksand over Nunito — two rounded-terminal typefaces with no corners in
 // them at all.
@@ -122,12 +122,15 @@ export const softAurora = createTheme({
 
                 text: "#2b2450",
                 textDim: "#5b5285",
-                textMuted: "#8a82ab",
-                textFaint: "#b3accd",
+                // Pastel palettes tempt you into pale grey-violet text. These
+                // are pitched to clear 4.5:1 on `surface2`, the palest ground
+                // any of them can land on.
+                textMuted: "#66608c",
+                textFaint: "#918ab0",
                 onTint: "#ffffff",
 
                 tint: "#7b6cf6",
-                tintSoft: "#6354e0",
+                tintSoft: "#5a4ad2",
                 tintPale: "#a79bff",
                 tintBg: "rgba(123, 108, 246, 0.1)",
                 tintBorder: "rgba(123, 108, 246, 0.28)",
@@ -135,26 +138,27 @@ export const softAurora = createTheme({
 
                 purple: "#a06cf6",
                 violet: "#8b5cf6",
-                cyan: "#3aa9bd",
+                cyan: "#1c7887",
                 cyanBg: "rgba(58, 169, 189, 0.12)",
                 cyanBorder: "rgba(58, 169, 189, 0.3)",
-                green: "#2fa37c",
-                gold: "#cf8a20",
+                green: "#1f7d5e",
+                gold: "#8a6212",
 
-                danger: "#e05477",
+                danger: "#b52c53",
                 dangerBg: "rgba(224, 84, 119, 0.12)",
                 dangerBorder: "rgba(224, 84, 119, 0.3)",
 
-                scrim: "rgba(43, 36, 80, 0.35)",
+                scrim: "rgba(43, 36, 80, 0.4)",
                 skeleton: "#ebe8fa",
 
                 selectBg: "rgba(123, 108, 246, 0.12)",
                 selectBorder: "rgba(123, 108, 246, 0.45)",
-                selectText: "#6354e0",
+                selectText: "#5343c5",
+                selectTextDim: "#66608c",
                 focus: "rgba(123, 108, 246, 0.5)",
                 knob: "#ffffff",
                 onAvatar: "#2b2450",
-                overlay: "rgba(43, 36, 80, 0.5)",
+                overlay: "rgba(43, 36, 80, 0.66)",
                 onOverlay: "#ffffff",
                 track: "#e7e4fb"
             },
@@ -213,6 +217,7 @@ export const softAurora = createTheme({
                 selectBg: "rgba(169, 155, 255, 0.18)",
                 selectBorder: "rgba(169, 155, 255, 0.45)",
                 selectText: "#c0b5ff",
+                selectTextDim: "#aca4d6",
                 focus: "rgba(169, 155, 255, 0.55)",
                 knob: "#ffffff",
                 onAvatar: "#241c4a",

@@ -43,6 +43,10 @@ export function Toggle({ on, onChange, label }: { on: boolean; onChange: (on: bo
                     height: thumb,
                     borderRadius: Math.min(RADII.round, thumb / 2),
                     backgroundColor: C.knob,
+                    // A hairline as well as the shadow: a theme with no
+                    // elevation still needs the knob to read against the track.
+                    borderWidth: CTRL.border.hairline,
+                    borderColor: C.border,
                     position: "absolute",
                     top: inset,
                     left: inset,

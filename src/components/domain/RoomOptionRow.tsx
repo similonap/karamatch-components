@@ -10,6 +10,9 @@ import { AppPressable } from "../primitives/AppPressable";
 // selected.
 export function RoomOptionRow({ room, selected, onPress }: { room: Room; selected: boolean; onPress: () => void }) {
     const { C, CTRL, RADII, S, T } = useTheme();
+    // A theme may fill a selected row solid, so the text inside takes the
+    // palette's selection colours rather than the surface ones.
+    const dim = selected ? C.selectTextDim : C.textMuted;
 
     return (
         <AppPressable
@@ -30,10 +33,12 @@ export function RoomOptionRow({ room, selected, onPress }: { room: Room; selecte
             }}
         >
             <View style={{ minWidth: 0 }}>
-                <Text style={[T.bodyStrong, { color: C.text }]}>{room.name}</Text>
-                <Text style={[T.footnote, { color: C.textMuted }]}>{room.seats} seats</Text>
+                <Text style={[T.bodyStrong, { color: selected ? C.selectText : C.text }]}>{room.name}</Text>
+                <Text style={[T.footnote, { color: dim }]}>{room.seats} seats</Text>
             </View>
-            <Text style={[T.captionStrong, { color: C.cyan, flexShrink: 0 }]}>{money(room.pricePerHour)}/hr</Text>
+            <Text style={[T.captionStrong, { color: selected ? C.selectText : C.cyan, flexShrink: 0 }]}>
+                {money(room.pricePerHour)}/hr
+            </Text>
         </AppPressable>
     );
 }

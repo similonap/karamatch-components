@@ -46,8 +46,8 @@ export const Default: Story = {
 };
 
 // How far each role dips is the theme's call, not this component's — the same
-// six rows feel completely different under Paper Press (no scale at all) and
-// Soft Aurora (deep, slow squash).
+// six rows feel completely different under Neon Nights (a tight, quick dip),
+// Soft Aurora (a deep, slow squash) and Wireframe (no scale at all).
 export const PressRoles: Story = {
     render: args => {
         const { C, MOTION, S, T } = useTheme();

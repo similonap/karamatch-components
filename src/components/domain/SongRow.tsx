@@ -30,10 +30,10 @@ export function SongRow({ song, selected, onToggle }: { song: Song; selected: bo
         >
             <SongArt coverArt={song.coverArt} gradient={selected} color={selected ? C.onTint : C.textFaint} />
             <View style={{ flex: 1, minWidth: 0 }}>
-                <Text style={[T.bodyStrong, { color: C.text }]} numberOfLines={1}>
+                <Text style={[T.bodyStrong, { color: selected ? C.selectText : C.text }]} numberOfLines={1}>
                     {song.title}
                 </Text>
-                <Text style={[T.caption, { color: C.textMuted }]} numberOfLines={1}>
+                <Text style={[T.caption, { color: selected ? C.selectTextDim : C.textMuted }]} numberOfLines={1}>
                     {song.artist}
                 </Text>
             </View>

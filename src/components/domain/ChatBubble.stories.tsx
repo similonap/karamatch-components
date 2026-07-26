@@ -5,35 +5,38 @@ import { useTheme } from "../../theme/ThemeProvider";
 import { MOCK_CHAT_MESSAGE, MOCK_USER } from "../../mocks/data";
 import { ChatBubble } from "./ChatBubble";
 
+// The padded backdrop is a `decorator`, not a per-story `render`: a story that
+// only overrides `args` falls back to Storybook's default renderer, which
+// renders the bare component and silently drops whatever framing a sibling
+// story set up inside its own `render`.
+function Backdrop({ children }: { children: React.ReactNode }) {
+    const { C, S } = useTheme();
+    return <View style={{ padding: S.lg, backgroundColor: C.surface }}>{children}</View>;
+}
+
 const meta: Meta<typeof ChatBubble> = {
     title: "Domain/ChatBubble",
     component: ChatBubble,
+    decorators: [Story => <Backdrop><Story /></Backdrop>],
     args: { message: MOCK_CHAT_MESSAGE, mine: false, showName: true }
 };
 
 export default meta;
 type Story = StoryObj<typeof ChatBubble>;
 
-export const Theirs: Story = {
-    render: args => {
-        const { C } = useTheme();
-        return (
-            <View style={{ padding: 24, backgroundColor: C.surface }}>
-                <ChatBubble {...args} />
-            </View>
-        );
-    }
-};
+export const Theirs: Story = {};
 
 export const Mine: Story = {
     args: { message: { ...MOCK_CHAT_MESSAGE, userId: MOCK_USER.id, from: MOCK_USER, text: "Sounds good, see you there!" }, mine: true }
 };
 
+// Composes several bubbles, so it keeps a `render` — but only for the
+// composition; the backdrop still comes from the decorator.
 export const Conversation: Story = {
     render: () => {
-        const { C, S } = useTheme();
+        const { S } = useTheme();
         return (
-            <View style={{ padding: 24, backgroundColor: C.surface, gap: S.xs }}>
+            <View style={{ gap: S.xs }}>
                 <ChatBubble message={MOCK_CHAT_MESSAGE} mine={false} showName />
                 <ChatBubble
                     message={{ ...MOCK_CHAT_MESSAGE, id: "m2", text: "Perfect, I'll bring the setlist." }}

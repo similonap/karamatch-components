@@ -79,18 +79,18 @@ and go.
 
 ## 4. Theming
 
-Three themes ship with the shelf, and each one supports dark **and** light:
+Three themes ship with the shelf, and all of them support dark **and** light:
 
 | Theme | `name` | Look |
 | --- | --- | --- |
 | Neon Nights (default) | `neon-nights` | Near-black violet, hot pink→purple gradient, Unbounded + Outfit |
-| Paper Press | `paper-press` | Cream stock, ink rules, hard offset shadows, square everything, Fraunces + IBM Plex Mono |
 | Soft Aurora | `soft-aurora` | Pastel pills, big soft glows, roomy controls, Quicksand + Nunito |
+| Wireframe | `wireframe` | Greyscale lo-fi sketch: hairline outlines, no colour, no shadows, no motion, Inter |
 
 Pick one, and switch appearance separately:
 
 ```tsx
-<ThemeProvider theme="paper-press" initialMode="light">
+<ThemeProvider theme="soft-aurora" initialMode="light">
   <Stack />
 </ThemeProvider>
 ```
@@ -121,10 +121,10 @@ Install the packages for the theme(s) you use and load them once at the root:
 ```sh
 # neon-nights (default)
 npx expo install @expo-google-fonts/unbounded @expo-google-fonts/outfit
-# paper-press
-npx expo install @expo-google-fonts/fraunces @expo-google-fonts/ibm-plex-mono
 # soft-aurora
 npx expo install @expo-google-fonts/quicksand @expo-google-fonts/nunito
+# wireframe
+npx expo install @expo-google-fonts/inter
 ```
 
 ```tsx
@@ -137,8 +137,8 @@ if (!fontsLoaded) return null;
 ```
 
 Weights per theme: `neon-nights` — Unbounded 700/800 + Outfit 400/500/700/800 ·
-`paper-press` — Fraunces 700/900 + IBM Plex Mono 400/500/600/700 ·
-`soft-aurora` — Quicksand 600/700 + Nunito 400/500/700/800.
+`soft-aurora` — Quicksand 600/700 + Nunito 400/500/700/800 ·
+`wireframe` — Inter 400/500/600/700.
 
 ### Writing your own theme
 
@@ -172,6 +172,11 @@ export const myBrand = createTheme({
 </ThemeProvider>
 ```
 
+Everything the shelf draws with is a token, so a theme can go a long way past a
+recolour: `soft-aurora` reshapes every control into a pill, grows the control
+heights, swaps both typefaces and slows every press down, while `wireframe`
+removes hue, elevation and animation altogether — neither touches a component.
+
 Define only one scheme and the theme stays on it, ignoring the light/dark
 switch. Pass a `createTheme()` object straight to `theme=` for a one-off.
 
@@ -196,3 +201,21 @@ component hardcodes a colour, radius, border width, duration or stroke.
 The defaults live in `theme/tokens.ts` and `theme/colors.ts`, and the default
 theme is deliberately an empty spec (`theme/themes/neonNights.ts`) — so those
 files double as the reference for what each token means.
+
+### Checking a theme is legible
+
+A palette of *roles* only works if each role reads against the role underneath
+it, and that's easy to get wrong — a `selectText` that's fine over a tint wash
+disappears the moment a theme fills `selectBg` solid. `npm run check:contrast`
+measures every foreground/background pair the components actually draw, for
+every registered theme in both schemes, compositing translucent tokens over the
+surface beneath them:
+
+```sh
+npm run check:contrast
+# wireframe      light  30/30 pairs pass
+```
+
+It exits non-zero on anything below threshold (WCAG AA where it applies: 4.5
+for body text, 3.0 for large/bold text and meaningful glyphs), so a new theme
+can't ship invisible text. Run it after adding or repitching a palette.

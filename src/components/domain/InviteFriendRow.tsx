@@ -22,6 +22,9 @@ export function InviteFriendRow({
     onToggle: () => void;
 }) {
     const { C, CTRL, RADII, S2, T } = useTheme();
+    // A theme may fill a selected row solid, so everything inside it has to
+    // ask the palette what "on a selection" reads as — see C.selectText.
+    const dim = selected ? C.selectTextDim : C.textMuted;
 
     return (
         <AppPressable
@@ -42,11 +45,11 @@ export function InviteFriendRow({
         >
             <Avatar name={friend.name} photoUrl={friend.photoUrl} seed={friend.id} size={42} />
             <View style={{ flex: 1, minWidth: 0 }}>
-                <Text style={[T.bodyStrong, { color: C.text }]}>{friend.name}</Text>
+                <Text style={[T.bodyStrong, { color: selected ? C.selectText : C.text }]}>{friend.name}</Text>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-                    <Text style={[T.caption, { color: C.textMuted }]}>@{friend.username}</Text>
-                    <StarIcon size={10} color={C.gold} />
-                    <Text style={[T.caption, { color: C.textMuted }]}>{friend.singerRating.toFixed(1)}</Text>
+                    <Text style={[T.caption, { color: dim }]}>@{friend.username}</Text>
+                    <StarIcon size={10} color={selected ? C.selectTextDim : C.gold} />
+                    <Text style={[T.caption, { color: dim }]}>{friend.singerRating.toFixed(1)}</Text>
                 </View>
             </View>
             <MatchBadge pct={friend.matchPct} />

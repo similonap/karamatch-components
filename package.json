@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
-    "@expo-google-fonts/fraunces": "^0.4.1",
-    "@expo-google-fonts/ibm-plex-mono": "^0.4.1",
+    "@expo-google-fonts/inter": "^0.4.2",
     "@expo-google-fonts/nunito": "^0.4.2",
     "@expo-google-fonts/outfit": "^0.4.3",
     "@expo-google-fonts/quicksand": "^0.4.1",
@@ -48,6 +47,7 @@
     "storybook:ios": "expo start --ios",
     "storybook:android": "expo start --android",
     "build:registry": "node scripts/build-registry.js",
+    "check:contrast": "node scripts/check-contrast.js",
     "build:web": "sb-rn-get-stories && expo export --platform web"
   },
   "private": true

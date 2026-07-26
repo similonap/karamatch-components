@@ -52,13 +52,19 @@ export interface Palette {
     // Everything above is a colour the web app named; everything below is a
     // *job* a component needs done, which the default theme happens to do
     // with one of the colours above. Separating them is what lets a theme
-    // make selection a solid ink fill (Paper Press) rather than a tint wash,
-    // without every component growing a branch.
+    // fill a selected row solid rather than washing it with tint, without
+    // every component growing a branch.
 
-    /** A selected pill / row / tile: its fill, outline and label. */
+    /**
+     * A selected pill / row / tile: its fill, outline, label, and the label's
+     * quieter second line. `selectText`/`selectTextDim` exist so a theme can
+     * fill a selection solid — a row that inverts needs its own text colours,
+     * and reusing `text`/`textMuted` would paint dark on dark.
+     */
     selectBg: string;
     selectBorder: string;
     selectText: string;
+    selectTextDim: string;
     /** Outline of a focused text field. */
     focus: string;
     /** The knob of a switch. */
@@ -120,6 +126,7 @@ const dark: Palette = {
     selectBg: "rgba(255, 61, 143, 0.14)",
     selectBorder: "rgba(255, 61, 143, 0.42)",
     selectText: "#ff6fae",
+    selectTextDim: "#9d92b5",
     focus: "rgba(255, 61, 143, 0.42)",
     knob: "#ffffff",
     onAvatar: "#ffffff",
@@ -176,6 +183,7 @@ const light: Palette = {
     selectBg: "rgba(224, 26, 114, 0.1)",
     selectBorder: "rgba(224, 26, 114, 0.35)",
     selectText: "#c8146c",
+    selectTextDim: "#6d6183",
     focus: "rgba(224, 26, 114, 0.35)",
     knob: "#ffffff",
     onAvatar: "#ffffff",
