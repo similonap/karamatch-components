@@ -1,9 +1,9 @@
-import { Text } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import type { IconName } from "../../icons/types";
 import { AppPressable } from "./AppPressable";
+import { AppText } from "./AppText";
 
 // Ported from karamatch-web/src/screens/Profile.tsx's inline theme-picker
 // tile — an icon-over-label option, tinted when selected. Generic enough for
@@ -19,7 +19,7 @@ export function IconTile({
     selected: boolean;
     onPress: () => void;
 }) {
-    const { C, CTRL, FONT, RADII, T } = useTheme();
+    const { C, CTRL, RADII } = useTheme();
 
     return (
         <AppPressable
@@ -39,7 +39,9 @@ export function IconTile({
             }}
         >
             <Icon name={icon} size={20} color={selected ? C.selectText : C.textDim} />
-            <Text style={[T.footnote, { fontFamily: FONT.bodyBold, color: selected ? C.selectText : C.textDim }]}>{label}</Text>
+            <AppText variant="footnote" weight="bold" tone={selected ? "selectText" : "textDim"}>
+                {label}
+            </AppText>
         </AppPressable>
     );
 }

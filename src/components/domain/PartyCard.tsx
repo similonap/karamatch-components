@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
 import { useTheme } from "../../theme/ThemeProvider";
@@ -6,6 +6,7 @@ import { Icon } from "../../icons/Icon";
 import { formatWhen, money, plural } from "../../utils/format";
 import type { PartyView } from "../../types";
 import { AppPressable } from "../primitives/AppPressable";
+import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
 import { Button } from "../primitives/Button";
 import { Card } from "../primitives/Card";
@@ -55,7 +56,7 @@ export function PartyCard({
     onRateCrew?: () => void;
     onReviewVenue?: () => void;
 }) {
-    const { C, CTRL, S, S2, T } = useTheme();
+    const { C, CTRL, S, S2 } = useTheme();
     const strongMatch = (matchPct ?? 0) >= 60;
 
     return (
@@ -64,40 +65,44 @@ export function PartyCard({
                 <View style={{ flexDirection: "row", alignItems: "center", gap: S2.s12 }}>
                     <MatchRing pct={matchPct ?? 0} />
                     <View style={{ minWidth: 0, flex: 1, gap: 2 }}>
-                        <Text style={[T.bodyStrong, { fontSize: 16, color: C.text }]} numberOfLines={1}>
+                        <AppText variant="bodyStrong" size={16} truncate>
                             {party.title}
-                        </Text>
-                        <Text style={[T.caption, { color: C.textMuted }]} numberOfLines={1}>
+                        </AppText>
+                        <AppText variant="caption" truncate>
                             {party.venue.name} · {formatWhen(party.start)}
-                        </Text>
-                        <Text style={[T.caption, { color: C.textMuted }]}>{plural(party.spotsOpen, "spot open", "spots open")}</Text>
+                        </AppText>
+                        <AppText variant="caption">{plural(party.spotsOpen, "spot open", "spots open")}</AppText>
                     </View>
                 </View>
             ) : (
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: S2.s10 }}>
                     <View style={{ minWidth: 0, flex: 1, gap: 2 }}>
-                        <Text style={[T.bodyStrong, { fontSize: 16, color: C.text }]} numberOfLines={1}>
+                        <AppText variant="bodyStrong" size={16} truncate>
                             {party.title}
-                        </Text>
-                        <Text style={[T.caption, { color: C.textMuted }]} numberOfLines={1}>
+                        </AppText>
+                        <AppText variant="caption" truncate>
                             {party.venue.name} ·{" "}
                             {variant === "past" ? plural(party.membersCount, "singer", "singers") : formatWhen(party.start)}
-                        </Text>
+                        </AppText>
                     </View>
                     {variant === "open" ? <Chip label={plural(party.spotsOpen, "spot", "spots")} tone="cyan" /> : null}
                     {variant === "upcoming" ? (
                         <Chip label={isHost ? "Host" : "Joined"} icon={isHost ? "crown" : "check"} tone="tint" />
                     ) : null}
-                    {variant === "past" ? <Text style={[T.footnote, { color: C.textFaint }]}>{formatWhen(party.start)}</Text> : null}
+                    {variant === "past" ? (
+                        <AppText variant="footnote" tone="textFaint">
+                            {formatWhen(party.start)}
+                        </AppText>
+                    ) : null}
                 </View>
             )}
 
             {(variant === "open" || variant === "match") ? (
                 <AppPressable onPress={onHostPress} press="row" style={{ flexDirection: "row", alignItems: "center", gap: S.sm, alignSelf: "flex-start" }}>
                     <Avatar name={party.host.name} photoUrl={party.host.photoUrl} seed={party.host.id} size={28} />
-                    <Text style={[T.caption, { color: C.textMuted }]}>
+                    <AppText variant="caption">
                         @{party.host.username} · {plural(party.membersCount, "singer", "singers")}
-                    </Text>
+                    </AppText>
                 </AppPressable>
             ) : null}
 
@@ -109,7 +114,9 @@ export function PartyCard({
                         ))}
                     </View>
                 ) : (
-                    <Text style={[T.footnote, { fontSize: 12, color: C.textFaint }]}>No shared songs — matched on genre affinity.</Text>
+                    <AppText variant="footnote" size={12} tone="textFaint">
+                        No shared songs — matched on genre affinity.
+                    </AppText>
                 )
             ) : null}
 
@@ -125,9 +132,12 @@ export function PartyCard({
                         borderTopColor: C.border
                     }}
                 >
-                    <Text style={[T.caption, { color: C.textMuted }]}>
-                        Your share <Text style={[T.bodyStrong, { color: C.text }]}>{money(party.share)}</Text>
-                    </Text>
+                    <AppText variant="caption">
+                        Your share{" "}
+                        <AppText variant="bodyStrong" tone="text">
+                            {money(party.share)}
+                        </AppText>
+                    </AppText>
                     <Button label={joining ? "Joining" : "Join"} variant="tinted" size="md" busy={joining} onPress={() => onJoin?.()} />
                 </View>
             ) : null}
@@ -135,17 +145,19 @@ export function PartyCard({
             {variant === "upcoming" ? (
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: S.sm }}>
                     {isHost ? (
-                        <Text style={[T.caption, { color: C.textMuted }]}>
+                        <AppText variant="caption">
                             {party.membersCount}/{party.capacity} singers
-                        </Text>
+                        </AppText>
                     ) : (
                         <AppPressable onPress={onHostPress} press="row" style={{ flexDirection: "row", alignItems: "center", gap: S2.s6 }}>
                             <Avatar name={party.host.name} photoUrl={party.host.photoUrl} seed={party.host.id} size={22} />
-                            <Text style={[T.caption, { color: C.textMuted }]}>@{party.host.username}</Text>
+                            <AppText variant="caption">@{party.host.username}</AppText>
                         </AppPressable>
                     )}
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
-                        <Text style={[T.captionStrong, { color: C.tintSoft }]}>Open room</Text>
+                        <AppText variant="captionStrong" tone="tintSoft">
+                            Open room
+                        </AppText>
                         <Icon name="chevronRight" size={14} weight="strong" color={C.tintSoft} />
                     </View>
                 </View>
@@ -182,7 +194,7 @@ const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 // conic-gradient support, so this is an SVG circle with a dashed stroke
 // instead, which is the standard native technique for a percentage ring.
 function MatchRing({ pct }: { pct: number }) {
-    const { C, RADII, T } = useTheme();
+    const { C, RADII } = useTheme();
     const strong = pct >= 60;
     const tone = strong ? C.tint : C.textMuted;
     const offset = RING_CIRCUMFERENCE * (1 - pct / 100);
@@ -218,8 +230,12 @@ function MatchRing({ pct }: { pct: number }) {
                     justifyContent: "center"
                 }}
             >
-                <Text style={[T.captionStrong, { fontSize: 14, lineHeight: 16, color: tone }]}>{pct}</Text>
-                <Text style={[T.footnote, { fontSize: 8, lineHeight: 9, opacity: 0.75, color: tone }]}>MATCH</Text>
+                <AppText variant="captionStrong" size={14} lineHeight={16} tone={tone}>
+                    {pct}
+                </AppText>
+                <AppText variant="footnote" size={8} lineHeight={9} tone={tone} style={{ opacity: 0.75 }}>
+                    MATCH
+                </AppText>
             </View>
         </View>
     );

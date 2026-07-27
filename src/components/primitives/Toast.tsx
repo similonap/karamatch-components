@@ -1,13 +1,14 @@
-import { Modal, Text, View } from "react-native";
+import { Modal, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTheme } from "../../theme/ThemeProvider";
+import { AppText } from "./AppText";
 
 // Ported from karamatch-web/src/ui.tsx's `Toast`. The web version was a
 // hand-rolled absolutely-positioned overlay; RN uses a real, transparent,
 // fade `<Modal>` instead, which is why this needs an explicit `visible`.
 export function Toast({ message, visible = true }: { message: string; visible?: boolean }) {
-    const { C, CTRL, LAYOUT, RADII, S, S2, SHADOW, T } = useTheme();
+    const { C, CTRL, LAYOUT, RADII, S, S2, SHADOW } = useTheme();
     const insets = useSafeAreaInsets();
 
     return (
@@ -34,7 +35,9 @@ export function Toast({ message, visible = true }: { message: string; visible?: 
                         boxShadow: SHADOW.e2
                     }}
                 >
-                    <Text style={[T.caption, { color: C.text, textAlign: "center" }]}>{message}</Text>
+                    <AppText variant="caption" tone="text" align="center">
+                        {message}
+                    </AppText>
                 </View>
             </View>
         </Modal>

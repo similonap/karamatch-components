@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import type { ReactNode } from "react";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import type { IconName } from "../../icons/types";
+import { AppText } from "./AppText";
 
 // Ported from karamatch-web/src/ui.tsx's `EmptyState` — an icon, a line, and
 // ideally a way out.
@@ -18,7 +19,7 @@ export function EmptyState({
     body?: string;
     action?: ReactNode;
 }) {
-    const { C, CTRL, RADII, S, T } = useTheme();
+    const { C, CTRL, RADII, S } = useTheme();
     return (
         <View style={{ alignItems: "center", justifyContent: "center", gap: S.sm, paddingVertical: S.xl, paddingHorizontal: S.lg }}>
             <View
@@ -37,8 +38,14 @@ export function EmptyState({
             >
                 <Icon name={icon} size={24} color={C.textFaint} />
             </View>
-            <Text style={[T.bodyStrong, { color: C.text, textAlign: "center" }]}>{title}</Text>
-            {body ? <Text style={[T.caption, { color: C.textMuted, textAlign: "center", maxWidth: 250 }]}>{body}</Text> : null}
+            <AppText variant="bodyStrong" align="center">
+                {title}
+            </AppText>
+            {body ? (
+                <AppText variant="caption" align="center" style={{ maxWidth: 250 }}>
+                    {body}
+                </AppText>
+            ) : null}
             {action ? <View style={{ marginTop: S.sm }}>{action}</View> : null}
         </View>
     );

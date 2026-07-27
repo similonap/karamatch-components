@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { StarIcon } from "../../icons/StarIcon";
 import type { MatchedUser } from "../../types";
 import { AppPressable } from "../primitives/AppPressable";
+import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
 import { CheckRing } from "../primitives/CheckRing";
 import { MatchBadge } from "../primitives/MatchBadge";
@@ -21,7 +22,7 @@ export function InviteFriendRow({
     selected: boolean;
     onToggle: () => void;
 }) {
-    const { C, CTRL, RADII, S2, T } = useTheme();
+    const { C, CTRL, RADII, S2 } = useTheme();
     // A theme may fill a selected row solid, so everything inside it has to
     // ask the palette what "on a selection" reads as — see C.selectText.
     const dim = selected ? C.selectTextDim : C.textMuted;
@@ -45,11 +46,17 @@ export function InviteFriendRow({
         >
             <Avatar name={friend.name} photoUrl={friend.photoUrl} seed={friend.id} size={42} />
             <View style={{ flex: 1, minWidth: 0 }}>
-                <Text style={[T.bodyStrong, { color: selected ? C.selectText : C.text }]}>{friend.name}</Text>
+                <AppText variant="bodyStrong" tone={selected ? "selectText" : "text"}>
+                    {friend.name}
+                </AppText>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-                    <Text style={[T.caption, { color: dim }]}>@{friend.username}</Text>
+                    <AppText variant="caption" tone={dim}>
+                        @{friend.username}
+                    </AppText>
                     <StarIcon size={10} color={selected ? C.selectTextDim : C.gold} />
-                    <Text style={[T.caption, { color: dim }]}>{friend.singerRating.toFixed(1)}</Text>
+                    <AppText variant="caption" tone={dim}>
+                        {friend.singerRating.toFixed(1)}
+                    </AppText>
                 </View>
             </View>
             <MatchBadge pct={friend.matchPct} />

@@ -1,10 +1,11 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import type { IconName } from "../../icons/types";
 import { AppPressable } from "../primitives/AppPressable";
+import { AppText } from "../primitives/AppText";
 
 export type TabKey = "venues" | "parties" | "match" | "friends" | "mine";
 
@@ -23,7 +24,7 @@ export const TABS: { key: TabKey; label: string; icon: IconName }[] = [
 // backdrop-filter/blur is unsupported, breaking the "identical on both
 // platforms" requirement the web version calls out.
 export function BottomTabBar({ current, onSelect }: { current: TabKey; onSelect: (tab: TabKey) => void }) {
-    const { C, CTRL, FONT, LAYOUT, T } = useTheme();
+    const { C, CTRL, LAYOUT } = useTheme();
     const insets = useSafeAreaInsets();
 
     return (
@@ -49,9 +50,9 @@ export function BottomTabBar({ current, onSelect }: { current: TabKey; onSelect:
                         style={{ flex: 1, alignItems: "center", justifyContent: "center", gap: 3 }}
                     >
                         <Icon name={tab.icon} size={24} solid={on} color={on ? C.tint : C.textMuted} />
-                        <Text style={[T.tab, { fontFamily: on ? FONT.bodyBold : FONT.bodyMedium, color: on ? C.tint : C.textMuted }]}>
+                        <AppText variant="tab" weight={on ? "bold" : "medium"} tone={on ? "tint" : "textMuted"}>
                             {tab.label}
-                        </Text>
+                        </AppText>
                     </AppPressable>
                 );
             })}

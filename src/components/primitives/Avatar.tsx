@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { Image } from "expo-image";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { avatarColor, initial } from "../../utils/avatar";
+import { AppText } from "./AppText";
 
 // Ported from karamatch-web/src/ui.tsx's `Avatar`. `expo-image` replaces the
 // web `<img>`; its `onError` gives the same broken-photo fallback to the
@@ -21,7 +22,7 @@ export function Avatar({
     size?: number;
     ring?: boolean;
 }) {
-    const { AVATARS, C, CTRL, FONT, RADII } = useTheme();
+    const { AVATARS, C, CTRL, RADII } = useTheme();
     const [broken, setBroken] = useState(false);
     const ringWidth = CTRL.avatarRing;
     const showPhoto = photoUrl && !broken;
@@ -49,7 +50,9 @@ export function Avatar({
                     contentFit="cover"
                 />
             ) : (
-                <Text style={{ fontFamily: FONT.bodyBold, fontSize: Math.round(size * 0.38), color: C.onAvatar }}>{initial(name)}</Text>
+                <AppText weight="bold" size={Math.round(size * 0.38)} tone="onAvatar" lineHeight={Math.round(size * 0.38 * 1.2)}>
+                    {initial(name)}
+                </AppText>
             )}
         </View>
     );

@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import type { ReactNode } from "react";
 
 import { useTheme } from "../../theme/ThemeProvider";
@@ -6,6 +6,7 @@ import type { ThemeValue } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import type { IconName } from "../../icons/types";
 import { AppPressable } from "./AppPressable";
+import { AppText } from "./AppText";
 
 type ChipTone = "neutral" | "tint" | "cyan" | "gold" | "green";
 
@@ -42,7 +43,7 @@ export function Chip({
     /** Trailing chevron, for a chip that opens something (e.g. a location picker). */
     chevron?: boolean;
 }) {
-    const { C, CTRL, RADII, T } = useTheme();
+    const { C, CTRL, RADII } = useTheme();
     // A selected chip takes the theme's selection roles rather than the "tint"
     // tone, so a theme that fills selections solid gets a solid chip.
     const iconColor = selected ? C.selectText : iconColorFor(C)[tone];
@@ -65,7 +66,9 @@ export function Chip({
         >
             {icon ? <Icon name={icon} size={CTRL.chipIcon} color={iconColor} /> : null}
             {typeof label === "string" ? (
-                <Text style={[T.chip, { color: iconColor }]}>{label}</Text>
+                <AppText variant="chip" tone={iconColor}>
+                    {label}
+                </AppText>
             ) : (
                 label
             )}

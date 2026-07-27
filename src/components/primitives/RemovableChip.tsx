@@ -1,14 +1,15 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import { AppPressable } from "./AppPressable";
+import { AppText } from "./AppText";
 
 // Ported from karamatch-web/src/screens/Profile.tsx's inline "picked song"
 // chip — a fully tappable pill (not just its close icon) that removes the
 // item, used for favourites already added before they're searchable again.
 export function RemovableChip({ label, onRemove }: { label: string; onRemove: () => void }) {
-    const { C, CTRL, RADII, T } = useTheme();
+    const { C, CTRL, RADII } = useTheme();
 
     return (
         <AppPressable onPress={onRemove} accessibilityLabel={"Remove " + label} press="control">
@@ -26,9 +27,9 @@ export function RemovableChip({ label, onRemove }: { label: string; onRemove: ()
                     paddingRight: 8
                 }}
             >
-                <Text style={[T.chip, { color: C.tintSoft }]} numberOfLines={1}>
+                <AppText variant="chip" tone="tintSoft" truncate>
                     {label}
-                </Text>
+                </AppText>
                 <Icon name="close" size={13} weight="strong" color={C.tintSoft} />
             </View>
         </AppPressable>

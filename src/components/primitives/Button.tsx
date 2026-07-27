@@ -1,4 +1,4 @@
-import { Platform, Text, View } from "react-native";
+import { Platform, View } from "react-native";
 import type { StyleProp, ViewStyle } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
@@ -7,6 +7,7 @@ import { glowShadow } from "../../theme/tokens";
 import { Icon } from "../../icons/Icon";
 import type { IconName } from "../../icons/types";
 import { AppPressable } from "./AppPressable";
+import { AppText } from "./AppText";
 import { Spinner } from "./Spinner";
 
 // Ported from karamatch-web/src/ui.tsx's `Button`. Same variant x size
@@ -68,7 +69,7 @@ export function Button({
     size?: ButtonSize;
     style?: StyleProp<ViewStyle>;
 }) {
-    const { C, CTRL, DECOR, GRAD, RADII, SHADOW, T } = useTheme();
+    const { C, CTRL, DECOR, GRAD, RADII, SHADOW } = useTheme();
     const off = Boolean(disabled || busy);
     const textColor = textColorFor(C, variant, off);
     const iconSize = CTRL.buttonIcon;
@@ -109,7 +110,12 @@ export function Button({
                 ) : icon ? (
                     <Icon name={icon} size={iconSize} color={textColor} />
                 ) : null}
-                <Text style={[T.button, { color: textColor, fontSize: CTRL.buttonFontSize[size] }]}>{label}</Text>
+                {/* `truncate` also sets flexShrink: a label longer than its
+                    button used to overflow the box rather than ellipsise,
+                    because Yoga defaults flexShrink to 0. */}
+                <AppText variant="button" tone={textColor} size={CTRL.buttonFontSize[size]} truncate>
+                    {label}
+                </AppText>
             </View>
         </AppPressable>
     );

@@ -1,10 +1,11 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import type { ReactNode } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import { AppPressable } from "../primitives/AppPressable";
+import { AppText } from "../primitives/AppText";
 
 // Ported from karamatch-web/src/ui.tsx's `AppBar` — a stack screen's
 // navigation bar: fixed height, hairline underneath, back affordance on the
@@ -28,7 +29,7 @@ export function AppBar({
     subtitle?: string;
     bordered?: boolean;
 }) {
-    const { C, CTRL, DECOR, LAYOUT, RADII, S, T } = useTheme();
+    const { C, CTRL, DECOR, LAYOUT, RADII, S } = useTheme();
     const insets = useSafeAreaInsets();
 
     return (
@@ -65,9 +66,9 @@ export function AppBar({
                 <View style={{ flex: 1, minWidth: 0 }}>
                     {!large && title ? (
                         typeof title === "string" ? (
-                            <Text style={[T.navTitle, { color: C.text }]} numberOfLines={1}>
+                            <AppText variant="navTitle" truncate>
                                 {title}
-                            </Text>
+                            </AppText>
                         ) : (
                             title
                         )
@@ -79,8 +80,12 @@ export function AppBar({
 
             {large && title ? (
                 <View style={{ paddingHorizontal: LAYOUT.gutter, paddingBottom: S.md }}>
-                    {typeof title === "string" ? <Text style={[T.title, { color: C.text }]}>{title}</Text> : title}
-                    {subtitle ? <Text style={[T.caption, { color: C.textMuted, marginTop: 3 }]}>{subtitle}</Text> : null}
+                    {typeof title === "string" ? <AppText variant="title">{title}</AppText> : title}
+                    {subtitle ? (
+                        <AppText variant="caption" style={{ marginTop: 3 }}>
+                            {subtitle}
+                        </AppText>
+                    ) : null}
                 </View>
             ) : null}
         </View>

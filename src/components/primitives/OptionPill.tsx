@@ -1,8 +1,8 @@
-import { Text } from "react-native";
 import type { ReactNode } from "react";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { AppPressable } from "./AppPressable";
+import { AppText } from "./AppText";
 
 // Ported from karamatch-web/src/ui.tsx's `OptionPill` — a selectable option
 // pill, e.g. a day, a time, a room.
@@ -19,7 +19,7 @@ export function OptionPill({
     onPress: () => void;
     disabled?: boolean;
 }) {
-    const { C, CTRL, LAYOUT, RADII, T } = useTheme();
+    const { C, CTRL, LAYOUT, RADII } = useTheme();
 
     return (
         <AppPressable
@@ -40,11 +40,13 @@ export function OptionPill({
                 gap: 1
             }}
         >
-            <Text style={[T.captionStrong, { color: selected ? C.selectText : C.textDim }]}>{label}</Text>
+            <AppText variant="captionStrong" tone={selected ? "selectText" : "textDim"}>
+                {label}
+            </AppText>
             {sub ? (
-                <Text style={[T.footnote, { fontSize: 10, opacity: 0.8, color: selected ? C.selectText : C.textDim }]}>
+                <AppText variant="footnote" size={10} tone={selected ? "selectText" : "textDim"} style={{ opacity: 0.8 }}>
                     {sub}
-                </Text>
+                </AppText>
             ) : null}
         </AppPressable>
     );

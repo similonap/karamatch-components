@@ -1,6 +1,7 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
+import { AppText } from "./AppText";
 import { Avatar } from "./Avatar";
 
 // Ported from karamatch-web/src/ui.tsx's `AvatarStack` — overlapping
@@ -14,7 +15,7 @@ export function AvatarStack({
     max?: number;
     size?: number;
 }) {
-    const { C, CTRL, FONT, RADII } = useTheme();
+    const { C, CTRL, RADII } = useTheme();
     const ring = "0 0 0 " + CTRL.avatarRing + "px ";
     const shown = people.slice(0, max);
     const extra = people.length - shown.length;
@@ -47,7 +48,9 @@ export function AvatarStack({
                         boxShadow: ring + C.surface1
                     }}
                 >
-                    <Text style={{ fontFamily: FONT.bodyBold, fontSize: Math.round(size * 0.34), color: C.textDim }}>+{extra}</Text>
+                    <AppText weight="bold" size={Math.round(size * 0.34)} tone="textDim" lineHeight={Math.round(size * 0.34 * 1.2)}>
+                        +{extra}
+                    </AppText>
                 </View>
             ) : null}
         </View>

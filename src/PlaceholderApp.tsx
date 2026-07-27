@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { AppBar } from "./components/scaffolding/AppBar";
+import { AppText } from "./components/primitives/AppText";
 import { Section } from "./components/primitives/Section";
 import { Segmented } from "./components/primitives/Segmented";
 import { BottomBar } from "./components/scaffolding/BottomBar";
@@ -72,7 +73,7 @@ function AppearancePicker() {
 }
 
 function VenueDetailScreen({ onBack }: { onBack: () => void }) {
-    const { C, S, T } = useTheme();
+    const { S } = useTheme();
     const room = MOCK_VENUE.rooms[0];
 
     return (
@@ -87,9 +88,9 @@ function VenueDetailScreen({ onBack }: { onBack: () => void }) {
                         last
                     />
                 </Group>
-                <Text style={[T.caption, { color: C.textMuted }]}>
+                <AppText variant="caption">
                     This screen exists to prove the shelf assembles — swap it for your own once you're building the real app.
-                </Text>
+                </AppText>
             </Screen>
             <BottomBar>
                 <Button label={"Book from " + money(MOCK_VENUE.fromPrice) + "/hr"} onPress={() => {}} />

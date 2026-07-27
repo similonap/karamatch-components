@@ -1,7 +1,8 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import type { CrewMember } from "../../types";
+import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
 import { Card } from "../primitives/Card";
 import { MatchBadge } from "../primitives/MatchBadge";
@@ -26,22 +27,26 @@ export function CrewRatingCard({
     onStarsChange: (stars: number) => void;
     onTextChange: (text: string) => void;
 }) {
-    const { C, S, S2, T } = useTheme();
+    const { S, S2 } = useTheme();
 
     return (
         <Card highlight={stars > 0} style={{ gap: S2.s12 }}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: S2.s12 }}>
                 <Avatar name={member.name} photoUrl={member.photoUrl} seed={member.id} size={42} />
                 <View style={{ flex: 1, minWidth: 0 }}>
-                    <Text style={[T.bodyStrong, { color: C.text }]}>{member.name}</Text>
-                    <Text style={[T.caption, { color: C.textMuted }]}>@{member.username}</Text>
+                    <AppText variant="bodyStrong">{member.name}</AppText>
+                    <AppText variant="caption">@{member.username}</AppText>
                 </View>
                 <MatchBadge pct={member.matchPct} />
             </View>
 
             <View style={{ flexDirection: "row", alignItems: "center", gap: S.sm }}>
                 <StarInput value={stars} onChange={onStarsChange} />
-                {stars > 0 ? <Text style={[T.caption, { color: C.gold }]}>{STAR_WORDS[stars]}</Text> : null}
+                {stars > 0 ? (
+                    <AppText variant="caption" tone="gold">
+                        {STAR_WORDS[stars]}
+                    </AppText>
+                ) : null}
             </View>
 
             {stars > 0 ? (

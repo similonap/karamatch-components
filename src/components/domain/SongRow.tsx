@@ -1,15 +1,16 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import type { Song } from "../../types";
 import { AppPressable } from "../primitives/AppPressable";
+import { AppText } from "../primitives/AppText";
 import { CheckRing } from "../primitives/CheckRing";
 import { SongArt } from "../primitives/SongArt";
 
 // Ported from karamatch-web/src/screens/SongPicker.tsx's `SongRow`, shared
 // there with the profile editor — one row of a song list, toggled on tap.
 export function SongRow({ song, selected, onToggle }: { song: Song; selected: boolean; onToggle: () => void }) {
-    const { C, CTRL, RADII, S2, T } = useTheme();
+    const { C, CTRL, RADII, S2 } = useTheme();
 
     return (
         <AppPressable
@@ -30,12 +31,12 @@ export function SongRow({ song, selected, onToggle }: { song: Song; selected: bo
         >
             <SongArt coverArt={song.coverArt} gradient={selected} color={selected ? C.onTint : C.textFaint} />
             <View style={{ flex: 1, minWidth: 0 }}>
-                <Text style={[T.bodyStrong, { color: selected ? C.selectText : C.text }]} numberOfLines={1}>
+                <AppText variant="bodyStrong" tone={selected ? "selectText" : "text"} truncate>
                     {song.title}
-                </Text>
-                <Text style={[T.caption, { color: selected ? C.selectTextDim : C.textMuted }]} numberOfLines={1}>
+                </AppText>
+                <AppText variant="caption" tone={selected ? "selectTextDim" : "textMuted"} truncate>
                     {song.artist}
-                </Text>
+                </AppText>
             </View>
             <CheckRing on={selected} />
         </AppPressable>

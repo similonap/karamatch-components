@@ -37,6 +37,8 @@ export type { IconName } from "./icons/types";
 
 // Primitives
 export { AppPressable } from "./components/primitives/AppPressable";
+export { AppText, useTextStyle } from "./components/primitives/AppText";
+export type { AppTextOptions, TextTone, TextWeight } from "./components/primitives/AppText";
 export { Avatar } from "./components/primitives/Avatar";
 export { AvatarPicker } from "./components/primitives/AvatarPicker";
 export { AvatarStack } from "./components/primitives/AvatarStack";

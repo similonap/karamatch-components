@@ -1,6 +1,7 @@
 import { TextInput, View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
+import { useTextStyle } from "./AppText";
 import { Icon } from "../../icons/Icon";
 import { AppPressable } from "./AppPressable";
 
@@ -15,7 +16,8 @@ export function SearchField({
     onChange: (value: string) => void;
     placeholder?: string;
 }) {
-    const { C, CTRL, RADII, T } = useTheme();
+    const { C, CTRL, RADII } = useTheme();
+    const inputStyle = useTextStyle({ variant: "input" });
 
     return (
         <View
@@ -39,7 +41,7 @@ export function SearchField({
                 onChangeText={onChange}
                 placeholder={placeholder}
                 placeholderTextColor={C.textFaint}
-                style={[T.input, { flex: 1, color: C.text, padding: 0 }]}
+                style={[inputStyle, { flex: 1, padding: 0 }]}
             />
             {value ? (
                 <AppPressable

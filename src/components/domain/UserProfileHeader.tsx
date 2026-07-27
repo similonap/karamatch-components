@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import type { ReactNode } from "react";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { StarIcon } from "../../icons/StarIcon";
 import type { UserProfile } from "../../types";
+import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
 
 // Ported from karamatch-web/src/screens/UserProfile.tsx's header block: an
@@ -11,18 +12,24 @@ import { Avatar } from "../primitives/Avatar";
 // taste match when the profile isn't your own) that reads as one strip
 // rather than three floating cards.
 export function UserProfileHeader({ user }: { user: UserProfile }) {
-    const { C, CTRL, RADII, S, T } = useTheme();
+    const { C, CTRL, RADII, S } = useTheme();
 
     return (
         <View style={{ gap: S.lg }}>
             <View style={{ alignItems: "center", gap: S.sm }}>
                 <Avatar name={user.name} photoUrl={user.photoUrl} seed={user.id} size={96} />
                 <View style={{ alignItems: "center" }}>
-                    <Text style={[T.title, { fontSize: 20, color: C.text }]}>{user.name}</Text>
-                    <Text style={[T.callout, { color: C.textMuted, marginTop: 2 }]}>@{user.username}</Text>
+                    <AppText variant="title" size={20}>
+                        {user.name}
+                    </AppText>
+                    <AppText variant="callout" tone="textMuted" style={{ marginTop: 2 }}>
+                        @{user.username}
+                    </AppText>
                 </View>
                 {user.bio ? (
-                    <Text style={[T.callout, { color: C.textDim, textAlign: "center", maxWidth: 280 }]}>{user.bio}</Text>
+                    <AppText variant="callout" tone="textDim" align="center" style={{ maxWidth: 280 }}>
+                        {user.bio}
+                    </AppText>
                 ) : null}
             </View>
 
@@ -46,7 +53,7 @@ export function UserProfileHeader({ user }: { user: UserProfile }) {
 }
 
 function Stat({ label, value, color, icon, last }: { label: string; value: string; color?: string; icon?: ReactNode; last?: boolean }) {
-    const { C, CTRL, S, S2, T } = useTheme();
+    const { C, CTRL, S, S2 } = useTheme();
     return (
         <View
             style={{
@@ -60,9 +67,13 @@ function Stat({ label, value, color, icon, last }: { label: string; value: strin
         >
             <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
                 {icon}
-                <Text style={[T.bodyStrong, { fontSize: 17, color: color ?? C.text }]}>{value}</Text>
+                <AppText variant="bodyStrong" size={17} tone={color ?? C.text}>
+                    {value}
+                </AppText>
             </View>
-            <Text style={[T.footnote, { fontSize: 10, color: C.textMuted, marginTop: 2 }]}>{label}</Text>
+            <AppText variant="footnote" size={10} style={{ marginTop: 2 }}>
+                {label}
+            </AppText>
         </View>
     );
 }

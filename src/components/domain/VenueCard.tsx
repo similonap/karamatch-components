@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { Image } from "expo-image";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import { money, plural } from "../../utils/format";
 import type { VenueNearby } from "../../types";
+import { AppText } from "../primitives/AppText";
 import { Card } from "../primitives/Card";
 import { Rating } from "../primitives/Rating";
 
@@ -13,7 +14,7 @@ import { Rating } from "../primitives/Rating";
 // card — a 124px photo (distance badge riding on top-left) over a name /
 // rating line and a rooms · from-price line.
 export function VenueCard({ venue, onPress }: { venue: VenueNearby; onPress?: () => void }) {
-    const { C, CTRL, RADII, S, S2, T } = useTheme();
+    const { C, CTRL, RADII, S, S2 } = useTheme();
     const [broken, setBroken] = useState(false);
     const showPhoto = venue.imageUrl && !broken;
 
@@ -47,22 +48,26 @@ export function VenueCard({ venue, onPress }: { venue: VenueNearby; onPress?: ()
                     }}
                 >
                     <Icon name="pin" size={12} color={C.onOverlay} />
-                    <Text style={[T.chip, { color: C.onOverlay }]}>{venue.distanceKm} km</Text>
+                    <AppText variant="chip" tone="onOverlay">
+                        {venue.distanceKm} km
+                    </AppText>
                 </View>
             </View>
 
             <View style={{ paddingTop: S2.s12, paddingHorizontal: S.md, paddingBottom: S.md, gap: S2.s6 }}>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: S.sm }}>
-                    <Text style={[T.bodyStrong, { fontSize: 16, color: C.text, flexShrink: 1 }]} numberOfLines={1}>
+                    <AppText variant="bodyStrong" size={16} truncate style={{ flexShrink: 1 }}>
                         {venue.name}
-                    </Text>
+                    </AppText>
                     {/* A venue with no reviews yet has no rating to show. */}
                     {venue.reviewsCount > 0 ? <Rating value={venue.rating} /> : null}
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: S.sm }}>
-                    <Text style={[T.caption, { color: C.textMuted }]}>{plural(venue.rooms.length, "room", "rooms")}</Text>
+                    <AppText variant="caption">{plural(venue.rooms.length, "room", "rooms")}</AppText>
                     <View style={{ width: 3, height: 3, borderRadius: Math.min(RADII.round, 1.5), backgroundColor: C.textFaint }} />
-                    <Text style={[T.caption, { color: C.cyan }]}>from {money(venue.fromPrice)}/hr</Text>
+                    <AppText variant="caption" tone="cyan">
+                        from {money(venue.fromPrice)}/hr
+                    </AppText>
                 </View>
             </View>
         </Card>

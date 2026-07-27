@@ -1,7 +1,8 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import type { ReactNode } from "react";
 
 import { useTheme } from "../../theme/ThemeProvider";
+import { AppText } from "./AppText";
 
 // Ported from karamatch-web/src/ui.tsx's `Section` — a titled block of
 // content within a screen.
@@ -16,13 +17,13 @@ export function Section({
     children: ReactNode;
     gap?: number;
 }) {
-    const { C, S, T } = useTheme();
+    const { S } = useTheme();
     return (
         <View style={{ gap: gap ?? S.sm }}>
-            <Text style={[T.sectionHeader, { color: C.textMuted }]}>{title}</Text>
+            <AppText variant="sectionHeader">{title}</AppText>
             {children}
             {hint ? (
-                typeof hint === "string" ? <Text style={[T.footnote, { color: C.textFaint }]}>{hint}</Text> : hint
+                typeof hint === "string" ? <AppText variant="footnote" tone="textFaint">{hint}</AppText> : hint
             ) : null}
         </View>
     );

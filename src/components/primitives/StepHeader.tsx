@@ -1,7 +1,8 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import type { ReactNode } from "react";
 
 import { useTheme } from "../../theme/ThemeProvider";
+import { AppText } from "./AppText";
 
 // Ported from karamatch-web/src/ui.tsx's `StepHeader` — onboarding progress
 // as a filled track instead of tracked-out "STEP 1 OF 3" caps.
@@ -18,7 +19,7 @@ export function StepHeader({
     subtitle?: string;
     trailing?: ReactNode;
 }) {
-    const { C, CTRL, RADII, S2, T } = useTheme();
+    const { C, CTRL, RADII, S2 } = useTheme();
     return (
         <View style={{ gap: S2.s10 }}>
             <View
@@ -39,10 +40,14 @@ export function StepHeader({
                 ))}
             </View>
             <View style={{ flexDirection: "row", alignItems: "baseline", justifyContent: "space-between", gap: 8 }}>
-                <Text style={[T.title, { color: C.text }]}>{title}</Text>
+                <AppText variant="title">{title}</AppText>
                 {trailing}
             </View>
-            {subtitle ? <Text style={[T.callout, { color: C.textMuted }]}>{subtitle}</Text> : null}
+            {subtitle ? (
+                <AppText variant="callout" tone="textMuted">
+                    {subtitle}
+                </AppText>
+            ) : null}
         </View>
     );
 }

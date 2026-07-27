@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import type { IconName } from "../../icons/types";
 import { AppPressable } from "./AppPressable";
+import { AppText } from "./AppText";
 
 // Ported from karamatch-web/src/ui.tsx's `IconButton` — a circular icon
 // button for an app bar or an overlay.
@@ -22,7 +23,7 @@ export function IconButton({
     tone?: "plain" | "filled";
     size?: number;
 }) {
-    const { C, CTRL, LAYOUT, RADII, T } = useTheme();
+    const { C, CTRL, LAYOUT, RADII } = useTheme();
     const resolvedSize = size ?? LAYOUT.touch;
 
     return (
@@ -59,9 +60,9 @@ export function IconButton({
                         borderColor: C.surface
                     }}
                 >
-                    <Text style={[T.sectionHeader, { fontSize: 10, letterSpacing: 0, textTransform: "none", color: C.onTint }]}>
+                    <AppText variant="sectionHeader" size={10} tone="onTint" transform="none" style={{ letterSpacing: 0 }}>
                         {badge > 9 ? "9+" : badge}
-                    </Text>
+                    </AppText>
                 </View>
             ) : null}
         </AppPressable>

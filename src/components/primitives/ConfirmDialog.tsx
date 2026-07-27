@@ -1,7 +1,8 @@
-import { Modal, Text, View } from "react-native";
+import { Modal, View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { AppPressable } from "./AppPressable";
+import { AppText } from "./AppText";
 import { Button } from "./Button";
 
 // Ported from karamatch-web/src/ui.tsx's `ConfirmDialog` — a blocking
@@ -25,7 +26,7 @@ export function ConfirmDialog({
     onConfirm: () => void;
     onCancel: () => void;
 }) {
-    const { C, CTRL, RADII, S, SHADOW, T } = useTheme();
+    const { C, CTRL, RADII, S, SHADOW } = useTheme();
 
     return (
         <Modal visible={visible} transparent animationType="fade" statusBarTranslucent onRequestClose={onCancel}>
@@ -56,8 +57,12 @@ export function ConfirmDialog({
                         boxShadow: SHADOW.e3
                     }}
                 >
-                    <Text style={[T.heading, { color: C.text, textAlign: "center" }]}>{title}</Text>
-                    <Text style={[T.caption, { color: C.textDim, textAlign: "center" }]}>{body}</Text>
+                    <AppText variant="heading" align="center">
+                        {title}
+                    </AppText>
+                    <AppText variant="caption" tone="textDim" align="center">
+                        {body}
+                    </AppText>
                     <View style={{ flexDirection: "row", gap: S.sm, marginTop: S.sm }}>
                         <Button label="Cancel" variant="secondary" size="md" onPress={onCancel} disabled={busy} style={{ flex: 1 }} />
                         <Button

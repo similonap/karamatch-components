@@ -1,20 +1,21 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
+import { AppText } from "../primitives/AppText";
 import type { ChatMessage } from "../../types";
 
 // Ported from karamatch-web/src/screens/PartyRoom.tsx's inline chat bubble —
 // a tail on the outer corner, the way both platforms' native bubbles are
 // shaped, and the sender's name shown only on the first message of a run.
 export function ChatBubble({ message, mine, showName }: { message: ChatMessage; mine: boolean; showName: boolean }) {
-    const { C, CTRL, RADII, S2, T } = useTheme();
+    const { C, CTRL, RADII, S2 } = useTheme();
 
     return (
         <View style={{ alignItems: mine ? "flex-end" : "flex-start", gap: 2 }}>
             {showName ? (
-                <Text style={[T.footnote, { fontSize: 10, color: C.textFaint, paddingHorizontal: 8 }]}>
+                <AppText variant="footnote" size={10} tone="textFaint" style={{ paddingHorizontal: 8 }}>
                     {mine ? "You" : message.from?.name ?? "Someone"}
-                </Text>
+                </AppText>
             ) : null}
             <View
                 style={{
@@ -30,7 +31,9 @@ export function ChatBubble({ message, mine, showName }: { message: ChatMessage; 
                     borderColor: mine ? "transparent" : C.border
                 }}
             >
-                <Text style={[T.callout, { color: mine ? C.onTint : C.text }]}>{message.text}</Text>
+                <AppText variant="callout" tone={mine ? "onTint" : "text"}>
+                    {message.text}
+                </AppText>
             </View>
         </View>
     );

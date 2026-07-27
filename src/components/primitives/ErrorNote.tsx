@@ -1,11 +1,12 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
+import { AppText } from "./AppText";
 
 // Ported from karamatch-web/src/ui.tsx's `ErrorNote`.
 export function ErrorNote({ message }: { message: string }) {
-    const { C, CTRL, RADII, S, S2, T } = useTheme();
+    const { C, CTRL, RADII, S, S2 } = useTheme();
     return (
         <View
             style={{
@@ -22,7 +23,9 @@ export function ErrorNote({ message }: { message: string }) {
             }}
         >
             <Icon name="info" size={16} color={C.tintSoft} />
-            <Text style={[T.caption, { flex: 1, color: C.tintSoft }]}>{message}</Text>
+            <AppText variant="caption" tone="tintSoft" style={{ flex: 1 }}>
+                {message}
+            </AppText>
         </View>
     );
 }

@@ -1,15 +1,16 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { money } from "../../utils/format";
 import type { Room } from "../../types";
 import { AppPressable } from "../primitives/AppPressable";
+import { AppText } from "../primitives/AppText";
 
 // Ported from karamatch-web/src/screens/VenueDetail.tsx's inline room-picker
 // row — name and seat count on the left, price/hr on the right, tinted when
 // selected.
 export function RoomOptionRow({ room, selected, onPress }: { room: Room; selected: boolean; onPress: () => void }) {
-    const { C, CTRL, RADII, S, T } = useTheme();
+    const { C, CTRL, RADII, S } = useTheme();
     // A theme may fill a selected row solid, so the text inside takes the
     // palette's selection colours rather than the surface ones.
     const dim = selected ? C.selectTextDim : C.textMuted;
@@ -33,12 +34,16 @@ export function RoomOptionRow({ room, selected, onPress }: { room: Room; selecte
             }}
         >
             <View style={{ minWidth: 0 }}>
-                <Text style={[T.bodyStrong, { color: selected ? C.selectText : C.text }]}>{room.name}</Text>
-                <Text style={[T.footnote, { color: dim }]}>{room.seats} seats</Text>
+                <AppText variant="bodyStrong" tone={selected ? "selectText" : "text"}>
+                    {room.name}
+                </AppText>
+                <AppText variant="footnote" tone={dim}>
+                    {room.seats} seats
+                </AppText>
             </View>
-            <Text style={[T.captionStrong, { color: selected ? C.selectText : C.cyan, flexShrink: 0 }]}>
+            <AppText variant="captionStrong" tone={selected ? "selectText" : "cyan"} style={{ flexShrink: 0 }}>
                 {money(room.pricePerHour)}/hr
-            </Text>
+            </AppText>
         </AppPressable>
     );
 }

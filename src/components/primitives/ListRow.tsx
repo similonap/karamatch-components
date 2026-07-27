@@ -1,10 +1,11 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import type { ReactNode } from "react";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import type { IconName } from "../../icons/types";
 import { AppPressable } from "./AppPressable";
+import { AppText } from "./AppText";
 
 // Ported from karamatch-web/src/ui.tsx's `ListRow` — a row inside a Group:
 // leading icon, title/subtitle, trailing value + chevron.
@@ -33,7 +34,7 @@ export function ListRow({
     trailing?: ReactNode;
     last?: boolean;
 }) {
-    const { C, CTRL, S, S2, T } = useTheme();
+    const { C, CTRL, S, S2 } = useTheme();
 
     const body = (
         <View
@@ -52,22 +53,24 @@ export function ListRow({
             {icon ? <Icon name={icon} size={20} color={danger ? C.tintSoft : iconColor ?? C.textMuted} /> : null}
             <View style={{ flex: 1, minWidth: 0 }}>
                 {typeof title === "string" ? (
-                    <Text style={[T.bodyStrong, { color: danger ? C.tintSoft : C.text }]} numberOfLines={1}>
+                    <AppText variant="bodyStrong" tone={danger ? "tintSoft" : "text"} truncate>
                         {title}
-                    </Text>
+                    </AppText>
                 ) : (
                     title
                 )}
                 {subtitle ? (
                     typeof subtitle === "string" ? (
-                        <Text style={[T.caption, { color: C.textMuted, marginTop: 1 }]}>{subtitle}</Text>
+                        <AppText variant="caption" style={{ marginTop: 1 }}>
+                            {subtitle}
+                        </AppText>
                     ) : (
                         subtitle
                     )
                 ) : null}
             </View>
             {value ? (
-                typeof value === "string" ? <Text style={[T.caption, { color: C.textMuted }]}>{value}</Text> : value
+                typeof value === "string" ? <AppText variant="caption">{value}</AppText> : value
             ) : null}
             {trailing}
             {chevron ? <Icon name="chevronRight" size={18} color={C.textFaint} /> : null}

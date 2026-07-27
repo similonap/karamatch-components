@@ -112,6 +112,26 @@ See it live in the gallery under **Theme → Theming** (`Showcase`, `SideBySide`
 `Tokens`, `Switcher`), or switch the whole gallery over from the **Theme**
 addon panel.
 
+### Text
+
+`AppText` is the typography primitive — pick a role from the ramp and a tone
+from the palette, and both follow the live theme:
+
+```tsx
+<AppText variant="title">Karaoke near you</AppText>
+<AppText variant="caption" tone="textMuted">Neon Nights · 21:00</AppText>
+<AppText variant="bodyStrong" size={16} truncate>{venue.name}</AppText>
+```
+
+`variant` accepts any of the 17 ramp roles (`display`, `title`, `heading`,
+`navTitle`, `bodyStrong`, `body`, `callout`, `caption`, `captionStrong`,
+`footnote`, `sectionHeader`, plus `button`, `chip`, `tab`, `input`, `numeric`,
+`wordmark`). `weight` swaps the registered font family rather than setting
+`fontWeight`, since React Native can't synthesise a weight onto a font file.
+`truncate` also sets `flexShrink`, without which a clamped label overflows its
+row instead of ellipsising. For a `TextInput`, which can't be an `AppText`,
+`useTextStyle()` returns the same resolved style.
+
 ### Loading a theme's fonts
 
 React Native can't synthesise a weight, so each theme names one registered

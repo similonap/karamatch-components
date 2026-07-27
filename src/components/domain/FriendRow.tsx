@@ -1,8 +1,9 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { StarIcon } from "../../icons/StarIcon";
 import type { MatchedUser } from "../../types";
+import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
 import { Button } from "../primitives/Button";
 import { ListRow } from "../primitives/ListRow";
@@ -26,7 +27,7 @@ export function FriendRow({
     onAdd?: () => void;
     last?: boolean;
 }) {
-    const { C, S, T } = useTheme();
+    const { C, S } = useTheme();
 
     return (
         <ListRow
@@ -42,7 +43,9 @@ export function FriendRow({
                     {variant === "friend" ? (
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
                             <StarIcon size={12} color={C.gold} />
-                            <Text style={[T.captionStrong, { color: C.gold }]}>{person.singerRating.toFixed(1)}</Text>
+                            <AppText variant="captionStrong" tone="gold">
+                                {person.singerRating.toFixed(1)}
+                            </AppText>
                         </View>
                     ) : (
                         <Button label="Add" icon="userPlus" variant="tinted" size="sm" onPress={() => onAdd?.()} />

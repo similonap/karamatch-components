@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import type { PartyRoomMember } from "../../types";
 import { AppPressable } from "../primitives/AppPressable";
+import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
 
 // Ported from karamatch-web/src/screens/PartyRoom.tsx's inline crew pills —
@@ -19,7 +20,7 @@ export function CrewMemberChip({
     isMe: boolean;
     onPress?: () => void;
 }) {
-    const { C, CTRL, RADII, T } = useTheme();
+    const { C, CTRL, RADII } = useTheme();
 
     return (
         <AppPressable
@@ -39,7 +40,7 @@ export function CrewMemberChip({
             }}
         >
             <Avatar name={member.name} photoUrl={member.photoUrl} seed={member.id} size={24} />
-            <Text style={[T.captionStrong, { color: C.text }]}>{isMe ? "You" : member.name.split(" ")[0]}</Text>
+            <AppText variant="captionStrong">{isMe ? "You" : member.name.split(" ")[0]}</AppText>
             {member.role === "host" ? (
                 <Icon name="crown" size={12} color={C.gold} />
             ) : member.paid ? (
@@ -52,7 +53,7 @@ export function CrewMemberChip({
 }
 
 export function InvitedMemberChip({ username }: { username: string }) {
-    const { C, CTRL, DECOR, RADII, T } = useTheme();
+    const { C, CTRL, DECOR, RADII } = useTheme();
 
     return (
         <View
@@ -68,8 +69,10 @@ export function InvitedMemberChip({ username }: { username: string }) {
                 paddingHorizontal: 11
             }}
         >
-            <Text style={[T.footnote, { color: C.textMuted }]}>@{username}</Text>
-            <Text style={[T.footnote, { color: C.cyan }]}>invited</Text>
+            <AppText variant="footnote">@{username}</AppText>
+            <AppText variant="footnote" tone="cyan">
+                invited
+            </AppText>
         </View>
     );
 }

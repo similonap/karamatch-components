@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { Image } from "expo-image";
 
 import { useTheme } from "../../theme/ThemeProvider";
@@ -7,6 +7,7 @@ import { Icon } from "../../icons/Icon";
 import { formatWhen, money } from "../../utils/format";
 import type { NotificationView } from "../../types";
 import { AppPressable } from "../primitives/AppPressable";
+import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
 import { Button } from "../primitives/Button";
 import { Card } from "../primitives/Card";
@@ -30,7 +31,7 @@ export function NotificationRow({
     /** "Decline" (invite) or "Dismiss" (review). */
     onDismiss: () => void;
 }) {
-    const { C, S, S2, T } = useTheme();
+    const { C, S, S2 } = useTheme();
 
     return (
         <Card highlight style={{ gap: S2.s12 }}>
@@ -38,13 +39,19 @@ export function NotificationRow({
                 <AppPressable onPress={onOpen} press="row" style={{ flexDirection: "row", alignItems: "center", gap: S2.s12 }}>
                     <VenueThumb imageUrl={notification.venue.imageUrl} />
                     <View style={{ flex: 1, minWidth: 0 }}>
-                        <Text style={[T.callout, { color: C.textDim }]}>
+                        {/* A bold run inside a sentence keeps the parent's
+                            variant and only swaps weight, so it stays on the
+                            callout size rather than jumping to bodyStrong's. */}
+                        <AppText variant="callout" tone="textDim">
                             {"How was "}
-                            <Text style={{ fontFamily: T.bodyStrong.fontFamily, color: C.text }}>{notification.venue.name}</Text>?
-                        </Text>
-                        <Text style={[T.footnote, { color: C.textMuted, marginTop: 3 }]}>
+                            <AppText variant="callout" weight="bold" tone="text">
+                                {notification.venue.name}
+                            </AppText>
+                            ?
+                        </AppText>
+                        <AppText variant="footnote" style={{ marginTop: 3 }}>
                             {notification.party.title} · {formatWhen(notification.party.start)}
-                        </Text>
+                        </AppText>
                     </View>
                     <Icon name="chevronRight" size={16} weight="strong" color={C.textFaint} />
                 </AppPressable>
@@ -52,14 +59,18 @@ export function NotificationRow({
                 <AppPressable onPress={onOpen} press="row" style={{ flexDirection: "row", alignItems: "center", gap: S2.s12 }}>
                     <Avatar name={notification.from.name} photoUrl={notification.from.photoUrl} seed={notification.from.id} size={42} />
                     <View style={{ minWidth: 0, flex: 1 }}>
-                        <Text style={[T.callout, { color: C.textDim }]}>
-                            <Text style={{ fontFamily: T.bodyStrong.fontFamily, color: C.text }}>@{notification.from.username}</Text>
+                        <AppText variant="callout" tone="textDim">
+                            <AppText variant="callout" weight="bold" tone="text">
+                                @{notification.from.username}
+                            </AppText>
                             {" invited you to "}
-                            <Text style={{ fontFamily: T.bodyStrong.fontFamily, color: C.tintSoft }}>{notification.party.title}</Text>
-                        </Text>
-                        <Text style={[T.footnote, { color: C.textMuted, marginTop: 3 }]}>
+                            <AppText variant="callout" weight="bold" tone="tintSoft">
+                                {notification.party.title}
+                            </AppText>
+                        </AppText>
+                        <AppText variant="footnote" style={{ marginTop: 3 }}>
                             {notification.party.venueName} · {formatWhen(notification.party.start)}
-                        </Text>
+                        </AppText>
                     </View>
                 </AppPressable>
             )}

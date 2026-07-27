@@ -3,6 +3,7 @@ import { TextInput, View } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import { AppPressable } from "../primitives/AppPressable";
+import { useTextStyle } from "../primitives/AppText";
 
 // Ported from karamatch-web/src/screens/PartyRoom.tsx's inline chat composer
 // — a pill text field plus a circular send button that tints once there's a
@@ -18,7 +19,8 @@ export function ChatInputBar({
     onSend: () => void;
     placeholder?: string;
 }) {
-    const { C, CTRL, RADII, S, T } = useTheme();
+    const { C, CTRL, RADII, S } = useTheme();
+    const inputStyle = useTextStyle({ variant: "input" });
     const canSend = value.trim().length > 0;
 
     return (
@@ -30,7 +32,7 @@ export function ChatInputBar({
                 placeholder={placeholder}
                 placeholderTextColor={C.textFaint}
                 style={[
-                    T.input,
+                    inputStyle,
                     {
                         flex: 1,
                         height: CTRL.searchHeight,
@@ -39,7 +41,6 @@ export function ChatInputBar({
                         borderWidth: CTRL.border.regular,
                         borderColor: C.border,
                         backgroundColor: C.surface2,
-                        color: C.text,
                         paddingHorizontal: CTRL.fieldPaddingX + 2
                     }
                 ]}

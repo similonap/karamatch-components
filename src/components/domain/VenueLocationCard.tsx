@@ -1,8 +1,9 @@
-import { Linking, Platform, Text, View } from "react-native";
+import { Linking, Platform, View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import { AppPressable } from "../primitives/AppPressable";
+import { AppText } from "../primitives/AppText";
 import { Card } from "../primitives/Card";
 
 // Replaces karamatch-web/src/ui.tsx's `VenueMap` (a read-only Leaflet
@@ -21,7 +22,7 @@ export function VenueLocationCard({
     lng: number;
     height?: number;
 }) {
-    const { C, CTRL, RADII, S, S2, T } = useTheme();
+    const { C, CTRL, RADII, S, S2 } = useTheme();
 
     const openInMaps = () => {
         const label = encodeURIComponent(name);
@@ -59,16 +60,18 @@ export function VenueLocationCard({
                     >
                         <Icon name="pin" size={18} color={C.tintSoft} />
                     </View>
-                    <Text style={[T.footnote, { color: C.textFaint }]}>
+                    <AppText variant="footnote" tone="textFaint">
                         {lat.toFixed(4)}, {lng.toFixed(4)}
-                    </Text>
+                    </AppText>
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: S.sm, borderTopWidth: CTRL.border.hairline, borderTopColor: C.border }}>
-                    <Text style={[T.captionStrong, { color: C.text, flexShrink: 1 }]} numberOfLines={1}>
+                    <AppText variant="captionStrong" truncate style={{ flexShrink: 1 }}>
                         {name}
-                    </Text>
+                    </AppText>
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
-                        <Text style={[T.captionStrong, { color: C.tintSoft }]}>Open in Maps</Text>
+                        <AppText variant="captionStrong" tone="tintSoft">
+                            Open in Maps
+                        </AppText>
                         <Icon name="chevronRight" size={14} weight="strong" color={C.tintSoft} />
                     </View>
                 </View>

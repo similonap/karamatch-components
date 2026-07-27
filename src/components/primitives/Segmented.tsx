@@ -1,7 +1,8 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { AppPressable } from "./AppPressable";
+import { AppText } from "./AppText";
 
 // Ported from karamatch-web/src/ui.tsx's `Segmented` — an iOS/Material-
 // neutral segmented control, for switching a pane within a screen.
@@ -14,7 +15,7 @@ export function Segmented<K extends string>({
     value: K;
     onChange: (key: K) => void;
 }) {
-    const { C, CTRL, RADII, T } = useTheme();
+    const { C, CTRL, RADII } = useTheme();
     const pad = CTRL.segmentPad;
     const outer = Math.min(RADII.control, (CTRL.segmentHeight + pad * 2) / 2);
     // The inner radius has to shrink by the padding, or a pill-shaped
@@ -53,9 +54,9 @@ export function Segmented<K extends string>({
                             backgroundColor: on ? C.surfacePress : "transparent"
                         }}
                     >
-                        <Text style={[on ? T.captionStrong : T.caption, { color: on ? C.text : C.textMuted }]}>
+                        <AppText variant={on ? "captionStrong" : "caption"} tone={on ? "text" : "textMuted"}>
                             {item.label}
-                        </Text>
+                        </AppText>
                         {item.dot ? (
                             <View style={{ width: 6, height: 6, borderRadius: Math.min(RADII.round, 3), backgroundColor: C.tint }} />
                         ) : null}
