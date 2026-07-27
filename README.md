@@ -66,7 +66,120 @@ export default function RootLayout() {
 
 Skip this and you'll get `Error: useTheme must be used within a ThemeProvider`.
 
-## 3. Use the component
+## 3. Load the fonts
+
+The components never set `fontWeight` — React Native can't synthesise a weight
+onto a font file, so every type role names an exact weighted family
+(`Outfit_700Bold`, not Outfit at 700). Those families have to be registered
+before anything renders: an unregistered `fontFamily` silently falls back to the
+system font on iOS and draws **nothing at all** on Android.
+
+Install the font packages for the theme(s) you use:
+
+```sh
+# neon-nights (default)
+npx expo install @expo-google-fonts/unbounded @expo-google-fonts/outfit
+# soft-aurora
+npx expo install @expo-google-fonts/quicksand @expo-google-fonts/nunito
+# wireframe
+npx expo install @expo-google-fonts/inter
+```
+
+| Theme | Packages | Families to register |
+| --- | --- | --- |
+| `neon-nights` | `unbounded`, `outfit` | `Unbounded_700Bold`, `Unbounded_800ExtraBold`, `Outfit_400Regular`, `Outfit_500Medium`, `Outfit_700Bold`, `Outfit_800ExtraBold` |
+| `soft-aurora` | `quicksand`, `nunito` | `Quicksand_600SemiBold`, `Quicksand_700Bold`, `Nunito_400Regular`, `Nunito_500Medium`, `Nunito_700Bold`, `Nunito_800ExtraBold` |
+| `wireframe` | `inter` | `Inter_400Regular`, `Inter_500Medium`, `Inter_600SemiBold`, `Inter_700Bold` |
+
+Then load them once at the root, above `ThemeProvider`, and hold the splash
+screen until they're ready:
+
+```sh
+npx expo install expo-font expo-splash-screen
+```
+
+```tsx
+// app/_layout.tsx
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import { Stack } from "expo-router";
+import { ThemeProvider } from "@/theme/ThemeProvider";
+
+// Import each weight from its own subpath. The package root re-exports every
+// weight from one file, which makes Metro bundle all nine .ttf files as assets
+// even though you only use four.
+import { Outfit_400Regular } from "@expo-google-fonts/outfit/400Regular";
+import { Outfit_500Medium } from "@expo-google-fonts/outfit/500Medium";
+import { Outfit_700Bold } from "@expo-google-fonts/outfit/700Bold";
+import { Outfit_800ExtraBold } from "@expo-google-fonts/outfit/800ExtraBold";
+import { Unbounded_700Bold } from "@expo-google-fonts/unbounded/700Bold";
+import { Unbounded_800ExtraBold } from "@expo-google-fonts/unbounded/800ExtraBold";
+
+SplashScreen.preventAutoHideAsync().catch(() => {});
+
+export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({
+    Unbounded_700Bold,
+    Unbounded_800ExtraBold,
+    Outfit_400Regular,
+    Outfit_500Medium,
+    Outfit_700Bold,
+    Outfit_800ExtraBold
+  });
+
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  // Render nothing while the splash screen is still up — mounting components
+  // before the families exist is what produces invisible text on Android.
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
+  return (
+    <ThemeProvider>
+      <Stack />
+    </ThemeProvider>
+  );
+}
+```
+
+The key is the object keys: `useFonts` registers each family under the name you
+give it, and that name is exactly what the theme's `fonts` tokens reference.
+Using the imported constants as shorthand properties keeps the two in sync.
+
+A few things worth knowing:
+
+- **Switching themes at runtime?** Load every family every theme you offer names
+  — `useFonts` runs once, and a theme swap can't go back and fetch more. See
+  `App.tsx` in this repo, which loads all three themes' families for exactly
+  that reason.
+- **Your own `.ttf`/`.otf` files** work the same way — drop them in
+  `assets/fonts/` and register them under whatever name your theme uses:
+  ```tsx
+  const [fontsLoaded] = useFonts({
+    MyBrand_Regular: require("./assets/fonts/MyBrand-Regular.ttf"),
+    MyBrand_Bold: require("./assets/fonts/MyBrand-Bold.ttf")
+  });
+  ```
+  Then name those strings in `createTheme({ fonts: { … } })` (see
+  [Writing your own theme](#writing-your-own-theme)).
+- **Skipping the loading flash.** In a development build or a bare app you can
+  embed the files natively with the `expo-font` config plugin instead, which
+  makes them available at launch with no `useFonts` call:
+  ```json
+  ["expo-font", { "fonts": ["node_modules/@expo-google-fonts/outfit/400Regular/Outfit_400Regular.ttf"] }]
+  ```
+  This needs a rebuild (`npx expo prebuild` / EAS Build) and doesn't apply to
+  Expo Go or web, so `useFonts` stays the portable default.
+- **Web** loads the same families over `@font-face` automatically via
+  `react-native-web`; nothing extra to configure.
+
+## 4. Use the component
 
 ```tsx
 import { Button } from "@/components/primitives/Button";
@@ -77,7 +190,7 @@ import { Button } from "@/components/primitives/Button";
 That's it — browse the gallery for what's available, install what you need,
 and go.
 
-## 4. Theming
+## 5. Theming
 
 Three themes ship with the shelf, and all of them support dark **and** light:
 
@@ -132,33 +245,9 @@ from the palette, and both follow the live theme:
 row instead of ellipsising. For a `TextInput`, which can't be an `AppText`,
 `useTextStyle()` returns the same resolved style.
 
-### Loading a theme's fonts
-
-React Native can't synthesise a weight, so each theme names one registered
-family per weight and those families have to be loaded before you render.
-Install the packages for the theme(s) you use and load them once at the root:
-
-```sh
-# neon-nights (default)
-npx expo install @expo-google-fonts/unbounded @expo-google-fonts/outfit
-# soft-aurora
-npx expo install @expo-google-fonts/quicksand @expo-google-fonts/nunito
-# wireframe
-npx expo install @expo-google-fonts/inter
-```
-
-```tsx
-import { useFonts } from "@expo-google-fonts/outfit/useFonts";
-import { Outfit_400Regular } from "@expo-google-fonts/outfit/400Regular";
-// …one import per weight; see App.tsx in this repo for all three themes.
-
-const [fontsLoaded] = useFonts({ Outfit_400Regular /* … */ });
-if (!fontsLoaded) return null;
-```
-
-Weights per theme: `neon-nights` — Unbounded 700/800 + Outfit 400/500/700/800 ·
-`soft-aurora` — Quicksand 600/700 + Nunito 400/500/700/800 ·
-`wireframe` — Inter 400/500/600/700.
+Each theme brings its own two typefaces, so switching theme means the new
+theme's families must already be registered — see
+[3. Load the fonts](#3-load-the-fonts).
 
 ### Writing your own theme
 
@@ -191,6 +280,11 @@ export const myBrand = createTheme({
   <Stack />
 </ThemeProvider>
 ```
+
+The strings in `fonts` are family names, not packages — each one has to match a
+key you registered with `useFonts` ([3. Load the fonts](#3-load-the-fonts)), or
+text in that role renders blank on Android. Omit `fonts` entirely and the theme
+keeps Unbounded + Outfit.
 
 Everything the shelf draws with is a token, so a theme can go a long way past a
 recolour: `soft-aurora` reshapes every control into a pill, grows the control
