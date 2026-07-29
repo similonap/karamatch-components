@@ -2,8 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react-native";
 import { View } from "react-native";
 import { SafeAreaInsetsContext } from "react-native-safe-area-context";
 
+import { MOCK_USER } from "../../mocks/data";
 import { useTheme } from "../../theme/ThemeProvider";
+import { AppPressable } from "../primitives/AppPressable";
+import { Avatar } from "../primitives/Avatar";
 import { IconButton } from "../primitives/IconButton";
+import { Wordmark } from "../primitives/Wordmark";
 import { AppBar } from "./AppBar";
 
 const meta: Meta<typeof AppBar> = {
@@ -21,6 +25,53 @@ export const Default: Story = {
         return (
             <View style={{ backgroundColor: C.surface }}>
                 <AppBar {...args} onBack={() => {}} right={<IconButton icon="share" label="Share" onPress={() => {}} />} />
+            </View>
+        );
+    }
+};
+
+// The tab-host bar from karamatch-web/src/screens/MainTabs.tsx: wordmark on
+// the left, then the notification bell carrying its unread count and the
+// signed-in user's avatar. No back chevron and no border — this bar is the
+// root of the app, not a pushed screen, so there is nothing to go back to and
+// nothing to divide it from the tab content below.
+//
+// The avatar gets its own `AppPressable` sized to `LAYOUT.touch` rather than
+// being pressed directly: at 32pt it is below the 44pt touch minimum, so the
+// wrapper supplies the target while the image keeps its size.
+export const Home: Story = {
+    name: "Home (notifications + profile)",
+    args: { title: undefined, bordered: false },
+    render: args => {
+        const { C, LAYOUT } = useTheme();
+        return (
+            <View style={{ backgroundColor: C.surface }}>
+                <AppBar
+                    {...args}
+                    title={<Wordmark />}
+                    right={
+                        <>
+                            <IconButton icon="bell" label="Notifications" badge={2} onPress={() => {}} />
+                            <AppPressable
+                                onPress={() => {}}
+                                accessibilityLabel="Your profile"
+                                style={{
+                                    width: LAYOUT.touch,
+                                    height: LAYOUT.touch,
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                }}
+                            >
+                                <Avatar
+                                    name={MOCK_USER.name}
+                                    photoUrl={MOCK_USER.photoUrl}
+                                    seed={MOCK_USER.id}
+                                    size={32}
+                                />
+                            </AppPressable>
+                        </>
+                    }
+                />
             </View>
         );
     }
