@@ -80,18 +80,23 @@ export function Screen({
     if (!scroll) {
         const body = <View style={[{ flex: 1 }, layout, style]}>{children}</View>;
 
-        return avoidKeyboard ? (
-            <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                // Android resizes the window itself under `adjustResize`, so
-                // padding it a second time double-counts the keyboard.
-                behavior={Platform.OS === "ios" ? "padding" : undefined}
-                keyboardVerticalOffset={keyboardOffset}
-            >
-                {body}
-            </KeyboardAvoidingView>
-        ) : (
-            body
+        // Outside the KeyboardAvoidingView, not inside it: the wash belongs to
+        // the screen, and lifting it with the content would slide the bloom up
+        // the display every time a field takes focus.
+        return withGlow(
+            avoidKeyboard ? (
+                <KeyboardAvoidingView
+                    style={{ flex: 1 }}
+                    // Android resizes the window itself under `adjustResize`, so
+                    // padding it a second time double-counts the keyboard.
+                    behavior={Platform.OS === "ios" ? "padding" : undefined}
+                    keyboardVerticalOffset={keyboardOffset}
+                >
+                    {body}
+                </KeyboardAvoidingView>
+            ) : (
+                body
+            )
         );
     }
 
