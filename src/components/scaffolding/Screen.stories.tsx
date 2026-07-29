@@ -55,7 +55,7 @@ export const Centred: Story = {
                     <View style={{ flex: 1, alignItems: "center", justifyContent: "center", gap: S.md }}>
                         <BrandMark size={80} />
                         <AppText variant="title">KaraMatch</AppText>
-                        <AppText variant="body" tone="dim" style={{ textAlign: "center", maxWidth: 260 }}>
+                        <AppText variant="body" tone="textDim" style={{ textAlign: "center", maxWidth: 260 }}>
                             Find people who sing what you sing. Book a party. Split the bill.
                         </AppText>
                     </View>
@@ -81,7 +81,7 @@ export const FilledWithOverlay: Story = {
                 <Screen {...args}>
                     <View style={{ flex: 1, backgroundColor: C.surface3 }}>
                         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                            <AppText variant="caption" tone="faint">
+                            <AppText variant="caption" tone="textFaint">
                                 Map fills the body
                             </AppText>
                         </View>
