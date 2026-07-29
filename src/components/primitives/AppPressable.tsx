@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import type { ReactNode } from "react";
 import { Animated, Pressable } from "react-native";
-import type { StyleProp, ViewStyle } from "react-native";
+import type { AccessibilityRole, AccessibilityState, StyleProp, ViewStyle } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import type { PressRole } from "../../theme/tokens";
@@ -26,6 +26,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 // to port because the problem it worked around doesn't exist here.
 export function AppPressable({
     onPress,
+    onLongPress,
     disabled,
     style,
     children,
@@ -33,9 +34,12 @@ export function AppPressable({
     scaleTo,
     opacityTo,
     accessibilityLabel,
+    accessibilityRole,
+    accessibilityState,
     hitSlop
 }: {
     onPress?: () => void;
+    onLongPress?: () => void;
     disabled?: boolean;
     style?: StyleProp<ViewStyle>;
     children: ReactNode;
@@ -50,6 +54,10 @@ export function AppPressable({
     scaleTo?: number;
     opacityTo?: number;
     accessibilityLabel?: string;
+    /** `tab` for a tab bar button, so the platform announces it as one. */
+    accessibilityRole?: AccessibilityRole;
+    /** Carries selected/disabled state to the screen reader — a plain press has none to report. */
+    accessibilityState?: AccessibilityState;
     hitSlop?: number;
 }) {
     const { MOTION } = useTheme();
@@ -71,9 +79,12 @@ export function AppPressable({
     return (
         <AnimatedPressable
             onPress={onPress}
+            onLongPress={onLongPress}
             disabled={disabled}
             hitSlop={hitSlop}
             accessibilityLabel={accessibilityLabel}
+            accessibilityRole={accessibilityRole}
+            accessibilityState={accessibilityState}
             onPressIn={() => animateTo(scaleTo ?? feedback.scale, opacityTo ?? feedback.opacity, MOTION.pressInMs)}
             onPressOut={() => animateTo(1, 1, MOTION.pressOutMs)}
             style={[style, { opacity: disabled ? 0.45 : opacity, transform: [{ scale }] }]}

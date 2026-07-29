@@ -2,10 +2,8 @@ import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTheme } from "../../theme/ThemeProvider";
-import { Icon } from "../../icons/Icon";
 import type { IconName } from "../../icons/types";
-import { AppPressable } from "../primitives/AppPressable";
-import { AppText } from "../primitives/AppText";
+import { TabBarButton } from "./TabBarButton";
 
 export type TabKey = "venues" | "parties" | "match" | "friends" | "mine";
 
@@ -39,23 +37,15 @@ export function BottomTabBar({ current, onSelect }: { current: TabKey; onSelect:
                 borderTopColor: C.border
             }}
         >
-            {TABS.map(tab => {
-                const on = tab.key === current;
-                return (
-                    <AppPressable
-                        key={tab.key}
-                        onPress={() => onSelect(tab.key)}
-                        press="snap"
-                        accessibilityLabel={tab.label}
-                        style={{ flex: 1, alignItems: "center", justifyContent: "center", gap: 3 }}
-                    >
-                        <Icon name={tab.icon} size={24} solid={on} color={on ? C.tint : C.textMuted} />
-                        <AppText variant="tab" weight={on ? "bold" : "medium"} tone={on ? "tint" : "textMuted"}>
-                            {tab.label}
-                        </AppText>
-                    </AppPressable>
-                );
-            })}
+            {TABS.map(tab => (
+                <TabBarButton
+                    key={tab.key}
+                    icon={tab.icon}
+                    label={tab.label}
+                    selected={tab.key === current}
+                    onPress={() => onSelect(tab.key)}
+                />
+            ))}
         </View>
     );
 }

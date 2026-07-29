@@ -37,6 +37,7 @@ const SUPPORT_FILES = [
     { file: "src/theme/ThemeProvider.tsx", type: "registry:lib" },
     { file: "src/icons/Icon.tsx", type: "registry:ui" },
     { file: "src/icons/StarIcon.tsx", type: "registry:ui" },
+    { file: "src/icons/TabIcon.tsx", type: "registry:ui" },
     { file: "src/icons/types.ts", type: "registry:lib" },
     { file: "src/components/scaffolding/useScreenLayout.ts", type: "registry:lib" },
     { file: "src/components/scaffolding/useAppBarHeight.ts", type: "registry:lib" },

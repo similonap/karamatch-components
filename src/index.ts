@@ -33,6 +33,7 @@ export type {
 // Icons
 export { Icon } from "./icons/Icon";
 export { StarIcon } from "./icons/StarIcon";
+export { TabIcon } from "./icons/TabIcon";
 export type { IconName } from "./icons/types";
 
 // Primitives
@@ -86,6 +87,7 @@ export type { TabKey } from "./components/scaffolding/BottomTabBar";
 export { ListScreen } from "./components/scaffolding/ListScreen";
 export type { ListScreenProps } from "./components/scaffolding/ListScreen";
 export { Screen } from "./components/scaffolding/Screen";
+export { TabBarButton } from "./components/scaffolding/TabBarButton";
 export { useScreenLayout } from "./components/scaffolding/useScreenLayout";
 export type { ScreenLayoutOptions } from "./components/scaffolding/useScreenLayout";
 
