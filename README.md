@@ -190,7 +190,89 @@ import { Button } from "@/components/primitives/Button";
 That's it — browse the gallery for what's available, install what you need,
 and go.
 
-## 5. Theming
+## 5. Building a screen
+
+The scaffolding components (`AppBar`, `Screen`, `ListScreen`, `BottomBar`,
+`BottomTabBar`) follow one rule: **a screen owns its own chrome.** Turn the
+navigator's header off and compose the screen yourself.
+
+```tsx
+// app/_layout.tsx
+<Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: C.bg } }} />
+```
+
+```tsx
+// app/venue.tsx
+import { useRouter } from "expo-router";
+import { AppBar } from "@/components/scaffolding/AppBar";
+import { Screen } from "@/components/scaffolding/Screen";
+
+export default function Venue() {
+  const router = useRouter();
+
+  return (
+    <>
+      <AppBar title="Venue detail" onBack={router.back} />
+      <Screen>{/* … */}</Screen>
+    </>
+  );
+}
+```
+
+The route's container is already `flex: 1`, so a fragment is enough: `AppBar`
+sizes to its content and `Screen` takes the rest.
+
+A few things this buys you, and one thing to watch:
+
+- **`AppBar` reserves the status-bar inset itself.** Nothing else does —
+  `Screen` pads the *bottom* inset only. A screen with no `AppBar` draws its
+  first element under the status bar, so either mount a bar or pad the top
+  yourself.
+- **`contentInsetAdjustmentBehavior` won't save you.** `Screen` sets it, but
+  it's iOS-only and only fires under a native header — with `headerShown:
+  false` it does nothing.
+- **Need the bar's height?** Use `useAppBarHeight()`, not `LAYOUT.appBar`.
+  The token is the bar's row; the hook adds the inset above it. This is what
+  `Screen`'s `keyboardOffset` wants:
+
+  ```tsx
+  const appBarHeight = useAppBarHeight();
+
+  <AppBar title="Sign in" onBack={router.back} />
+  <Screen scroll={false} avoidKeyboard keyboardOffset={appBarHeight}>
+  ```
+
+- **Centred screens want `scroll={false}`.** A welcome screen or an empty
+  state isn't a scrolling body; `<Screen scroll={false} style={{ justifyContent: "center" }}>`
+  is the case that prop exists for. Note `style` lands on the scroll view's
+  *content container* when `scroll` is left on, so use `flexGrow: 1` there
+  rather than `flex: 1`.
+
+### Putting the bar in the navigator instead
+
+If you'd rather keep titles on the route, install `app-bar-header` and hand
+`appBarHeader()` to the navigator — leave `headerShown` alone, since a custom
+`header` only renders when the header is shown:
+
+```tsx
+import { appBarHeader } from "@/components/scaffolding/AppBarHeader";
+
+<Stack screenOptions={{ header: appBarHeader(), contentStyle: { backgroundColor: C.bg } }}>
+  <Stack.Screen name="venue" options={{ title: "Venue detail" }} />
+  <Stack.Screen name="welcome" options={{ headerShown: false }} />
+</Stack>
+```
+
+Back affordance and title come from the route. Don't write the render prop by
+hand: a navigator header renders *outside* the screen container, so
+`contentStyle` doesn't paint behind it — `appBarHeader()` keeps the bar's
+background on, which a hand-rolled `<AppBar />` with `transparent` would not.
+
+Nested layouts do **not** inherit `screenOptions` from the root one. A bare
+`<Stack />` in `app/(app)/_layout.tsx` gets the stock header and an unthemed
+background back, whatever the root layout says.
+
+## 6. Theming
 
 Three themes ship with the shelf, and all of them support dark **and** light:
 
