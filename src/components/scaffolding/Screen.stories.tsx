@@ -152,3 +152,22 @@ export const DockedComposer: Story = {
         );
     }
 };
+
+export const Glow: Story = {
+    render: () => {
+        const { C, S } = useTheme();
+        return (
+            <View style={{ flex: 1, backgroundColor: C.bg }}>
+                <Screen glow scroll={false}>
+                    <View style={{ flex: 1, alignItems: "center", justifyContent: "center", gap: S.sm }}>
+                        <BrandMark size={80} />
+                        <AppText variant="title">KaraMatch</AppText>
+                        <AppText variant="body" tone="textDim" align="center">
+                            One soft brand bloom behind the content — the Welcome screen's wash.
+                        </AppText>
+                    </View>
+                </Screen>
+            </View>
+        );
+    }
+};

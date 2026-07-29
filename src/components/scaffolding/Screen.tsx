@@ -1,6 +1,7 @@
 import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import type { NativeScrollEvent, NativeSyntheticEvent, StyleProp, ViewStyle } from "react-native";
 
+import { useTheme } from "../../theme/ThemeProvider";
 import { useScreenLayout } from "./useScreenLayout";
 
 // Ported from karamatch-web/src/ui.tsx's `ScrollBody` — the body of a screen,
@@ -25,6 +26,7 @@ export function Screen({
     bottomPad,
     gap,
     scroll = true,
+    glow = false,
     avoidKeyboard = false,
     keyboardOffset = 0,
     style,
@@ -36,6 +38,11 @@ export function Screen({
     gap?: number;
     /** Set false for screens whose content fills the viewport instead of scrolling. */
     scroll?: boolean;
+    /**
+     * Lays one soft brand bloom behind the content. Off by default: it is a
+     * first-run flourish, and stacking it under a list just reads as fog.
+     */
+    glow?: boolean;
     /**
      * Keep content clear of the on-screen keyboard. Opt-in, because the
      * mechanism costs a layout node on screens that have no text input.
@@ -53,6 +60,18 @@ export function Screen({
     onScroll?: (offset: number) => void;
 }) {
     const layout = useScreenLayout({ pad, bottomPad, gap });
+
+    // Both branches below return through this, so the wash sits behind the
+    // scroller and the plain column alike.
+    const withGlow = (body: React.ReactNode) =>
+        glow ? (
+            <View style={{ flex: 1 }}>
+                <BrandWash />
+                {body}
+            </View>
+        ) : (
+            body
+        );
 
     // No scroller: the layout goes on the view itself so children can size
     // against it — `flex: 1` on a child, or an absolutely filled map. Nothing
@@ -80,7 +99,7 @@ export function Screen({
         ? (event: NativeSyntheticEvent<NativeScrollEvent>) => onScroll(event.nativeEvent.contentOffset.y)
         : undefined;
 
-    return (
+    return withGlow(
         <ScrollView
             style={{ flex: 1 }}
             contentContainerStyle={[layout, style]}
@@ -100,5 +119,32 @@ export function Screen({
         >
             {children}
         </ScrollView>
+    );
+}
+
+// Ported from karamatch-web/src/screens/Welcome.tsx, which drew this as a CSS
+// radial-gradient on the screen itself. The old screen stacked two radial
+// gradients and a glow; at phone size that just read as fog, so this is the one
+// bloom that survived — sized and placed exactly as the web left it.
+function BrandWash() {
+    const { C } = useTheme();
+    const wash = "radial-gradient(ellipse 420px 340px at 50% 22%, " + C.tintGlow + ", transparent 70%)";
+
+    return (
+        <View
+            pointerEvents="none"
+            style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                // react-native-web has no special case for `experimental_backgroundImage`
+                // (a Fabric/native-only style prop name) — it passes the key straight
+                // through as an invalid CSS property, so the wash silently no-ops there.
+                // `backgroundImage` is the real CSS property and DOES work on web.
+                ...(Platform.OS === "web" ? { backgroundImage: wash } : { experimental_backgroundImage: wash })
+            }}
+        />
     );
 }
