@@ -38,6 +38,7 @@ const SUPPORT_FILES = [
     { file: "src/icons/Icon.tsx", type: "registry:ui" },
     { file: "src/icons/StarIcon.tsx", type: "registry:ui" },
     { file: "src/icons/types.ts", type: "registry:lib" },
+    { file: "src/components/scaffolding/useScreenLayout.ts", type: "registry:lib" },
     { file: "src/types.ts", type: "registry:lib" },
     { file: "src/utils/avatar.ts", type: "registry:lib" },
     { file: "src/utils/format.ts", type: "registry:lib" },
