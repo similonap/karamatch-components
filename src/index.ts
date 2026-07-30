@@ -84,6 +84,8 @@ export { AppBar } from "./components/scaffolding/AppBar";
 export { BottomBar } from "./components/scaffolding/BottomBar";
 export { BottomTabBar, TABS as BOTTOM_TAB_BAR_TABS } from "./components/scaffolding/BottomTabBar";
 export type { TabKey } from "./components/scaffolding/BottomTabBar";
+export { HERO_HEIGHT, ImageStatusAppBar, ImageStatusHero } from "./components/scaffolding/ImageStatusAppBar";
+export type { ImageStatusAppBarProps, ImageStatusHeroProps } from "./components/scaffolding/ImageStatusAppBar";
 export { ListScreen } from "./components/scaffolding/ListScreen";
 export type { ListScreenProps } from "./components/scaffolding/ListScreen";
 export { Screen } from "./components/scaffolding/Screen";

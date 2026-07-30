@@ -29,6 +29,7 @@ export function Screen({
     glow = false,
     avoidKeyboard = false,
     keyboardOffset = 0,
+    underStatusBar = false,
     style,
     onScroll
 }: {
@@ -55,6 +56,16 @@ export function Screen({
      * `avoidKeyboard` is set on a non-scrolling screen.
      */
     keyboardOffset?: number;
+    /**
+     * Start the content at the very top of the window, under the status bar,
+     * for a screen whose first child is a hero photo with a floating bar over
+     * it (see `ImageStatusAppBar`). Off by default: iOS's automatic content
+     * inset is what keeps an ordinary screen's first row clear of the notch,
+     * and it is only ever wrong when the content is *meant* to run under it.
+     * Ignored when `scroll` is false — a plain column has no content inset to
+     * adjust, and never had one to begin with.
+     */
+    underStatusBar?: boolean;
     style?: StyleProp<ViewStyle>;
     /** Scroll offset in px, for screens with a collapsing header. Ignored when `scroll` is false. */
     onScroll?: (offset: number) => void;
@@ -108,7 +119,7 @@ export function Screen({
         <ScrollView
             style={{ flex: 1 }}
             contentContainerStyle={[layout, style]}
-            contentInsetAdjustmentBehavior="automatic"
+            contentInsetAdjustmentBehavior={underStatusBar ? "never" : "automatic"}
             // A scroller can lift its own content, so it needs no
             // KeyboardAvoidingView — this insets the scroll view on iOS and
             // keeps the focused field reachable. Android gets the same effect
