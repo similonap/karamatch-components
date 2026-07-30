@@ -30,10 +30,15 @@ import { useAppBarHeight } from "./useAppBarHeight";
 //         <ImageStatusAppBar title={venue.name} onBack={router.back} scrollY={scrollY} />
 //     </View>
 //
-// The wrapping `View` is what the bar is absolutely positioned against, and
-// `underStatusBar` is what stops iOS insetting the photo below the notch —
-// the hero is meant to run under the status bar, that being the whole point of
-// a chevron that floats on it.
+// The wrapping `View` is what the bar is absolutely positioned against.
+//
+// The photo itself starts *below* the status bar and any camera cutout:
+// `ImageStatusHero` reserves the top inset above it as a strip of `C.bg`, so
+// the top of the image lines up with the bottom of the bar's chevron row and
+// nothing is ever hidden behind the notch. `underStatusBar` on the `Screen` is
+// still what makes that work — it turns off iOS's automatic content inset, so
+// the hero's own reserved strip is the only top inset, rather than a second
+// one stacked on top of the platform's.
 
 /** The hero's height on the web venue screen, and the default for both halves. */
 export const HERO_HEIGHT = 180;
@@ -62,12 +67,13 @@ export function ImageStatusAppBar({ title, onBack, right, scrollY, imageHeight =
 
     // The web hard-coded this window as `(scrollY - 60) / (180 - 56 - 60)`:
     // fully handed over once the photo's bottom edge meets the bar's bottom
-    // edge, fading over roughly the last bar-row of travel before that. Same
-    // rule, but measured against `useAppBarHeight()` rather than
-    // `LAYOUT.appBar` — the bar here also reserves the status-bar inset, so on
-    // a notched device the photo runs out that much sooner, and a fixed 60pt
-    // start would compress the whole fade into the last few pixels.
-    const handover = Math.max(imageHeight - height, 1);
+    // edge, fading over roughly the last bar-row of travel before that.
+    //
+    // Both edges sit the same status-bar inset down the window — the hero
+    // reserves it above the photo, the bar reserves it above its row — so the
+    // inset cancels out of the difference and the travel is `imageHeight`
+    // against `LAYOUT.appBar`, the bar's row alone, not `useAppBarHeight()`.
+    const handover = Math.max(imageHeight - LAYOUT.appBar, 1);
     const fadeStart = Math.max(handover - LAYOUT.appBar, 0);
     const collapse = clamp01((scrollY - fadeStart) / Math.max(handover - fadeStart, 1));
 
@@ -164,12 +170,13 @@ export function ImageStatusAppBar({ title, onBack, right, scrollY, imageHeight =
 export interface ImageStatusHeroProps {
     /** Empty or broken falls back to a mic glyph on `C.surface3`, as `VenueCard` does. */
     imageUrl?: string;
-    /** Must match the bar's `imageHeight` — that's what times the handover. */
+    /** The photo's own height, below the status-bar inset. Must match the bar's `imageHeight`. */
     height?: number;
 }
 
 export function ImageStatusHero({ imageUrl, height = HERO_HEIGHT }: ImageStatusHeroProps) {
     const { C } = useTheme();
+    const insets = useSafeAreaInsets();
     const [broken, setBroken] = useState(false);
     const showPhoto = Boolean(imageUrl) && !broken;
 
@@ -179,31 +186,38 @@ export function ImageStatusHero({ imageUrl, height = HERO_HEIGHT }: ImageStatusH
     const scrim = "linear-gradient(180deg, " + C.scrim + " 0%, transparent 45%)";
 
     return (
-        <View style={{ height, backgroundColor: C.surface3, alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-            {showPhoto ? (
-                <Image
-                    source={{ uri: imageUrl }}
-                    onError={() => setBroken(true)}
-                    style={{ width: "100%", height: "100%" }}
-                    contentFit="cover"
+        // The reserved strip above the photo. It paints `C.bg` rather than
+        // being left transparent so the photo has a defined edge to start at
+        // even while the bar floating over it is still fully see-through, and
+        // it lives here rather than on the `Screen` because it has to scroll
+        // away with the photo — a pad on the scroller would stay put.
+        <View style={{ paddingTop: insets.top, backgroundColor: C.bg }}>
+            <View style={{ height, backgroundColor: C.surface3, alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                {showPhoto ? (
+                    <Image
+                        source={{ uri: imageUrl }}
+                        onError={() => setBroken(true)}
+                        style={{ width: "100%", height: "100%" }}
+                        contentFit="cover"
+                    />
+                ) : (
+                    <Icon name="mic" size={36} color={C.textFaint} />
+                )}
+                <View
+                    pointerEvents="none"
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        // Same split as `Screen`'s BrandWash: `experimental_backgroundImage`
+                        // is the native-only prop name, and react-native-web passes it
+                        // through as an invalid CSS property instead of translating it.
+                        ...(Platform.OS === "web" ? { backgroundImage: scrim } : { experimental_backgroundImage: scrim })
+                    }}
                 />
-            ) : (
-                <Icon name="mic" size={36} color={C.textFaint} />
-            )}
-            <View
-                pointerEvents="none"
-                style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    // Same split as `Screen`'s BrandWash: `experimental_backgroundImage`
-                    // is the native-only prop name, and react-native-web passes it
-                    // through as an invalid CSS property instead of translating it.
-                    ...(Platform.OS === "web" ? { backgroundImage: scrim } : { experimental_backgroundImage: scrim })
-                }}
-            />
+            </View>
         </View>
     );
 }
