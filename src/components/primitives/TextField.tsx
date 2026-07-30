@@ -35,8 +35,16 @@ export function TextField({
 
     return (
         <View style={{ gap: S2.s6 }}>
+            {/* Sentence case, so a field label never competes with the all-caps
+                section header directly above it.
+
+                No left inset: the web original nudged this label 2px right, which
+                aligned it with neither the input's border edge (0) nor its text
+                (`CTRL.fieldPaddingX`, 14) — it just left the label 2px off from
+                every sibling in the same column, a section header above it most
+                visibly. Flush left is the only edge that agrees with anything. */}
             {label ? (
-                <AppText variant="captionStrong" tone="textMuted" style={{ paddingLeft: 2 }}>
+                <AppText variant="captionStrong" tone="textMuted">
                     {label}
                 </AppText>
             ) : null}
