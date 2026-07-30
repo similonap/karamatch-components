@@ -14,20 +14,11 @@ function Backdrop({ children }: { children: React.ReactNode }) {
     return <View style={{ padding: S.lg, backgroundColor: C.surface }}>{children}</View>;
 }
 
-// Hoisted rather than written inline at each call site. These carry the full
-// API message shape (id, userId, sentAt), and a *fresh* object literal handed
-// straight to a prop gets excess-property-checked against ChatBubbleProps'
-// narrow shape, which would reject the extra fields. Through a variable it's
-// an ordinary structural check — which is the path real API objects take.
-const MY_REPLY = { ...MOCK_CHAT_MESSAGE, userId: MOCK_USER.id, from: MOCK_USER, text: "Sounds good, see you there!" };
-const THEIR_FOLLOW_UP = { ...MOCK_CHAT_MESSAGE, id: "m2", text: "Perfect, I'll bring the setlist." };
-const MY_CLOSER = { ...MOCK_CHAT_MESSAGE, id: "m3", userId: MOCK_USER.id, from: MOCK_USER, text: "See you at 9!" };
-
 const meta: Meta<typeof ChatBubble> = {
     title: "Domain/ChatBubble",
     component: ChatBubble,
     decorators: [Story => <Backdrop><Story /></Backdrop>],
-    args: { message: MOCK_CHAT_MESSAGE, mine: false, showName: true }
+    args: { text: MOCK_CHAT_MESSAGE.text, fromName: MOCK_CHAT_MESSAGE.from.name, mine: false, showName: true }
 };
 
 export default meta;
@@ -36,7 +27,13 @@ type Story = StoryObj<typeof ChatBubble>;
 export const Theirs: Story = {};
 
 export const Mine: Story = {
-    args: { message: MY_REPLY, mine: true }
+    args: { text: "Sounds good, see you there!", fromName: MOCK_USER.name, mine: true }
+};
+
+// A sender the server couldn't resolve — the name line falls back rather than
+// rendering an empty run.
+export const UnknownSender: Story = {
+    args: { fromName: null }
 };
 
 // Composes several bubbles, so it keeps a `render` — but only for the
@@ -46,9 +43,9 @@ export const Conversation: Story = {
         const { S } = useTheme();
         return (
             <View style={{ gap: S.xs }}>
-                <ChatBubble message={MOCK_CHAT_MESSAGE} mine={false} showName />
-                <ChatBubble message={THEIR_FOLLOW_UP} mine={false} showName={false} />
-                <ChatBubble message={MY_CLOSER} mine showName />
+                <ChatBubble text={MOCK_CHAT_MESSAGE.text} fromName={MOCK_CHAT_MESSAGE.from.name} mine={false} showName />
+                <ChatBubble text="Perfect, I'll bring the setlist." fromName={MOCK_CHAT_MESSAGE.from.name} mine={false} showName={false} />
+                <ChatBubble text="See you at 9!" fromName={MOCK_USER.name} mine showName />
             </View>
         );
     }

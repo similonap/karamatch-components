@@ -14,19 +14,21 @@ import { Chip } from "../primitives/Chip";
 export type PartyCardVariant = "open" | "match" | "upcoming" | "past";
 
 export type PartyCardProps = {
-    party: {
-        title: string;
-        /** Anything `new Date()` parses — rendered as "Fri 21:00". */
-        start: string;
-        /** Only the name is drawn; the card never links through to the venue. */
-        venue: { name: string };
-        host: { id: string | number; name: string; username: string; photoUrl?: string | null };
-        membersCount: number;
-        capacity: number;
-        spotsOpen: number;
-        /** What one singer pays, already split by the server. */
-        share: number;
-    };
+    title: string;
+    /** Anything `new Date()` parses — rendered as "Fri 21:00". */
+    start: string;
+    /** Only the name is drawn; the card never links through to the venue. */
+    venueName: string;
+    /** Only seeds the fallback avatar colour, so either id flavour works. */
+    hostId: string | number;
+    hostName: string;
+    hostUsername: string;
+    hostPhotoUrl?: string | null;
+    membersCount: number;
+    capacity: number;
+    spotsOpen: number;
+    /** What one singer pays, already split by the server. */
+    share: number;
     variant: PartyCardVariant;
     onPress?: () => void;
     /** variant="open" | "match" — taps the host row to open their profile. */
@@ -53,11 +55,21 @@ export type PartyCardProps = {
 // - "upcoming" karamatch-web/src/screens/tabs/MineTab.tsx         (host/joined chip)
 // - "past"     karamatch-web/src/screens/tabs/MineTab.tsx         (rate-crew / review-venue actions)
 // A shelf composite can't fork per screen the way the app did, so this is
-// one component with the variant-specific data passed as optional props —
-// which is also why `matchPct`, `rated` and friends sit alongside `party`
-// rather than inside it: the app modelled them as separate response types.
+// one component with the variant-specific data (`matchPct`, `rated` and
+// friends) passed as optional props — the app modelled those as separate
+// response types.
 export function PartyCard({
-    party,
+    title,
+    start,
+    venueName,
+    hostId,
+    hostName,
+    hostUsername,
+    hostPhotoUrl,
+    membersCount,
+    capacity,
+    spotsOpen,
+    share,
     variant,
     onPress,
     onHostPress,
@@ -81,32 +93,31 @@ export function PartyCard({
                     <MatchRing pct={matchPct ?? 0} />
                     <View style={{ minWidth: 0, flex: 1, gap: 2 }}>
                         <AppText variant="bodyStrong" size={16} truncate>
-                            {party.title}
+                            {title}
                         </AppText>
                         <AppText variant="caption" truncate>
-                            {party.venue.name} · {formatWhen(party.start)}
+                            {venueName} · {formatWhen(start)}
                         </AppText>
-                        <AppText variant="caption">{plural(party.spotsOpen, "spot open", "spots open")}</AppText>
+                        <AppText variant="caption">{plural(spotsOpen, "spot open", "spots open")}</AppText>
                     </View>
                 </View>
             ) : (
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: S2.s10 }}>
                     <View style={{ minWidth: 0, flex: 1, gap: 2 }}>
                         <AppText variant="bodyStrong" size={16} truncate>
-                            {party.title}
+                            {title}
                         </AppText>
                         <AppText variant="caption" truncate>
-                            {party.venue.name} ·{" "}
-                            {variant === "past" ? plural(party.membersCount, "singer", "singers") : formatWhen(party.start)}
+                            {venueName} · {variant === "past" ? plural(membersCount, "singer", "singers") : formatWhen(start)}
                         </AppText>
                     </View>
-                    {variant === "open" ? <Chip label={plural(party.spotsOpen, "spot", "spots")} tone="cyan" /> : null}
+                    {variant === "open" ? <Chip label={plural(spotsOpen, "spot", "spots")} tone="cyan" /> : null}
                     {variant === "upcoming" ? (
                         <Chip label={isHost ? "Host" : "Joined"} icon={isHost ? "crown" : "check"} tone="tint" />
                     ) : null}
                     {variant === "past" ? (
                         <AppText variant="footnote" tone="textFaint">
-                            {formatWhen(party.start)}
+                            {formatWhen(start)}
                         </AppText>
                     ) : null}
                 </View>
@@ -114,9 +125,9 @@ export function PartyCard({
 
             {(variant === "open" || variant === "match") ? (
                 <AppPressable onPress={onHostPress} press="row" style={{ flexDirection: "row", alignItems: "center", gap: S.sm, alignSelf: "flex-start" }}>
-                    <Avatar name={party.host.name} photoUrl={party.host.photoUrl} seed={party.host.id} size={28} />
+                    <Avatar name={hostName} photoUrl={hostPhotoUrl} seed={hostId} size={28} />
                     <AppText variant="caption">
-                        @{party.host.username} · {plural(party.membersCount, "singer", "singers")}
+                        @{hostUsername} · {plural(membersCount, "singer", "singers")}
                     </AppText>
                 </AppPressable>
             ) : null}
@@ -124,8 +135,9 @@ export function PartyCard({
             {variant === "match" ? (
                 commonSongs && commonSongs.length > 0 ? (
                     <View style={{ flexDirection: "row", flexWrap: "wrap", gap: S.xs }}>
-                        {commonSongs.map(title => (
-                            <Chip key={title} label={title} icon="music" tone="cyan" />
+                        {/* Not `title` — that's the party's own prop now. */}
+                        {commonSongs.map(song => (
+                            <Chip key={song} label={song} icon="music" tone="cyan" />
                         ))}
                     </View>
                 ) : (
@@ -150,7 +162,7 @@ export function PartyCard({
                     <AppText variant="caption">
                         Your share{" "}
                         <AppText variant="bodyStrong" tone="text">
-                            {money(party.share)}
+                            {money(share)}
                         </AppText>
                     </AppText>
                     <Button label={joining ? "Joining" : "Join"} variant="tinted" size="md" busy={joining} onPress={() => onJoin?.()} />
@@ -161,12 +173,12 @@ export function PartyCard({
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: S.sm }}>
                     {isHost ? (
                         <AppText variant="caption">
-                            {party.membersCount}/{party.capacity} singers
+                            {membersCount}/{capacity} singers
                         </AppText>
                     ) : (
                         <AppPressable onPress={onHostPress} press="row" style={{ flexDirection: "row", alignItems: "center", gap: S2.s6 }}>
-                            <Avatar name={party.host.name} photoUrl={party.host.photoUrl} seed={party.host.id} size={22} />
-                            <AppText variant="caption">@{party.host.username}</AppText>
+                            <Avatar name={hostName} photoUrl={hostPhotoUrl} seed={hostId} size={22} />
+                            <AppText variant="caption">@{hostUsername}</AppText>
                         </AppPressable>
                     )}
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>

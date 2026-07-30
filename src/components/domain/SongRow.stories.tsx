@@ -11,7 +11,7 @@ import { SongRow } from "./SongRow";
 const meta: Meta<typeof SongRow> = {
     title: "Domain/SongRow",
     component: SongRow,
-    args: { song: MOCK_SONGS[0], selected: false }
+    args: { title: MOCK_SONGS[0].title, artist: MOCK_SONGS[0].artist, coverArt: MOCK_SONGS[0].coverArt, selected: false }
 };
 
 export default meta;
@@ -37,7 +37,8 @@ export const List: Story = {
         return (
             <View style={{ padding: 24, backgroundColor: C.surface, gap: S.sm }}>
                 {MOCK_SONGS.map(song => (
-                    <SongRow key={song.id} song={song} selected={picked.includes(song.id)} onToggle={() => toggle(song.id)} />
+                    // Spread: `genre` and `id` ride along and are ignored.
+                    <SongRow key={song.id} {...song} selected={picked.includes(song.id)} onToggle={() => toggle(song.id)} />
                 ))}
             </View>
         );

@@ -10,7 +10,15 @@ import { CrewRatingCard } from "./CrewRatingCard";
 const meta: Meta<typeof CrewRatingCard> = {
     title: "Domain/CrewRatingCard",
     component: CrewRatingCard,
-    args: { member: MOCK_CREW_MEMBER, stars: 0, text: "" }
+    args: {
+        id: MOCK_CREW_MEMBER.id,
+        name: MOCK_CREW_MEMBER.name,
+        username: MOCK_CREW_MEMBER.username,
+        photoUrl: MOCK_CREW_MEMBER.photoUrl,
+        matchPct: MOCK_CREW_MEMBER.matchPct,
+        stars: 0,
+        text: ""
+    }
 };
 
 export default meta;

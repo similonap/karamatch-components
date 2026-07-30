@@ -123,7 +123,7 @@ function Kitchen() {
 
             <Section title="Favourites">
                 {MOCK_SONGS.slice(0, 2).map(item => (
-                    <SongRow key={item.id} song={item} selected={song === item.id} onToggle={() => setSong(item.id)} />
+                    <SongRow key={item.id} {...item} selected={song === item.id} onToggle={() => setSong(item.id)} />
                 ))}
             </Section>
 

@@ -8,35 +8,36 @@ import { Card } from "../primitives/Card";
 import { StarRow } from "../primitives/StarRow";
 
 export type ReviewCardProps = {
-    review: {
-        stars: number;
-        text: string;
-        /** Anything `new Date()` parses — rendered as "3 days ago". */
-        createdAt: string;
-        /** A deleted or anonymised author still renders, as "A singer". */
-        from?: { id?: string | number; name: string; photoUrl?: string | null } | null;
-    };
+    stars: number;
+    text: string;
+    /** Anything `new Date()` parses — rendered as "3 days ago". */
+    createdAt: string;
+    /** A deleted or anonymised author still renders, as "A singer". */
+    authorName?: string | null;
+    authorPhotoUrl?: string | null;
+    /** Only seeds the fallback avatar colour. */
+    authorId?: string | number | null;
 };
 
 // Ported from karamatch-web/src/screens/VenueDetail.tsx's inline review card.
-export function ReviewCard({ review }: ReviewCardProps) {
+export function ReviewCard({ stars, text, createdAt, authorName, authorPhotoUrl, authorId }: ReviewCardProps) {
     const { S2 } = useTheme();
 
     return (
         <Card style={{ gap: S2.s6 }}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: S2.s10 }}>
-                <Avatar name={review.from?.name ?? "Someone"} photoUrl={review.from?.photoUrl ?? null} seed={review.from?.id ?? 0} size={28} />
+                <Avatar name={authorName ?? "Someone"} photoUrl={authorPhotoUrl ?? null} seed={authorId ?? 0} size={28} />
                 <AppText variant="captionStrong" truncate style={{ flex: 1 }}>
-                    {review.from?.name ?? "A singer"}
+                    {authorName ?? "A singer"}
                 </AppText>
-                <StarRow value={review.stars} />
+                <StarRow value={stars} />
                 <AppText variant="footnote" tone="textFaint">
-                    {formatAgo(review.createdAt)}
+                    {formatAgo(createdAt)}
                 </AppText>
             </View>
-            {review.text ? (
+            {text ? (
                 <AppText variant="caption" tone="textDim">
-                    {review.text}
+                    {text}
                 </AppText>
             ) : null}
         </Card>

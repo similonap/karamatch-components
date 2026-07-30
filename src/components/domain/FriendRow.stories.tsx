@@ -10,7 +10,16 @@ const meta: Meta<typeof FriendRow> = {
     title: "Domain/FriendRow",
     component: FriendRow,
     argTypes: { onPress: { action: "pressed" }, onAdd: { action: "add" } },
-    args: { person: MOCK_MATCHED_USER, last: true }
+    args: {
+        id: MOCK_MATCHED_USER.id,
+        name: MOCK_MATCHED_USER.name,
+        username: MOCK_MATCHED_USER.username,
+        photoUrl: MOCK_MATCHED_USER.photoUrl,
+        matchPct: MOCK_MATCHED_USER.matchPct,
+        singerRating: MOCK_MATCHED_USER.singerRating,
+        eventsCount: MOCK_MATCHED_USER.eventsCount,
+        last: true
+    }
 };
 
 export default meta;

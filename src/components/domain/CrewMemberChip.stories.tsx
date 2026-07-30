@@ -19,9 +19,9 @@ export const Crew: Story = {
         const { C, S2 } = useTheme();
         return (
             <View style={{ padding: 24, backgroundColor: C.surface, flexDirection: "row", flexWrap: "wrap", gap: S2.s6 }}>
-                <CrewMemberChip member={MOCK_PARTY_HOST_MEMBER} isMe={false} onPress={() => {}} />
-                <CrewMemberChip member={MOCK_PARTY_ROOM_MEMBER} isMe={false} onPress={() => {}} />
-                <CrewMemberChip member={{ ...MOCK_PARTY_ROOM_MEMBER, id: 9, paid: true }} isMe onPress={() => {}} />
+                <CrewMemberChip {...MOCK_PARTY_HOST_MEMBER} isMe={false} onPress={() => {}} />
+                <CrewMemberChip {...MOCK_PARTY_ROOM_MEMBER} isMe={false} onPress={() => {}} />
+                <CrewMemberChip {...MOCK_PARTY_ROOM_MEMBER} id={9} paid isMe onPress={() => {}} />
                 <InvitedMemberChip username="joniferrer" />
             </View>
         );

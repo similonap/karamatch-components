@@ -201,35 +201,39 @@ its own file, exported as `<Component>Props`:
 ```tsx
 // SongRow.tsx
 export type SongRowProps = {
-  song: { title: string; artist: string; coverArt?: string };
+  title: string;
+  artist: string;
+  coverArt?: string;
   selected: boolean;
   onToggle: () => void;
 };
 ```
 
-TypeScript is structural, so **your own API type already satisfies this** as
-long as it carries those fields. No import, no adapter, no mapping layer:
+**The fields are flat, not wrapped in a `song` object.** The signature is
+then an exact statement of what the component draws — nothing asks for data
+it never reads. Spread your own API object straight in; JSX spread ignores
+whatever the component doesn't declare, so no import, adapter or mapping
+layer is needed:
 
 ```tsx
-// Your app — your Song, your field names, your extra fields.
+// Your app — your Song, your extra fields.
 const songs = await api.get<Song[]>("/songs");
 
 {songs.map(song => (
-  <SongRow key={song.id} song={song} selected={picked.has(song.id)} onToggle={...} />
+  <SongRow key={song.id} {...song} selected={picked.has(song.id)} onToggle={...} />
 ))}
 ```
 
-Extra fields are always fine. Two consequences worth knowing:
+Two consequences worth knowing:
 
 - **Ids are `string | number`** wherever a component takes one, because they
   only seed a fallback avatar colour. Either flavour of id works.
-- **A *fresh* object literal passed straight to a prop** is excess-property-
-  checked by TypeScript, so `song={{ ...apiSong, note: "extra" }}` is
-  rejected while `song={apiSong}` is fine. Assign to a variable first. This
-  only bites in test and story code; real data arrives through variables.
+- **Nested entities get a prefix rather than an object.** `PartyCard` takes
+  `hostName`/`hostUsername`/`hostPhotoUrl`, not `host: {…}`, so spreading a
+  party still needs those picked out — see `PartyCard.stories.tsx`.
 
-If your API field names differ, map at the call site (`song={{ title: s.name,
-artist: s.by }}`) rather than reshaping your whole model.
+If your API field names differ, map at the call site (`<SongRow title={s.name}
+artist={s.by} … />`) rather than reshaping your whole model.
 
 ## 5. Building a screen
 

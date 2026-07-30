@@ -6,13 +6,12 @@ import { AppPressable } from "../primitives/AppPressable";
 import { AppText } from "../primitives/AppText";
 
 // Only what the row draws — a priced room in your own API almost certainly
-// carries more (ids, per-seat splits, availability) and still satisfies this.
+// carries more (ids, per-seat splits, availability), and spreading it in
+// passes those harmlessly by.
 export type RoomOptionRowProps = {
-    room: {
-        name: string;
-        seats: number;
-        pricePerHour: number;
-    };
+    name: string;
+    seats: number;
+    pricePerHour: number;
     selected: boolean;
     onPress: () => void;
 };
@@ -20,7 +19,7 @@ export type RoomOptionRowProps = {
 // Ported from karamatch-web/src/screens/VenueDetail.tsx's inline room-picker
 // row — name and seat count on the left, price/hr on the right, tinted when
 // selected.
-export function RoomOptionRow({ room, selected, onPress }: RoomOptionRowProps) {
+export function RoomOptionRow({ name, seats, pricePerHour, selected, onPress }: RoomOptionRowProps) {
     const { C, CTRL, RADII, S } = useTheme();
     // A theme may fill a selected row solid, so the text inside takes the
     // palette's selection colours rather than the surface ones.
@@ -46,14 +45,14 @@ export function RoomOptionRow({ room, selected, onPress }: RoomOptionRowProps) {
         >
             <View style={{ minWidth: 0 }}>
                 <AppText variant="bodyStrong" tone={selected ? "selectText" : "text"}>
-                    {room.name}
+                    {name}
                 </AppText>
                 <AppText variant="footnote" tone={dim}>
-                    {room.seats} seats
+                    {seats} seats
                 </AppText>
             </View>
             <AppText variant="captionStrong" tone={selected ? "selectText" : "cyan"} style={{ flexShrink: 0 }}>
-                {money(room.pricePerHour)}/hr
+                {money(pricePerHour)}/hr
             </AppText>
         </AppPressable>
     );

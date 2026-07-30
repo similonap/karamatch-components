@@ -4,12 +4,10 @@ import { useTheme } from "../../theme/ThemeProvider";
 import { AppText } from "../primitives/AppText";
 
 export type ChatBubbleProps = {
-    message: {
-        text: string;
-        /** Only the name is drawn, and only when `showName`; a message whose
-            sender didn't come back from the server falls back to "Someone". */
-        from?: { name: string } | null;
-    };
+    text: string;
+    /** Drawn only when `showName`; a message whose sender didn't come back
+        from the server falls back to "Someone". */
+    fromName?: string | null;
     mine: boolean;
     showName: boolean;
 };
@@ -17,14 +15,14 @@ export type ChatBubbleProps = {
 // Ported from karamatch-web/src/screens/PartyRoom.tsx's inline chat bubble —
 // a tail on the outer corner, the way both platforms' native bubbles are
 // shaped, and the sender's name shown only on the first message of a run.
-export function ChatBubble({ message, mine, showName }: ChatBubbleProps) {
+export function ChatBubble({ text, fromName, mine, showName }: ChatBubbleProps) {
     const { C, CTRL, RADII, S2 } = useTheme();
 
     return (
         <View style={{ alignItems: mine ? "flex-end" : "flex-start", gap: 2 }}>
             {showName ? (
                 <AppText variant="footnote" size={10} tone="textFaint" style={{ paddingHorizontal: 8 }}>
-                    {mine ? "You" : message.from?.name ?? "Someone"}
+                    {mine ? "You" : fromName ?? "Someone"}
                 </AppText>
             ) : null}
             <View
@@ -42,7 +40,7 @@ export function ChatBubble({ message, mine, showName }: ChatBubbleProps) {
                 }}
             >
                 <AppText variant="callout" tone={mine ? "onTint" : "text"}>
-                    {message.text}
+                    {text}
                 </AppText>
             </View>
         </View>

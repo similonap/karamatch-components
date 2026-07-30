@@ -18,7 +18,15 @@ const meta: Meta<typeof VenueCard> = {
     decorators: [Story => <Backdrop><Story /></Backdrop>],
     // An action arg, so both stories render the tappable form of the card.
     argTypes: { onPress: { action: "pressed" } },
-    args: { venue: MOCK_VENUE }
+    args: {
+        name: MOCK_VENUE.name,
+        imageUrl: MOCK_VENUE.imageUrl,
+        rating: MOCK_VENUE.rating,
+        reviewsCount: MOCK_VENUE.reviewsCount,
+        distanceKm: MOCK_VENUE.distanceKm,
+        fromPrice: MOCK_VENUE.fromPrice,
+        roomsCount: MOCK_VENUE.rooms.length
+    }
 };
 
 export default meta;
@@ -27,5 +35,5 @@ type Story = StoryObj<typeof VenueCard>;
 export const Default: Story = {};
 
 export const Unrated: Story = {
-    args: { venue: { ...MOCK_VENUE, reviewsCount: 0 } }
+    args: { reviewsCount: 0 }
 };

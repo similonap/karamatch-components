@@ -18,7 +18,14 @@ const meta: Meta<typeof ReviewCard> = {
     title: "Domain/ReviewCard",
     component: ReviewCard,
     decorators: [Story => <Backdrop><Story /></Backdrop>],
-    args: { review: MOCK_VENUE_REVIEW }
+    args: {
+        stars: MOCK_VENUE_REVIEW.stars,
+        text: MOCK_VENUE_REVIEW.text,
+        createdAt: MOCK_VENUE_REVIEW.createdAt,
+        authorId: MOCK_VENUE_REVIEW.from.id,
+        authorName: MOCK_VENUE_REVIEW.from.name,
+        authorPhotoUrl: MOCK_VENUE_REVIEW.from.photoUrl
+    }
 };
 
 export default meta;
@@ -27,5 +34,5 @@ type Story = StoryObj<typeof ReviewCard>;
 export const Default: Story = {};
 
 export const Anonymous: Story = {
-    args: { review: { ...MOCK_VENUE_REVIEW, from: null, text: "" } }
+    args: { authorId: null, authorName: null, authorPhotoUrl: null, text: "" }
 };

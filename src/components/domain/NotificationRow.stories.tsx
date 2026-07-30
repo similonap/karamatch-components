@@ -20,7 +20,17 @@ export default meta;
 type Story = StoryObj<typeof NotificationRow>;
 
 export const Invite: Story = {
-    args: { notification: MOCK_INVITE_NOTIFICATION },
+    args: {
+        kind: "invite",
+        fromId: MOCK_INVITE_NOTIFICATION.from.id,
+        fromName: MOCK_INVITE_NOTIFICATION.from.name,
+        fromUsername: MOCK_INVITE_NOTIFICATION.from.username,
+        fromPhotoUrl: MOCK_INVITE_NOTIFICATION.from.photoUrl,
+        partyTitle: MOCK_INVITE_NOTIFICATION.party.title,
+        partyStart: MOCK_INVITE_NOTIFICATION.party.start,
+        venueName: MOCK_INVITE_NOTIFICATION.party.venueName,
+        share: MOCK_INVITE_NOTIFICATION.party.share
+    },
     render: args => {
         const { C } = useTheme();
         return (
@@ -32,7 +42,13 @@ export const Invite: Story = {
 };
 
 export const Review: Story = {
-    args: { notification: MOCK_REVIEW_NOTIFICATION },
+    args: {
+        kind: "review",
+        venueName: MOCK_REVIEW_NOTIFICATION.venue.name,
+        venueImageUrl: MOCK_REVIEW_NOTIFICATION.venue.imageUrl,
+        partyTitle: MOCK_REVIEW_NOTIFICATION.party.title,
+        partyStart: MOCK_REVIEW_NOTIFICATION.party.start
+    },
     render: args => {
         const { C } = useTheme();
         return (

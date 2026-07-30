@@ -16,7 +16,16 @@ const meta: Meta<typeof UserProfileHeader> = {
     title: "Domain/UserProfileHeader",
     component: UserProfileHeader,
     decorators: [Story => <Backdrop><Story /></Backdrop>],
-    args: { user: MOCK_USER_PROFILE }
+    args: {
+        id: MOCK_USER_PROFILE.id,
+        name: MOCK_USER_PROFILE.name,
+        username: MOCK_USER_PROFILE.username,
+        bio: MOCK_USER_PROFILE.bio,
+        photoUrl: MOCK_USER_PROFILE.photoUrl,
+        singerRating: MOCK_USER_PROFILE.singerRating,
+        eventsCount: MOCK_USER_PROFILE.eventsCount,
+        matchPct: MOCK_USER_PROFILE.matchPct
+    }
 };
 
 export default meta;
@@ -24,11 +33,18 @@ type Story = StoryObj<typeof UserProfileHeader>;
 
 export const Default: Story = {};
 
-// Your own profile: a plain `PublicUser`, passed with no `matchPct` at all —
-// there is nothing to compare yourself against, and the strip drops the third
-// stat rather than showing a padded zero. This is also the type check that
-// matters: the signed-in user needs no `commonSongs`/`isFriend`/`isSelf`
-// invented to render here.
+// Your own profile: no `matchPct` at all — there is nothing to compare
+// yourself against, and the strip drops the third stat rather than showing a
+// padded zero.
 export const SelfProfile: Story = {
-    args: { user: MOCK_USER }
+    args: {
+        id: MOCK_USER.id,
+        name: MOCK_USER.name,
+        username: MOCK_USER.username,
+        bio: MOCK_USER.bio,
+        photoUrl: MOCK_USER.photoUrl,
+        singerRating: MOCK_USER.singerRating,
+        eventsCount: MOCK_USER.eventsCount,
+        matchPct: null
+    }
 };

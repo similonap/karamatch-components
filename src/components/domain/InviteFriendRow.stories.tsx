@@ -9,7 +9,14 @@ import { InviteFriendRow } from "./InviteFriendRow";
 const meta: Meta<typeof InviteFriendRow> = {
     title: "Domain/InviteFriendRow",
     component: InviteFriendRow,
-    args: { friend: MOCK_MATCHED_USER }
+    args: {
+        id: MOCK_MATCHED_USER.id,
+        name: MOCK_MATCHED_USER.name,
+        username: MOCK_MATCHED_USER.username,
+        photoUrl: MOCK_MATCHED_USER.photoUrl,
+        matchPct: MOCK_MATCHED_USER.matchPct,
+        singerRating: MOCK_MATCHED_USER.singerRating
+    }
 };
 
 export default meta;
@@ -47,9 +54,11 @@ export const List: Story = {
         return (
             <View style={{ padding: 24, backgroundColor: C.surface, gap: S.sm }}>
                 {friends.map(friend => (
+                    // Spread: the fixture carries email/bio/location too, and
+                    // the row simply ignores what it doesn't declare.
                     <InviteFriendRow
                         key={friend.id}
-                        friend={friend}
+                        {...friend}
                         selected={selected.includes(friend.id)}
                         onToggle={() =>
                             setSelected(current =>

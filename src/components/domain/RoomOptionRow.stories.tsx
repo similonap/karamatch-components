@@ -9,7 +9,11 @@ import { RoomOptionRow } from "./RoomOptionRow";
 const meta: Meta<typeof RoomOptionRow> = {
     title: "Domain/RoomOptionRow",
     component: RoomOptionRow,
-    args: { room: MOCK_VENUE.rooms[0] }
+    args: {
+        name: MOCK_VENUE.rooms[0].name,
+        seats: MOCK_VENUE.rooms[0].seats,
+        pricePerHour: MOCK_VENUE.rooms[0].pricePerHour
+    }
 };
 
 export default meta;
@@ -50,7 +54,9 @@ export const RoomList: Story = {
         return (
             <View style={{ padding: 24, backgroundColor: C.surface, gap: S.sm }}>
                 {rooms.map(room => (
-                    <RoomOptionRow key={room.id} room={room} selected={roomId === room.id} onPress={() => setRoomId(room.id)} />
+                    // Spread: the fixture's per-seat splits and spot options
+                    // ride along untouched.
+                    <RoomOptionRow key={room.id} {...room} selected={roomId === room.id} onPress={() => setRoomId(room.id)} />
                 ))}
             </View>
         );

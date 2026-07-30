@@ -2,10 +2,12 @@
 // shelf's showcase doesn't depend on a running karamatch-api.
 //
 // Deliberately unannotated: these are richer than any component's props (a
-// full karamatch API response, `email` and `location` and all), and each one
-// structurally satisfies the narrow shape the component it feeds asks for.
-// That's the same path a student's own API objects take, so the stories
-// exercise the real thing rather than a type the shelf handed itself.
+// full karamatch API response, `email` and `location` and all), the way a
+// student's own API objects are.
+//
+// Components take flat props, so a story either picks the fields it needs out
+// of a fixture (which is also what gives Storybook one control per prop) or
+// spreads the whole object in and lets the extra fields fall away.
 
 export const MOCK_USER = {
     id: 1,

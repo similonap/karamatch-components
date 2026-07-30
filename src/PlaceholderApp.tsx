@@ -36,7 +36,16 @@ function VenueListScreen({ onOpen }: { onOpen: () => void }) {
         <>
             <AppBar title="Karaoke near you" large />
             <Screen>
-                <VenueCard venue={MOCK_VENUE} onPress={onOpen} />
+                <VenueCard
+                    name={MOCK_VENUE.name}
+                    imageUrl={MOCK_VENUE.imageUrl}
+                    rating={MOCK_VENUE.rating}
+                    reviewsCount={MOCK_VENUE.reviewsCount}
+                    distanceKm={MOCK_VENUE.distanceKm}
+                    fromPrice={MOCK_VENUE.fromPrice}
+                    roomsCount={MOCK_VENUE.rooms.length}
+                    onPress={onOpen}
+                />
                 <AppearancePicker />
             </Screen>
         </>

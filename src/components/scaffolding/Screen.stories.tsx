@@ -16,9 +16,7 @@ import { TextField } from "../primitives/TextField";
 import { BottomBar } from "./BottomBar";
 import { Screen } from "./Screen";
 
-// Hoisted so the full API message shape reaches ChatBubble through a
-// variable — see the note in ChatBubble.stories.tsx.
-const CHAT_REPLY = { ...MOCK_CHAT_MESSAGE, id: "m2", text: "Perfect — see you there." };
+const CHAT_REPLY = "Perfect — see you there.";
 
 const meta: Meta<typeof Screen> = {
     title: "Scaffolding/Screen",
@@ -143,8 +141,8 @@ export const DockedComposer: Story = {
             <View style={{ height: 420, backgroundColor: C.surface }}>
                 <Screen {...args}>
                     <View style={{ flex: 1, justifyContent: "flex-end", gap: S.sm, paddingHorizontal: LAYOUT.gutter }}>
-                        <ChatBubble message={MOCK_CHAT_MESSAGE} mine={false} showName />
-                        <ChatBubble message={CHAT_REPLY} mine showName={false} />
+                        <ChatBubble text={MOCK_CHAT_MESSAGE.text} fromName={MOCK_CHAT_MESSAGE.from.name} mine={false} showName />
+                        <ChatBubble text={CHAT_REPLY} mine showName={false} />
                     </View>
                     <ChatInputBar value={draft} onChangeText={setDraft} onSend={() => setDraft("")} />
                 </Screen>

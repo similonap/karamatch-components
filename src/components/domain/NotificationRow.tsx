@@ -11,22 +11,14 @@ import { Avatar } from "../primitives/Avatar";
 import { Button } from "../primitives/Button";
 import { Card } from "../primitives/Card";
 
-// The one prop shape here that stays a union rather than a flat set of
-// fields: the component branches on `kind`, so the two arms have to stay
-// distinguishable for the narrowing below to hold. Your own notification
-// type satisfies this as long as it discriminates on the same literals.
-export type NotificationRowProps = {
-    notification:
-        | {
-              kind: "invite";
-              from: { id: string | number; name: string; username: string; photoUrl?: string | null };
-              party: { title: string; venueName: string; start: string; share: number };
-          }
-        | {
-              kind: "review";
-              venue: { name: string; imageUrl: string };
-              party: { title: string; start: string };
-          };
+// What both kinds of notification draw. Flat like every other component
+// here, but still a union on `kind` — the row branches on it, so the two
+// arms have to stay distinguishable for the narrowing below to hold.
+type NotificationRowSharedProps = {
+    partyTitle: string;
+    /** Anything `new Date()` parses — rendered as "Fri 21:00". */
+    partyStart: string;
+    venueName: string;
     busy?: boolean;
     /** Taps the row itself — opens the profile (invite) or the review form (review). */
     onOpen: () => void;
@@ -36,17 +28,40 @@ export type NotificationRowProps = {
     onDismiss: () => void;
 };
 
+export type NotificationRowProps = NotificationRowSharedProps &
+    (
+        | {
+              kind: "invite";
+              /** Only seeds the fallback avatar colour, so either id flavour works. */
+              fromId: string | number;
+              fromName: string;
+              fromUsername: string;
+              fromPhotoUrl?: string | null;
+              /** What you'd pay by accepting, already split by the server. */
+              share: number;
+          }
+        | {
+              kind: "review";
+              /** Empty or broken falls back to a star glyph. */
+              venueImageUrl: string;
+          }
+    );
+
 // Ported from karamatch-web/src/screens/Notifications.tsx's inline card,
 // which branches on `kind`: an "invite" (accept/decline, paying your share)
 // or a "review" nudge (dismiss/review) once a past night's party has ended.
-export function NotificationRow({ notification, busy, onOpen, onPrimary, onDismiss }: NotificationRowProps) {
+// Taken as one `props` object rather than destructured in the signature:
+// the arm-specific fields only exist on one side of the union, and reading
+// them off `props` after a `props.kind` check is what lets TS narrow them.
+export function NotificationRow(props: NotificationRowProps) {
+    const { partyTitle, partyStart, venueName, busy, onOpen, onPrimary, onDismiss } = props;
     const { C, S, S2 } = useTheme();
 
     return (
         <Card highlight style={{ gap: S2.s12 }}>
-            {notification.kind === "review" ? (
+            {props.kind === "review" ? (
                 <AppPressable onPress={onOpen} press="row" style={{ flexDirection: "row", alignItems: "center", gap: S2.s12 }}>
-                    <VenueThumb imageUrl={notification.venue.imageUrl} />
+                    <VenueThumb imageUrl={props.venueImageUrl} />
                     <View style={{ flex: 1, minWidth: 0 }}>
                         {/* A bold run inside a sentence keeps the parent's
                             variant and only swaps weight, so it stays on the
@@ -54,31 +69,31 @@ export function NotificationRow({ notification, busy, onOpen, onPrimary, onDismi
                         <AppText variant="callout" tone="textDim">
                             {"How was "}
                             <AppText variant="callout" weight="bold" tone="text">
-                                {notification.venue.name}
+                                {venueName}
                             </AppText>
                             ?
                         </AppText>
                         <AppText variant="footnote" style={{ marginTop: 3 }}>
-                            {notification.party.title} · {formatWhen(notification.party.start)}
+                            {partyTitle} · {formatWhen(partyStart)}
                         </AppText>
                     </View>
                     <Icon name="chevronRight" size={16} weight="strong" color={C.textFaint} />
                 </AppPressable>
             ) : (
                 <AppPressable onPress={onOpen} press="row" style={{ flexDirection: "row", alignItems: "center", gap: S2.s12 }}>
-                    <Avatar name={notification.from.name} photoUrl={notification.from.photoUrl} seed={notification.from.id} size={42} />
+                    <Avatar name={props.fromName} photoUrl={props.fromPhotoUrl} seed={props.fromId} size={42} />
                     <View style={{ minWidth: 0, flex: 1 }}>
                         <AppText variant="callout" tone="textDim">
                             <AppText variant="callout" weight="bold" tone="text">
-                                @{notification.from.username}
+                                @{props.fromUsername}
                             </AppText>
                             {" invited you to "}
                             <AppText variant="callout" weight="bold" tone="tintSoft">
-                                {notification.party.title}
+                                {partyTitle}
                             </AppText>
                         </AppText>
                         <AppText variant="footnote" style={{ marginTop: 3 }}>
-                            {notification.party.venueName} · {formatWhen(notification.party.start)}
+                            {venueName} · {formatWhen(partyStart)}
                         </AppText>
                     </View>
                 </AppPressable>
@@ -86,7 +101,7 @@ export function NotificationRow({ notification, busy, onOpen, onPrimary, onDismi
 
             <View style={{ flexDirection: "row", gap: S.sm }}>
                 <Button
-                    label={notification.kind === "review" ? "Dismiss" : "Decline"}
+                    label={props.kind === "review" ? "Dismiss" : "Decline"}
                     variant="secondary"
                     size="md"
                     disabled={busy}
@@ -94,10 +109,10 @@ export function NotificationRow({ notification, busy, onOpen, onPrimary, onDismi
                     style={{ flex: 1 }}
                 />
                 <Button
-                    label={notification.kind === "review" ? "Review" : "Accept · " + money(notification.party.share)}
-                    icon={notification.kind === "review" ? "star" : undefined}
+                    label={props.kind === "review" ? "Review" : "Accept · " + money(props.share)}
+                    icon={props.kind === "review" ? "star" : undefined}
                     size="md"
-                    busy={notification.kind === "invite" && busy}
+                    busy={props.kind === "invite" && busy}
                     onPress={onPrimary}
                     style={{ flex: 1.4 }}
                 />

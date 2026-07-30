@@ -6,23 +6,21 @@ import { AppText } from "../primitives/AppText";
 import { CheckRing } from "../primitives/CheckRing";
 import { SongArt } from "../primitives/SongArt";
 
-// The shape this row renders, not a song model. Structural typing means your
-// own API's song satisfies it as long as it carries these three fields — no
-// import, no adapter. See README's "Prop shapes" section.
+// What this row draws, not a song model. Your own API's song can be spread
+// straight in — `<SongRow {...song} selected onToggle={...} />` — and the
+// fields it carries beyond these three are simply ignored.
 export type SongRowProps = {
-    song: {
-        title: string;
-        artist: string;
-        /** Cover thumbnail. Absent is normal — SongArt draws a placeholder. */
-        coverArt?: string;
-    };
+    title: string;
+    artist: string;
+    /** Cover thumbnail. Absent is normal — SongArt draws a placeholder. */
+    coverArt?: string;
     selected: boolean;
     onToggle: () => void;
 };
 
 // Ported from karamatch-web/src/screens/SongPicker.tsx's `SongRow`, shared
 // there with the profile editor — one row of a song list, toggled on tap.
-export function SongRow({ song, selected, onToggle }: SongRowProps) {
+export function SongRow({ title, artist, coverArt, selected, onToggle }: SongRowProps) {
     const { C, CTRL, RADII, S2 } = useTheme();
 
     return (
@@ -42,13 +40,13 @@ export function SongRow({ song, selected, onToggle }: SongRowProps) {
                 backgroundColor: selected ? C.selectBg : C.surface1
             }}
         >
-            <SongArt coverArt={song.coverArt} gradient={selected} color={selected ? C.onTint : C.textFaint} />
+            <SongArt coverArt={coverArt} gradient={selected} color={selected ? C.onTint : C.textFaint} />
             <View style={{ flex: 1, minWidth: 0 }}>
                 <AppText variant="bodyStrong" tone={selected ? "selectText" : "text"} truncate>
-                    {song.title}
+                    {title}
                 </AppText>
                 <AppText variant="caption" tone={selected ? "selectTextDim" : "textMuted"} truncate>
-                    {song.artist}
+                    {artist}
                 </AppText>
             </View>
             <CheckRing on={selected} />

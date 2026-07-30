@@ -9,15 +9,14 @@ import { CheckRing } from "../primitives/CheckRing";
 import { MatchBadge } from "../primitives/MatchBadge";
 
 export type InviteFriendRowProps = {
-    friend: {
-        id: string | number;
-        name: string;
-        username: string;
-        photoUrl?: string | null;
-        /** Null or absent hides the match badge. */
-        matchPct?: number | null;
-        singerRating: number;
-    };
+    /** Only seeds the fallback avatar colour, so either id flavour works. */
+    id: string | number;
+    name: string;
+    username: string;
+    photoUrl?: string | null;
+    /** Null or absent hides the match badge. */
+    matchPct?: number | null;
+    singerRating: number;
     selected: boolean;
     onToggle: () => void;
 };
@@ -26,7 +25,7 @@ export type InviteFriendRowProps = {
 // row — SongRow's bordered/CheckRing shape (not ListRow's flush hairline
 // shape), because picking several friends to invite is a multi-select list
 // like the song picker, not a single navigable list.
-export function InviteFriendRow({ friend, selected, onToggle }: InviteFriendRowProps) {
+export function InviteFriendRow({ id, name, username, photoUrl, matchPct, singerRating, selected, onToggle }: InviteFriendRowProps) {
     const { C, CTRL, RADII, S2 } = useTheme();
     // A theme may fill a selected row solid, so everything inside it has to
     // ask the palette what "on a selection" reads as — see C.selectText.
@@ -49,22 +48,22 @@ export function InviteFriendRow({ friend, selected, onToggle }: InviteFriendRowP
                 backgroundColor: selected ? C.selectBg : C.surface1
             }}
         >
-            <Avatar name={friend.name} photoUrl={friend.photoUrl} seed={friend.id} size={42} />
+            <Avatar name={name} photoUrl={photoUrl} seed={id} size={42} />
             <View style={{ flex: 1, minWidth: 0 }}>
                 <AppText variant="bodyStrong" tone={selected ? "selectText" : "text"}>
-                    {friend.name}
+                    {name}
                 </AppText>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
                     <AppText variant="caption" tone={dim}>
-                        @{friend.username}
+                        @{username}
                     </AppText>
                     <StarIcon size={10} color={selected ? C.selectTextDim : C.gold} />
                     <AppText variant="caption" tone={dim}>
-                        {friend.singerRating.toFixed(1)}
+                        {singerRating.toFixed(1)}
                     </AppText>
                 </View>
             </View>
-            <MatchBadge pct={friend.matchPct} />
+            <MatchBadge pct={matchPct} />
             <CheckRing on={selected} />
         </AppPressable>
     );
