@@ -5,15 +5,31 @@ import { Image } from "expo-image";
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import { money, plural } from "../../utils/format";
-import type { VenueNearby } from "../../types";
 import { AppText } from "../primitives/AppText";
 import { Card } from "../primitives/Card";
 import { Rating } from "../primitives/Rating";
 
+export type VenueCardProps = {
+    venue: {
+        name: string;
+        /** Empty or broken falls back to a mic glyph. */
+        imageUrl: string;
+        rating: number;
+        /** Zero hides the rating — a venue with no reviews has none to show. */
+        reviewsCount: number;
+        distanceKm: number;
+        fromPrice: number;
+        /** Only counted, never read into: `unknown[]` takes whatever rooms
+            your API returns without dragging their shape in here. */
+        rooms: unknown[];
+    };
+    onPress?: () => void;
+};
+
 // Ported from karamatch-web/src/screens/tabs/VenuesTab.tsx's inline venue
 // card — a 124px photo (distance badge riding on top-left) over a name /
 // rating line and a rooms · from-price line.
-export function VenueCard({ venue, onPress }: { venue: VenueNearby; onPress?: () => void }) {
+export function VenueCard({ venue, onPress }: VenueCardProps) {
     const { C, CTRL, RADII, S, S2 } = useTheme();
     const [broken, setBroken] = useState(false);
     const showPhoto = venue.imageUrl && !broken;

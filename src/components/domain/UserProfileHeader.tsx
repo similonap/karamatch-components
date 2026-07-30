@@ -2,23 +2,36 @@ import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { StarIcon } from "../../icons/StarIcon";
-import type { PublicUser } from "../../types";
 import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
 import { Stat, StatStrip } from "../primitives/Stat";
+
+export type UserProfileHeaderProps = {
+    user: {
+        id: string | number;
+        name: string;
+        username: string;
+        /** Omitted or empty drops the line rather than leaving a gap. */
+        bio?: string;
+        photoUrl?: string | null;
+        singerRating: number;
+        eventsCount: number;
+        /** Null or absent drops the taste-match stat — see below. */
+        matchPct?: number | null;
+    };
+};
 
 // Ported from karamatch-web/src/screens/UserProfile.tsx's header block: an
 // avatar, name/@handle, bio, and a stat strip (rating, nights out, and
 // taste match when the profile isn't your own) that reads as one strip
 // rather than three floating cards.
 //
-// Takes a `PublicUser` plus an optional `matchPct`, not the full `UserProfile`
-// this was lifted out of. The header renders neither `commonSongs` nor
-// `isFriend`/`isSelf`/`favoriteSongs`/`genreProfile`, and demanding them forced
-// callers rendering their *own* profile to invent five fields to satisfy a type
-// nothing here reads. A `UserProfile` still satisfies this, so the
-// other-singer's-profile screen is unaffected.
-export function UserProfileHeader({ user }: { user: PublicUser & { matchPct?: number | null } }) {
+// The full profile this was lifted out of also carried common songs, friend
+// and self flags, favourites and a genre profile. None of them are drawn
+// here, and demanding them forced callers rendering their *own* profile to
+// invent five fields to satisfy a type nothing reads — so the shape below is
+// only what ends up on screen.
+export function UserProfileHeader({ user }: UserProfileHeaderProps) {
     const { C, S } = useTheme();
 
     // Absent and null both mean "no taste match to show" — your own profile has

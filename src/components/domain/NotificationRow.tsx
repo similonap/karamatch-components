@@ -5,24 +5,28 @@ import { Image } from "expo-image";
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import { formatWhen, money } from "../../utils/format";
-import type { NotificationView } from "../../types";
 import { AppPressable } from "../primitives/AppPressable";
 import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
 import { Button } from "../primitives/Button";
 import { Card } from "../primitives/Card";
 
-// Ported from karamatch-web/src/screens/Notifications.tsx's inline card,
-// which branches on `kind`: an "invite" (accept/decline, paying your share)
-// or a "review" nudge (dismiss/review) once a past night's party has ended.
-export function NotificationRow({
-    notification,
-    busy,
-    onOpen,
-    onPrimary,
-    onDismiss
-}: {
-    notification: NotificationView;
+// The one prop shape here that stays a union rather than a flat set of
+// fields: the component branches on `kind`, so the two arms have to stay
+// distinguishable for the narrowing below to hold. Your own notification
+// type satisfies this as long as it discriminates on the same literals.
+export type NotificationRowProps = {
+    notification:
+        | {
+              kind: "invite";
+              from: { id: string | number; name: string; username: string; photoUrl?: string | null };
+              party: { title: string; venueName: string; start: string; share: number };
+          }
+        | {
+              kind: "review";
+              venue: { name: string; imageUrl: string };
+              party: { title: string; start: string };
+          };
     busy?: boolean;
     /** Taps the row itself — opens the profile (invite) or the review form (review). */
     onOpen: () => void;
@@ -30,7 +34,12 @@ export function NotificationRow({
     onPrimary: () => void;
     /** "Decline" (invite) or "Dismiss" (review). */
     onDismiss: () => void;
-}) {
+};
+
+// Ported from karamatch-web/src/screens/Notifications.tsx's inline card,
+// which branches on `kind`: an "invite" (accept/decline, paying your share)
+// or a "review" nudge (dismiss/review) once a past night's party has ended.
+export function NotificationRow({ notification, busy, onOpen, onPrimary, onDismiss }: NotificationRowProps) {
     const { C, S, S2 } = useTheme();
 
     return (

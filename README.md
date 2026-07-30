@@ -190,6 +190,47 @@ import { Button } from "@/components/primitives/Button";
 That's it — browse the gallery for what's available, install what you need,
 and go.
 
+### Prop shapes
+
+The domain components (`VenueCard`, `PartyCard`, `FriendRow`, …) render real
+data, so they have to say something about its shape. **They don't ship a
+domain model.** There is no `types.ts` to import and nothing to keep in sync
+with your API. Each component declares only the fields it actually draws, in
+its own file, exported as `<Component>Props`:
+
+```tsx
+// SongRow.tsx
+export type SongRowProps = {
+  song: { title: string; artist: string; coverArt?: string };
+  selected: boolean;
+  onToggle: () => void;
+};
+```
+
+TypeScript is structural, so **your own API type already satisfies this** as
+long as it carries those fields. No import, no adapter, no mapping layer:
+
+```tsx
+// Your app — your Song, your field names, your extra fields.
+const songs = await api.get<Song[]>("/songs");
+
+{songs.map(song => (
+  <SongRow key={song.id} song={song} selected={picked.has(song.id)} onToggle={...} />
+))}
+```
+
+Extra fields are always fine. Two consequences worth knowing:
+
+- **Ids are `string | number`** wherever a component takes one, because they
+  only seed a fallback avatar colour. Either flavour of id works.
+- **A *fresh* object literal passed straight to a prop** is excess-property-
+  checked by TypeScript, so `song={{ ...apiSong, note: "extra" }}` is
+  rejected while `song={apiSong}` is fine. Assign to a variable first. This
+  only bites in test and story code; real data arrives through variables.
+
+If your API field names differ, map at the call site (`song={{ title: s.name,
+artist: s.by }}`) rather than reshaping your whole model.
+
 ## 5. Building a screen
 
 The scaffolding components (`AppBar`, `Screen`, `ListScreen`, `BottomBar`,

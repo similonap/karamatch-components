@@ -14,6 +14,15 @@ function Backdrop({ children }: { children: React.ReactNode }) {
     return <View style={{ padding: S.lg, backgroundColor: C.surface }}>{children}</View>;
 }
 
+// Hoisted rather than written inline at each call site. These carry the full
+// API message shape (id, userId, sentAt), and a *fresh* object literal handed
+// straight to a prop gets excess-property-checked against ChatBubbleProps'
+// narrow shape, which would reject the extra fields. Through a variable it's
+// an ordinary structural check — which is the path real API objects take.
+const MY_REPLY = { ...MOCK_CHAT_MESSAGE, userId: MOCK_USER.id, from: MOCK_USER, text: "Sounds good, see you there!" };
+const THEIR_FOLLOW_UP = { ...MOCK_CHAT_MESSAGE, id: "m2", text: "Perfect, I'll bring the setlist." };
+const MY_CLOSER = { ...MOCK_CHAT_MESSAGE, id: "m3", userId: MOCK_USER.id, from: MOCK_USER, text: "See you at 9!" };
+
 const meta: Meta<typeof ChatBubble> = {
     title: "Domain/ChatBubble",
     component: ChatBubble,
@@ -27,7 +36,7 @@ type Story = StoryObj<typeof ChatBubble>;
 export const Theirs: Story = {};
 
 export const Mine: Story = {
-    args: { message: { ...MOCK_CHAT_MESSAGE, userId: MOCK_USER.id, from: MOCK_USER, text: "Sounds good, see you there!" }, mine: true }
+    args: { message: MY_REPLY, mine: true }
 };
 
 // Composes several bubbles, so it keeps a `render` — but only for the
@@ -38,16 +47,8 @@ export const Conversation: Story = {
         return (
             <View style={{ gap: S.xs }}>
                 <ChatBubble message={MOCK_CHAT_MESSAGE} mine={false} showName />
-                <ChatBubble
-                    message={{ ...MOCK_CHAT_MESSAGE, id: "m2", text: "Perfect, I'll bring the setlist." }}
-                    mine={false}
-                    showName={false}
-                />
-                <ChatBubble
-                    message={{ ...MOCK_CHAT_MESSAGE, id: "m3", userId: MOCK_USER.id, from: MOCK_USER, text: "See you at 9!" }}
-                    mine
-                    showName
-                />
+                <ChatBubble message={THEIR_FOLLOW_UP} mine={false} showName={false} />
+                <ChatBubble message={MY_CLOSER} mine showName />
             </View>
         );
     }

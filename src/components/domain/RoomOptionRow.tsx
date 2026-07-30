@@ -2,14 +2,25 @@ import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { money } from "../../utils/format";
-import type { Room } from "../../types";
 import { AppPressable } from "../primitives/AppPressable";
 import { AppText } from "../primitives/AppText";
+
+// Only what the row draws — a priced room in your own API almost certainly
+// carries more (ids, per-seat splits, availability) and still satisfies this.
+export type RoomOptionRowProps = {
+    room: {
+        name: string;
+        seats: number;
+        pricePerHour: number;
+    };
+    selected: boolean;
+    onPress: () => void;
+};
 
 // Ported from karamatch-web/src/screens/VenueDetail.tsx's inline room-picker
 // row — name and seat count on the left, price/hr on the right, tinted when
 // selected.
-export function RoomOptionRow({ room, selected, onPress }: { room: Room; selected: boolean; onPress: () => void }) {
+export function RoomOptionRow({ room, selected, onPress }: RoomOptionRowProps) {
     const { C, CTRL, RADII, S } = useTheme();
     // A theme may fill a selected row solid, so the text inside takes the
     // palette's selection colours rather than the surface ones.

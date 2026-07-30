@@ -2,26 +2,31 @@ import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { StarIcon } from "../../icons/StarIcon";
-import type { MatchedUser } from "../../types";
 import { AppPressable } from "../primitives/AppPressable";
 import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
 import { CheckRing } from "../primitives/CheckRing";
 import { MatchBadge } from "../primitives/MatchBadge";
 
+export type InviteFriendRowProps = {
+    friend: {
+        id: string | number;
+        name: string;
+        username: string;
+        photoUrl?: string | null;
+        /** Null or absent hides the match badge. */
+        matchPct?: number | null;
+        singerRating: number;
+    };
+    selected: boolean;
+    onToggle: () => void;
+};
+
 // Ported from karamatch-web/src/screens/InviteFriends.tsx's inline friend
 // row — SongRow's bordered/CheckRing shape (not ListRow's flush hairline
 // shape), because picking several friends to invite is a multi-select list
 // like the song picker, not a single navigable list.
-export function InviteFriendRow({
-    friend,
-    selected,
-    onToggle
-}: {
-    friend: MatchedUser;
-    selected: boolean;
-    onToggle: () => void;
-}) {
+export function InviteFriendRow({ friend, selected, onToggle }: InviteFriendRowProps) {
     const { C, CTRL, RADII, S2 } = useTheme();
     // A theme may fill a selected row solid, so everything inside it has to
     // ask the palette what "on a selection" reads as — see C.selectText.

@@ -4,7 +4,6 @@ import Svg, { Circle } from "react-native-svg";
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
 import { formatWhen, money, plural } from "../../utils/format";
-import type { PartyView } from "../../types";
 import { AppPressable } from "../primitives/AppPressable";
 import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
@@ -14,30 +13,20 @@ import { Chip } from "../primitives/Chip";
 
 export type PartyCardVariant = "open" | "match" | "upcoming" | "past";
 
-// Ported from three different inline card layouts, one per screen, that all
-// render a `PartyView` (or its `MatchView`/`PastPartyView` extensions):
-// - "open"     karamatch-web/src/screens/tabs/OpenPartiesTab.tsx  (spots chip + host row + join)
-// - "match"    karamatch-web/src/screens/tabs/MatchTab.tsx        (match ring + common songs + join)
-// - "upcoming" karamatch-web/src/screens/tabs/MineTab.tsx         (host/joined chip)
-// - "past"     karamatch-web/src/screens/tabs/MineTab.tsx         (rate-crew / review-venue actions)
-// A shelf composite can't fork per screen the way the app did, so this is
-// one component with the variant-specific data passed as optional props.
-export function PartyCard({
-    party,
-    variant,
-    onPress,
-    onHostPress,
-    onJoin,
-    joining,
-    matchPct,
-    commonSongs,
-    isHost,
-    rated,
-    venueReviewed,
-    onRateCrew,
-    onReviewVenue
-}: {
-    party: PartyView;
+export type PartyCardProps = {
+    party: {
+        title: string;
+        /** Anything `new Date()` parses — rendered as "Fri 21:00". */
+        start: string;
+        /** Only the name is drawn; the card never links through to the venue. */
+        venue: { name: string };
+        host: { id: string | number; name: string; username: string; photoUrl?: string | null };
+        membersCount: number;
+        capacity: number;
+        spotsOpen: number;
+        /** What one singer pays, already split by the server. */
+        share: number;
+    };
     variant: PartyCardVariant;
     onPress?: () => void;
     /** variant="open" | "match" — taps the host row to open their profile. */
@@ -55,7 +44,33 @@ export function PartyCard({
     venueReviewed?: boolean;
     onRateCrew?: () => void;
     onReviewVenue?: () => void;
-}) {
+};
+
+// Ported from three different inline card layouts, one per screen, that all
+// render the same party:
+// - "open"     karamatch-web/src/screens/tabs/OpenPartiesTab.tsx  (spots chip + host row + join)
+// - "match"    karamatch-web/src/screens/tabs/MatchTab.tsx        (match ring + common songs + join)
+// - "upcoming" karamatch-web/src/screens/tabs/MineTab.tsx         (host/joined chip)
+// - "past"     karamatch-web/src/screens/tabs/MineTab.tsx         (rate-crew / review-venue actions)
+// A shelf composite can't fork per screen the way the app did, so this is
+// one component with the variant-specific data passed as optional props —
+// which is also why `matchPct`, `rated` and friends sit alongside `party`
+// rather than inside it: the app modelled them as separate response types.
+export function PartyCard({
+    party,
+    variant,
+    onPress,
+    onHostPress,
+    onJoin,
+    joining,
+    matchPct,
+    commonSongs,
+    isHost,
+    rated,
+    venueReviewed,
+    onRateCrew,
+    onReviewVenue
+}: PartyCardProps) {
     const { C, CTRL, S, S2 } = useTheme();
     const strongMatch = (matchPct ?? 0) >= 60;
 

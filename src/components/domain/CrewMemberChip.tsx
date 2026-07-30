@@ -2,24 +2,29 @@ import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { Icon } from "../../icons/Icon";
-import type { PartyRoomMember } from "../../types";
 import { AppPressable } from "../primitives/AppPressable";
 import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
+
+export type CrewMemberChipProps = {
+    member: {
+        /** Only seeds the fallback avatar colour, so either id flavour works. */
+        id: string | number;
+        name: string;
+        photoUrl?: string | null;
+        role: "host" | "member";
+        /** Drives the glyph on a non-host: paid shows a check, else a clock. */
+        paid: boolean;
+    };
+    isMe: boolean;
+    onPress?: () => void;
+};
 
 // Ported from karamatch-web/src/screens/PartyRoom.tsx's inline crew pills —
 // a joined member (avatar + first name/"You" + role glyph) and a dashed
 // "invited, not joined yet" placeholder. Two different shapes (the invited
 // one has no avatar and isn't tappable), so two exports from one file.
-export function CrewMemberChip({
-    member,
-    isMe,
-    onPress
-}: {
-    member: PartyRoomMember;
-    isMe: boolean;
-    onPress?: () => void;
-}) {
+export function CrewMemberChip({ member, isMe, onPress }: CrewMemberChipProps) {
     const { C, CTRL, RADII } = useTheme();
 
     return (

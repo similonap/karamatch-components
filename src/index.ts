@@ -91,27 +91,37 @@ export { TabBarButton } from "./components/scaffolding/TabBarButton";
 export { useScreenLayout } from "./components/scaffolding/useScreenLayout";
 export type { ScreenLayoutOptions } from "./components/scaffolding/useScreenLayout";
 
-// Domain composites
+// Domain composites. Each one declares the shape it draws as its own
+// `<Component>Props` — there is no shared domain model to import, so your
+// app's API types satisfy these structurally. See README's "Prop shapes".
 export { ChatBubble, shouldShowChatName } from "./components/domain/ChatBubble";
+export type { ChatBubbleProps } from "./components/domain/ChatBubble";
 export { ChatInputBar } from "./components/domain/ChatInputBar";
 export { CrewMemberChip, InvitedMemberChip } from "./components/domain/CrewMemberChip";
+export type { CrewMemberChipProps } from "./components/domain/CrewMemberChip";
 export { CrewRatingCard } from "./components/domain/CrewRatingCard";
+export type { CrewRatingCardProps } from "./components/domain/CrewRatingCard";
 export { FriendRow } from "./components/domain/FriendRow";
+export type { FriendRowProps } from "./components/domain/FriendRow";
 export { InviteFriendRow } from "./components/domain/InviteFriendRow";
+export type { InviteFriendRowProps } from "./components/domain/InviteFriendRow";
 export { NotificationRow } from "./components/domain/NotificationRow";
+export type { NotificationRowProps } from "./components/domain/NotificationRow";
 export { PartyCard } from "./components/domain/PartyCard";
-export type { PartyCardVariant } from "./components/domain/PartyCard";
+export type { PartyCardProps, PartyCardVariant } from "./components/domain/PartyCard";
 export { ReviewCard } from "./components/domain/ReviewCard";
+export type { ReviewCardProps } from "./components/domain/ReviewCard";
 export { RoomOptionRow } from "./components/domain/RoomOptionRow";
+export type { RoomOptionRowProps } from "./components/domain/RoomOptionRow";
 export { SongRow } from "./components/domain/SongRow";
+export type { SongRowProps } from "./components/domain/SongRow";
 export { UserProfileHeader } from "./components/domain/UserProfileHeader";
+export type { UserProfileHeaderProps } from "./components/domain/UserProfileHeader";
 export { VenueCard } from "./components/domain/VenueCard";
+export type { VenueCardProps } from "./components/domain/VenueCard";
 export { VenueLocationCard } from "./components/domain/VenueLocationCard";
 
 // Utils
 export { avatarColor, initial } from "./utils/avatar";
 export { formatAgo, formatDayLabel, formatTime, formatWhen, money, plural } from "./utils/format";
 export { useAsync, useDebounced } from "./utils/hooks";
-
-// Types
-export * from "./types";

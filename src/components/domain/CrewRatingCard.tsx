@@ -1,7 +1,6 @@
 import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
-import type { CrewMember } from "../../types";
 import { AppText } from "../primitives/AppText";
 import { Avatar } from "../primitives/Avatar";
 import { Card } from "../primitives/Card";
@@ -11,22 +10,25 @@ import { TextField } from "../primitives/TextField";
 
 const STAR_WORDS = ["", "Rough night", "Off-key", "Solid", "Great voice", "Absolute star"];
 
-// Ported from karamatch-web/src/screens/Rate.tsx's inline per-crew-member
-// card — star the person, and only once they have a star does the optional
-// review box appear, so an unrated crew doesn't read as a wall of textareas.
-export function CrewRatingCard({
-    member,
-    stars,
-    text,
-    onStarsChange,
-    onTextChange
-}: {
-    member: CrewMember;
+export type CrewRatingCardProps = {
+    member: {
+        id: string | number;
+        name: string;
+        username: string;
+        photoUrl?: string | null;
+        /** Taste compatibility. Null or absent hides the badge entirely. */
+        matchPct?: number | null;
+    };
     stars: number;
     text: string;
     onStarsChange: (stars: number) => void;
     onTextChange: (text: string) => void;
-}) {
+};
+
+// Ported from karamatch-web/src/screens/Rate.tsx's inline per-crew-member
+// card — star the person, and only once they have a star does the optional
+// review box appear, so an unrated crew doesn't read as a wall of textareas.
+export function CrewRatingCard({ member, stars, text, onStarsChange, onTextChange }: CrewRatingCardProps) {
     const { S, S2 } = useTheme();
 
     return (

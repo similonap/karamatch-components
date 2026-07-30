@@ -2,12 +2,22 @@ import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import { AppText } from "../primitives/AppText";
-import type { ChatMessage } from "../../types";
+
+export type ChatBubbleProps = {
+    message: {
+        text: string;
+        /** Only the name is drawn, and only when `showName`; a message whose
+            sender didn't come back from the server falls back to "Someone". */
+        from?: { name: string } | null;
+    };
+    mine: boolean;
+    showName: boolean;
+};
 
 // Ported from karamatch-web/src/screens/PartyRoom.tsx's inline chat bubble —
 // a tail on the outer corner, the way both platforms' native bubbles are
 // shaped, and the sender's name shown only on the first message of a run.
-export function ChatBubble({ message, mine, showName }: { message: ChatMessage; mine: boolean; showName: boolean }) {
+export function ChatBubble({ message, mine, showName }: ChatBubbleProps) {
     const { C, CTRL, RADII, S2 } = useTheme();
 
     return (
@@ -42,6 +52,6 @@ export function ChatBubble({ message, mine, showName }: { message: ChatMessage; 
 // Consecutive messages from one person only get a name once — a small
 // selector so a screen doesn't need to re-derive this itself when mapping
 // over a message list.
-export function shouldShowChatName(messages: ChatMessage[], index: number) {
+export function shouldShowChatName(messages: { userId: string | number }[], index: number) {
     return index === 0 || messages[index - 1].userId !== messages[index].userId;
 }

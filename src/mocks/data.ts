@@ -1,24 +1,13 @@
-// Small, realistic fixtures for each domain type in src/types.ts, reused by
-// every domain/*.stories.tsx so the shelf's showcase doesn't depend on a
-// running karamatch-api.
-import type {
-    ChatMessage,
-    CrewMember,
-    InviteNotification,
-    MatchedUser,
-    MatchView,
-    PartyRoomMember,
-    PartyView,
-    PastPartyView,
-    PublicUser,
-    ReviewNotification,
-    Song,
-    UserProfile,
-    VenueNearby,
-    VenueReview
-} from "../types";
+// Small, realistic fixtures reused by every domain/*.stories.tsx so the
+// shelf's showcase doesn't depend on a running karamatch-api.
+//
+// Deliberately unannotated: these are richer than any component's props (a
+// full karamatch API response, `email` and `location` and all), and each one
+// structurally satisfies the narrow shape the component it feeds asks for.
+// That's the same path a student's own API objects take, so the stories
+// exercise the real thing rather than a type the shelf handed itself.
 
-export const MOCK_USER: PublicUser = {
+export const MOCK_USER = {
     id: 1,
     name: "Mara Voss",
     username: "maravoss",
@@ -31,7 +20,7 @@ export const MOCK_USER: PublicUser = {
     eventsCount: 12
 };
 
-export const MOCK_HOST: PublicUser = {
+export const MOCK_HOST = {
     id: 2,
     name: "Theo Lindqvist",
     username: "theolindqvist",
@@ -44,9 +33,9 @@ export const MOCK_HOST: PublicUser = {
     eventsCount: 27
 };
 
-export const MOCK_MATCHED_USER: MatchedUser = { ...MOCK_HOST, matchPct: 78 };
+export const MOCK_MATCHED_USER = { ...MOCK_HOST, matchPct: 78 };
 
-export const MOCK_USER_PROFILE: UserProfile = {
+export const MOCK_USER_PROFILE = {
     ...MOCK_MATCHED_USER,
     commonSongs: ["Mr. Brightside", "Since U Been Gone"],
     favoriteSongs: [
@@ -58,7 +47,7 @@ export const MOCK_USER_PROFILE: UserProfile = {
     isSelf: false
 };
 
-export const MOCK_SONGS: Song[] = [
+export const MOCK_SONGS = [
     { id: "1", title: "Since U Been Gone", artist: "Kelly Clarkson", genre: ["pop", "2000s"] },
     {
         id: "2",
@@ -70,7 +59,7 @@ export const MOCK_SONGS: Song[] = [
     { id: "3", title: "Take On Me", artist: "a-ha", genre: ["pop", "80s"] }
 ];
 
-export const MOCK_VENUE: VenueNearby = {
+export const MOCK_VENUE = {
     id: "v1",
     name: "Neon Nights Karaoke",
     lat: 52.37,
@@ -96,7 +85,7 @@ export const MOCK_VENUE: VenueNearby = {
     ]
 };
 
-export const MOCK_OPEN_PARTY: PartyView = {
+export const MOCK_OPEN_PARTY = {
     id: "p1",
     title: "Friday night session",
     genre: "pop",
@@ -112,14 +101,14 @@ export const MOCK_OPEN_PARTY: PartyView = {
     status: "upcoming"
 };
 
-export const MOCK_MATCH_PARTY: MatchView = {
+export const MOCK_MATCH_PARTY = {
     ...MOCK_OPEN_PARTY,
     id: "p2",
     matchPct: 82,
     commonSongs: ["Mr. Brightside", "Since U Been Gone"]
 };
 
-export const MOCK_PAST_PARTY: PastPartyView = {
+export const MOCK_PAST_PARTY = {
     ...MOCK_OPEN_PARTY,
     id: "p3",
     status: "ended",
@@ -129,7 +118,7 @@ export const MOCK_PAST_PARTY: PastPartyView = {
     venueReviewed: true
 };
 
-export const MOCK_VENUE_REVIEW: VenueReview = {
+export const MOCK_VENUE_REVIEW = {
     id: "vr1",
     stars: 5,
     text: "Great sound system and the staff brought round after round of drinks without us asking twice.",
@@ -137,12 +126,12 @@ export const MOCK_VENUE_REVIEW: VenueReview = {
     from: MOCK_HOST
 };
 
-export const MOCK_CREW_MEMBER: CrewMember = { ...MOCK_MATCHED_USER, role: "member" };
+export const MOCK_CREW_MEMBER = { ...MOCK_MATCHED_USER, role: "member" as const };
 
-export const MOCK_PARTY_HOST_MEMBER: PartyRoomMember = { ...MOCK_HOST, matchPct: null, role: "host", paid: true };
-export const MOCK_PARTY_ROOM_MEMBER: PartyRoomMember = { ...MOCK_MATCHED_USER, role: "member", paid: false };
+export const MOCK_PARTY_HOST_MEMBER = { ...MOCK_HOST, matchPct: null, role: "host" as const, paid: true };
+export const MOCK_PARTY_ROOM_MEMBER = { ...MOCK_MATCHED_USER, role: "member" as const, paid: false };
 
-export const MOCK_CHAT_MESSAGE: ChatMessage = {
+export const MOCK_CHAT_MESSAGE = {
     id: "m1",
     partyId: "p1",
     userId: 2,
@@ -151,9 +140,9 @@ export const MOCK_CHAT_MESSAGE: ChatMessage = {
     sentAt: new Date(Date.now() - 20 * 60 * 1000).toISOString()
 };
 
-export const MOCK_INVITE_NOTIFICATION: InviteNotification = {
+export const MOCK_INVITE_NOTIFICATION = {
     id: "n1",
-    kind: "invite",
+    kind: "invite" as const,
     status: "pending",
     from: MOCK_HOST,
     party: {
@@ -166,9 +155,9 @@ export const MOCK_INVITE_NOTIFICATION: InviteNotification = {
     }
 };
 
-export const MOCK_REVIEW_NOTIFICATION: ReviewNotification = {
+export const MOCK_REVIEW_NOTIFICATION = {
     id: "n2",
-    kind: "review",
+    kind: "review" as const,
     status: "pending",
     venue: { id: "v1", name: "Neon Nights Karaoke", imageUrl: "" },
     party: {

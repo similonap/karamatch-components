@@ -1,15 +1,28 @@
 import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
-import type { Song } from "../../types";
 import { AppPressable } from "../primitives/AppPressable";
 import { AppText } from "../primitives/AppText";
 import { CheckRing } from "../primitives/CheckRing";
 import { SongArt } from "../primitives/SongArt";
 
+// The shape this row renders, not a song model. Structural typing means your
+// own API's song satisfies it as long as it carries these three fields — no
+// import, no adapter. See README's "Prop shapes" section.
+export type SongRowProps = {
+    song: {
+        title: string;
+        artist: string;
+        /** Cover thumbnail. Absent is normal — SongArt draws a placeholder. */
+        coverArt?: string;
+    };
+    selected: boolean;
+    onToggle: () => void;
+};
+
 // Ported from karamatch-web/src/screens/SongPicker.tsx's `SongRow`, shared
 // there with the profile editor — one row of a song list, toggled on tap.
-export function SongRow({ song, selected, onToggle }: { song: Song; selected: boolean; onToggle: () => void }) {
+export function SongRow({ song, selected, onToggle }: SongRowProps) {
     const { C, CTRL, RADII, S2 } = useTheme();
 
     return (
