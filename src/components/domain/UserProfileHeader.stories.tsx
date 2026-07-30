@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-native";
 import { View } from "react-native";
 
 import { useTheme } from "../../theme/ThemeProvider";
-import { MOCK_USER_PROFILE } from "../../mocks/data";
+import { MOCK_USER, MOCK_USER_PROFILE } from "../../mocks/data";
 import { UserProfileHeader } from "./UserProfileHeader";
 
 // A decorator rather than a per-story `render`, so an args-only story below
@@ -24,6 +24,11 @@ type Story = StoryObj<typeof UserProfileHeader>;
 
 export const Default: Story = {};
 
+// Your own profile: a plain `PublicUser`, passed with no `matchPct` at all —
+// there is nothing to compare yourself against, and the strip drops the third
+// stat rather than showing a padded zero. This is also the type check that
+// matters: the signed-in user needs no `commonSongs`/`isFriend`/`isSelf`
+// invented to render here.
 export const SelfProfile: Story = {
-    args: { user: { ...MOCK_USER_PROFILE, isSelf: true, matchPct: null } }
+    args: { user: MOCK_USER }
 };
