@@ -41,9 +41,10 @@ function FrozenDemo({ scrollY, imageHeight, ...bar }: ImageStatusAppBarProps) {
 
 // The real pairing, wired exactly as a screen wires it: `Screen` full-bleed
 // (`pad={false} gap={0}`) so the hero reaches both edges, `underStatusBar` so
-// the hero's own reserved top inset isn't doubled by iOS's automatic one, and
-// `onScroll` feeding the bar. The outer `View` is what the bar positions
-// against — a screen's route container does that job, a story has to supply it.
+// iOS's automatic content inset doesn't push the photo out from under the
+// status bar, and `onScroll` feeding the bar. The outer `View` is what the bar
+// positions against — a screen's route container does that job, a story has to
+// supply it.
 function ScrollingDemo({ imageHeight, ...bar }: ImageStatusAppBarProps) {
     const { C, LAYOUT, S } = useTheme();
     const [scrollY, setScrollY] = useState(0);
@@ -82,11 +83,13 @@ export const Scrolling: Story = {
     render: args => <ScrollingDemo {...args} onBack={() => {}} />
 };
 
-// What the stories above cannot show on an inset-less viewport: the photo has
-// to start *below* the notch. At rest the top of the image lines up with the
-// bottom of the chevron's row, with the hero's own `C.bg` strip filling the
-// status bar — nothing of the photo, and none of the venue's name once the bar
-// is solid, may sit behind the cutout.
+// What the stories above cannot show on an inset-less viewport: the photo runs
+// all the way to the top of the window, *behind* the status bar, with no strip
+// of `C.bg` boxing it in — while still leaving a full `imageHeight` of visible
+// frame below the cutout, and keeping the chevron (and the title, once the bar
+// is solid) clear of it. Both failure modes are visible here: a background band
+// above the photo means the inset got padded in instead of added to the height,
+// and a chevron under the island means the bar stopped reserving it.
 export const WithStatusBarInset: Story = {
     name: "With status bar inset",
     render: args => (
@@ -97,12 +100,12 @@ export const WithStatusBarInset: Story = {
 };
 
 // The other half of that: the handover is `imageHeight - LAYOUT.appBar`, and
-// the inset cancels out of it, because the photo's top edge and the bar's row
-// both start below the same inset. Frozen at exactly that scroll offset, on a
-// notched device: the bar must be fully handed over — solid, titled, dark
-// chevron — with the photo's bottom edge landing on the bar's, no strip of
-// photo left below it and no fade still in progress. Any inset left in the
-// collapse math shows up here as one or the other.
+// the inset cancels out of it, because the hero adds the inset to its height
+// and the bar reserves the same inset above its row. Frozen at exactly that
+// scroll offset, on a notched device: the bar must be fully handed over —
+// solid, titled, dark chevron — with the photo's bottom edge landing on the
+// bar's, no strip of photo left below it and no fade still in progress. Any
+// inset left in the collapse math shows up here as one or the other.
 export const AtHandoverWithInset: Story = {
     name: "At handover, with inset",
     render: args => (
